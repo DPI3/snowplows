@@ -1,0 +1,14 @@
+[RUNNING] 23. Autó haladása járható sávban teszt
+>>>[Skeleton].tick()
+>>>[Car].move()
+>>>[Route].getNextLane(cl)
+<<<return nl
+>>>[Lane].isPassable()
+<<<return true
+>>>[Car].setCurrentLane(nl)
+<<<return
+>>>[Car].setPositionOnLane(newPosition)
+<<<return
+<<<return
+<<<return
+[RESULT] The test completed successfully.

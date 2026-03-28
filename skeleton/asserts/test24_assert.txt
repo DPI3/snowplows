@@ -1,0 +1,13 @@
+[RUNNING] 24. Autó elakadása járhatatlan úton teszt
+>>>[Skeleton].tick()
+>>>[Car].move()
+>>>[Route].getNextLane(cl)
+<<<return nl
+>>>[Lane].isPassable()
+<<<return false
+>>>[Car].stopAndWait()
+[STATE] Speed set to 0, position remains
+<<<return
+<<<return
+<<<return
+[RESULT] The test completed successfully.
