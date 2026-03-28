@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 /**
  * Implementation of Test 20: Assigning a route to a bus.
- * Verifies that the BusDriverRole can request the shortest path from the 
+ * Verifies that the BusdriverRole can request the shortest path from the 
  * RoadNetwork and assign it to the Bus.
  */
 public class Test20 implements TestCase {
@@ -18,7 +18,7 @@ public class Test20 implements TestCase {
      */
     @Override
     public void run(Scanner scanner) {
-        BusDriverRole driver = new BusDriverRole();
+        BusdriverRole driver = new BusdriverRole();
         Bus bus = new Bus();
         Terminal destination = new Terminal(); // Node subclass based on UML
         

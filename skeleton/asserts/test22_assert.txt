@@ -2,7 +2,7 @@
 >>>[Bus].move()
 >>>[Bus].checkTerminalReached()
 <<<return true
->>>[BusDriverRole].incrementCompletedRounds()
+>>>[BusdriverRole].incrementCompletedRounds()
 <<<return
 >>>[RoadNetwork].getShortestPath(terminalB, terminalA)
 <<<return r

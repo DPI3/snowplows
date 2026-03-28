@@ -1,7 +1,7 @@
 package skeleton.src;
 
 /**
- * A BusDriverRole a buszvezető szerepkört reprezentálja.
+ * A BusdriverRole a buszvezető szerepkört reprezentálja.
  * Felelős a buszok mozgatásáért, útvonalak megtervezéséért
  * és a fordulók teljesítéséért két végállomás között.
  */
