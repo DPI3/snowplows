@@ -4,6 +4,25 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+
+/**
+ * A SnowplowSkeletonTestProgram osztály a szkeleton rendszer
+ * terminál alapú kezelői felületét valósítja meg.
+ *
+ * A program lehetőséget biztosít előre definiált tesztesetek
+ * futtatására parancssoros módon.
+ *
+ * Támogatott parancsok:
+ * - help: parancsok listázása
+ * - ls: tesztesetek listázása
+ * - run test <szám>: adott teszt futtatása
+ * - exit: program leállítása
+ *
+ * A tesztek a tests csomagban található osztályokként vannak implementálva,
+ * és a szekvenciadiagramoknak megfelelő kimenetet generálnak.
+ *
+ * A program célja a rendszer működésének ellenőrzése és demonstrálása.
+ */
 public class SnowplowSkeletonTestProgram {
 
     private static final Map<Integer, String> TESTS = new LinkedHashMap<>();
@@ -44,6 +63,25 @@ public class SnowplowSkeletonTestProgram {
         TESTS.put(33, "Útvonalkereső algoritmus, legrövidebb út tesztje");
     }
 
+
+    /**
+     * A SnowplowSkeletonTestProgram osztály a szkeleton rendszer
+     * terminál alapú kezelői felületét valósítja meg.
+     *
+     * A program lehetőséget biztosít előre definiált tesztesetek
+     * futtatására parancssoros módon.
+     *
+     * Támogatott parancsok:
+     * - help: parancsok listázása
+     * - ls: tesztesetek listázása
+     * - run test <szám>: adott teszt futtatása
+     * - exit: program leállítása
+     *
+     * A tesztek a tests csomagban található osztályokként vannak implementálva,
+     * és a szekvenciadiagramoknak megfelelő kimenetet generálnak.
+     *
+     * A program célja a rendszer működésének ellenőrzése és demonstrálása.
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -94,6 +132,16 @@ public class SnowplowSkeletonTestProgram {
         }
     }
 
+
+    /**
+     * Lefuttatja a megadott sorszámú tesztet.
+     *
+     * A metódus kiválasztja a megfelelő tesztosztályt,
+     * majd meghívja annak run() metódusát.
+     *
+     * @param testNumber a futtatandó teszt sorszáma
+     * @param scanner a felhasználói bemenet kezelésére szolgáló objektum
+     */
     private static void runTestCommand(String input, Scanner scanner) {
         String[] parts = input.split("\\s+");
 
@@ -129,6 +177,15 @@ public class SnowplowSkeletonTestProgram {
         System.out.println("[RESULT] The test completed successfully.");
     }
 
+
+    /**
+     * A tesztszám alapján visszaadja a megfelelő tesztobjektumot.
+     *
+     * A kiválasztás switch-case szerkezet segítségével történik.
+     *
+     * @param testNumber a teszt sorszáma
+     * @return a megfelelő TestCase példány, vagy null ha nincs implementálva
+     */
     private static TestCase getTest(int testNumber) {
         switch (testNumber) {
             case 1: return new Test1();
