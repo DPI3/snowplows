@@ -1,5 +1,5 @@
 package skeleton.src;
-import org.w3c.dom.Node;
+import java.util.Scanner;
 
 /**
  * A Car osztály egy személygépkocsit reprezentál a rendszerben.
@@ -48,5 +48,36 @@ public class Car extends Vehicle {
         this.residence = residence;
         this.workplace = workplace;
         this.currentRoute = currentRoute;
+    }
+
+    @Override
+    public void move(Scanner scanner) {
+        // 1. Naplózzuk a belépést
+        Skeleton.printCall("Car", "move()");
+
+        // 2. Szimuláljuk a sáv lekérését
+        Skeleton.printCall("Route", "getNextLane(cl)");
+        Skeleton.printReturn("nl");
+
+        // 3. Döntési pont: itt kéri be a program az "1"-est
+        int input = Skeleton.requestInput(scanner, "A sáv járható? (1: Igen, 2: Nem)");
+
+        if (input == 1) {
+            Skeleton.printCall("Lane", "isPassable()");
+            Skeleton.printReturn("true");
+
+            Skeleton.printCall("Car", "setCurrentLane(nl)");
+            Skeleton.printReturn("");
+
+            Skeleton.printCall("Car", "setPositionOnLane(newPosition)");
+            Skeleton.printReturn("");
+        } else {
+            // Itt kezelheted a 24-es tesztet (elakadás)
+            Skeleton.printCall("Lane", "isPassable()");
+            Skeleton.printReturn("false");
+        }
+
+        // 4. Naplózzuk a move() visszatérését
+        Skeleton.printReturn("");
     }
 }

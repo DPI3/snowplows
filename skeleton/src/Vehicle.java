@@ -1,4 +1,5 @@
 package skeleton.src;
+import java.util.Scanner;
 /**
  * A Vehicle absztrakt osztály a rendszerben szereplő járművek közös ősosztálya.
  *
@@ -61,14 +62,15 @@ public abstract class Vehicle {
      *
      * A szkeleton implementációban csak a metódushívás kerül naplózásra.
      */
-    public void move() {
-    }
+    public abstract void move(Scanner scanner);
 
     /**
      * Egy szimulációs lépést (tick) hajt végre.
      *
      * A jármű minden időegységben ezt a metódust hívja meg.
      */
-    public void tick() {
+    public void tick(Scanner scanner) {
+        // A tick hívja a move-ot
+        this.move(scanner);
     }
 }

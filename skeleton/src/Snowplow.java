@@ -1,5 +1,5 @@
 package skeleton.src;
-
+import java.util.Scanner;
 /**
  * A Snowplow osztály egy hókotró járművet reprezentál.
  *
@@ -74,16 +74,12 @@ public class Snowplow extends Vehicle implements Buyable {
      *
      * @param lane a tisztítandó sáv
      */
+    // A clean metódust már korábban jól megírtad a Skeleton hívásokkal
     public void clean(Lane lane) {
-        // 1. Jelzed, hogy beléptünk a metódusba
         Skeleton.printCall("Snowplow", "clean(lane)");
-
-        // 2. Itt történik a munka (meghívod a fejet)
         if (currentHead != null) {
             currentHead.clean(lane, this); 
         }
-
-        // 3. Jelzed, hogy végeztünk
         Skeleton.printReturn("");
     }
 
@@ -98,4 +94,17 @@ public class Snowplow extends Vehicle implements Buyable {
         Skeleton.printReturn("0");
         return 0;
     }
+
+    @Override
+    public void move(Scanner scanner) {
+        // Hókotró haladása (sd 6 alapján) [cite: 2731, 2744]
+        Skeleton.printCall("Snowplow", "move()");
+        
+        // Pozíció frissítése [cite: 2745]
+        Skeleton.printState("updatePosition()");
+        
+        Skeleton.printReturn("");
+    }
+
+    
 }

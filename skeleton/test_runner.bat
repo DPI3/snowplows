@@ -9,8 +9,8 @@ REM Ha az IDE-d automatikusan fordit, ezt a részt akár ki is törölheted,
 REM de parancssoros futtatásnál biztosra megyünk:
 echo [1/2] Java fajlok forditasa...
 if not exist bin mkdir bin
-javac -d bin src/*.java tests/*.java skeleton.SnowplowSkeletonTestProgram.java
-
+REM javac -d bin src/*.java tests/*.java SnowplowSkeletonTestProgram.java
+javac -d bin src/*.java tests/TestCase.java tests/Test19.java tests/Test20.java tests/Test21.java tests/Test22.java tests/Test23.java tests/Test24.java tests/Test25.java SnowplowSkeletonTestProgram.java
 if %errorlevel% neq 0 (
     echo [HIBA] A forditas sikertelen! Kerd meg az IDE-det a hibak javitasaert.
     pause

@@ -26,6 +26,6 @@ public class Test20 implements TestCase {
         driver.assignRoute(bus, destination);
         
         // 2. The bus starts moving after the assignment
-        bus.move();
+        bus.move(scanner);
     }
 }

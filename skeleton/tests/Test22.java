@@ -21,6 +21,6 @@ public class Test22 implements TestCase {
         
         // Starting the movement. The internal logic of the domain classes 
         // should handle the checkTerminalReached() logic.
-        bus.move(); 
+        bus.move(scanner); 
     }
 }

@@ -21,6 +21,6 @@ public class Test24 implements TestCase {
         
         // Starting the action. Inside move(), the nextLane.isPassable(scanner) 
         // will ask the user, and the testfile will provide 'false'.
-        car.move();
+        car.move(scanner);
     }
 }

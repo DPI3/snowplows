@@ -21,6 +21,6 @@ public class Test21 implements TestCase {
         Bus bus = new Bus();
         
         // Starting the action. Inside move(), it should check isPassable()
-        bus.move();
+        bus.move(scanner);
     }
 }

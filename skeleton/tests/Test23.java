@@ -16,10 +16,15 @@ public class Test23 implements TestCase {
      */
     @Override
     public void run(Scanner scanner) {
+        // A teszt indítása a Skeleton.tick() hívással [cite: 4048]
+        Skeleton.printCall("Skeleton", "tick()");
+
         Car car = new Car();
         
-        // Starting the action. In the skeleton, isPassable() should return true
-        // based on the testfile input.
-        car.move();
+        // Itt a car.move() hívás következik
+        car.move(scanner);
+
+        // A tick() hívás vége
+        Skeleton.printReturn("");
     }
 }
