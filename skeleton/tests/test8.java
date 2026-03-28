@@ -21,7 +21,7 @@ import java.util.Scanner;
  * - hó vagy feltört jég esetén az út megtisztul,
  * - a CleanerRole jutalmat kap a sikeres takarításért.
  */
-public class Test8 extends TestCase {
+public class Test8 implements TestCase {
 
     /**
      * A tesztszekvencia futtatása.
