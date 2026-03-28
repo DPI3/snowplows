@@ -1,5 +1,5 @@
-package skeleton.src;
-import tests.*;
+package skeleton;
+import skeleton.tests.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

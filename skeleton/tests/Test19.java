@@ -1,4 +1,4 @@
-package tests;
+package skeleton.tests;
 
 import skeleton.src.*;
 import java.util.Scanner;
