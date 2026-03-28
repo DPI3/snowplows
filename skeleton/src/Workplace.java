@@ -1,3 +1,4 @@
+package skeleton.src;
 public class Workplace extends Node{
     
     public Workplace(String id){

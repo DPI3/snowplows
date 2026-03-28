@@ -1,3 +1,4 @@
+package skeleton.src;
 public class NormalRoad extends Road{
 
     @Override

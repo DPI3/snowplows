@@ -1,13 +1,15 @@
-import java.util.List;
+package skeleton.src;
 
-public class Store{
-    private List<Buyable> inventory;
-
-    public Store(List<Buyable> inventory){
-        this.inventory = inventory;
+public class Store extends Node {
+    
+    public Store(String id) {
+        super(id);
     }
 
-    public boolean buy(CleanerRole cleanerRole, Buyable item){
-        
+    @Override
+    public void onVehicleEnter(Vehicle vehicle) {
+        Skeleton.printCall("Store", "onVehicleEnter(vehicle)");
+        // Ide jöhetne a vásárlási logika, de a szkeletonban elég a log
+        Skeleton.printReturn("");
     }
 }

@@ -1,3 +1,4 @@
+package skeleton.src;
 /**
  * A Role absztrakt osztály felel a járművek irányításáért.
  * A szerepkörök határozzák meg, hogy a játékos milyen műveleteket végezhet

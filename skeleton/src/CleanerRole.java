@@ -1,3 +1,5 @@
+package skeleton.src;
+
 /**
  * A CleanerRole a takarító szerepkört reprezentálja.
  * Felelős a hó eltávolításáért, a hókotrók irányításáért

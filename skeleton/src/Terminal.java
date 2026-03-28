@@ -6,6 +6,10 @@ package skeleton.src;
  */
 public class Terminal extends Node {
     
+    public Terminal(String id) {
+        super(id);
+    }
+
     /**
      * Handles a vehicle entering the terminal. If it is a bus, it may 
      * increment completed rounds and get a new route.

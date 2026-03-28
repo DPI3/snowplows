@@ -1,3 +1,5 @@
+package skeleton.src;
+
 /**
  * A Bus osztály egy tömegközlekedési járművet reprezentál.
  *

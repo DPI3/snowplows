@@ -1,3 +1,4 @@
+package skeleton.src;
 public class Residence extends Node{
     
     public Residence(String id){

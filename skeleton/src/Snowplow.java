@@ -1,3 +1,5 @@
+package skeleton.src;
+
 /**
  * A Snowplow osztály egy hókotró járművet reprezentál.
  *
