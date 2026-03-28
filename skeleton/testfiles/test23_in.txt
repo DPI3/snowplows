@@ -1,2 +1,3 @@
 ﻿run test 23
+1
 exit
