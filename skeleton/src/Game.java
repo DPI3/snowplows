@@ -61,5 +61,6 @@ public class Game {
      * vagy véget ért-e.
      */
     public boolean isOver() {
+        return false; // ideiglenes
     }
 }
