@@ -1,0 +1,2 @@
+﻿run test 24
+exit
