@@ -3,16 +3,16 @@ package skeleton.src;
 import java.util.Scanner;
 
 /**
- * Represents a single lane on a road segment.
- * Maintains its own state regarding snow thickness, ice, and accidents.
+ * Egyetlen sávot képvisel egy útszakaszon.
+ * Saját állapottal rendelkezik a hóvastagság, a jég és a balesetek tekintetében.
  */
 public class Lane {
 
     private LaneState state = new Clear();
 
     /**
-     * Changes the current state of the lane (e.g., when it snows or gets cleaned).
-     * @param newState the new state to apply
+     * Megváltoztatja a sáv jelenlegi állapotát (pl. havazáskor vagy takarításkor).
+     * @param newState az alkalmazandó új állapot
      */
     public void setState(LaneState newState) {
         Skeleton.printCall("Lane", "setState(newState)");
@@ -22,11 +22,11 @@ public class Lane {
     }    
 
     /**
-     * Checks if the lane is currently passable for a vehicle.
-     * In the skeleton phase, it prompts the tester for the lane's state.
+     * Ellenőrzi, hogy a sáv jelenleg járható-e egy jármű számára.
+     * A szkeleton fázisban bekéri a sáv állapotát a tesztelőtől.
      *
-     * @param scanner the scanner to read tester input
-     * @return true if passable, false if blocked (e.g., by deep snow)
+     * @param scanner a tesztelő bemenetének olvasásához használt scanner
+     * @return true, ha járható, false, ha blokkolva van (pl. mély hó miatt)
      */
     public boolean isPassable(Scanner scanner) {
         Skeleton.printCall("Lane", "isPassable()");
@@ -40,10 +40,10 @@ public class Lane {
     }
 
     /**
-     * Checks if there is an active accident on this lane.
+     * Ellenőrzi, hogy van-e aktív baleset ezen a sávon.
      *
-     * @param scanner the scanner to read tester input
-     * @return true if there is an accident, false otherwise
+     * @param scanner a tesztelő bemenetének olvasásához használt scanner
+     * @return true, ha van baleset, egyébként false
      */
     public boolean hasAccident(Scanner scanner) {
         Skeleton.printCall("Lane", "hasAccident()");

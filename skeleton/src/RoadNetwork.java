@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents the entire road network consisting of nodes and roads.
- * Responsible for managing pathfinding algorithms and global weather events.
+ * A csomópontokból és utakból álló teljes úthálózatot képviseli.
+ * Felelős az útvonalkereső algoritmusok és a globális időjárási események kezeléséért.
  */
 public class RoadNetwork {
     private List<Node> nodes = new ArrayList<>();
     private List<Road> roads = new ArrayList<>();
 
     /**
-     * Calculates the shortest path between two nodes considering dynamic weights 
-     * and impassable lanes. In the skeleton phase, this returns a mock Route.
+     * Kiszámítja a legrövidebb útvonalat két csomópont között, figyelembe véve a dinamikus 
+     * súlyozásokat és a járhatatlan sávokat. A szkeleton fázisban ez egy mock (ál) útvonalat ad vissza.
      *
-     * @param from the starting Node
-     * @param to the destination Node
-     * @return the calculated Route containing the sequence of lanes
+     * @param from a kezdő csomópont
+     * @param to a cél csomópont
+     * @return a kiszámított útvonal, amely tartalmazza az áthaladandó sávok sorrendjét
      */
     public Route getShortestPath(Node from, Node to) {
         Skeleton.printCall("RoadNetwork", "getShortestPath(from, dest)");

@@ -3,27 +3,27 @@ package skeleton.src;
 import java.util.Scanner;
 
 /**
- * A central utility class responsible for formatting and logging the execution 
- * flow of the skeleton program. 
+ * Egy központi segédosztály, amely a szkeleton program futási folyamatának 
+ * formázásáért és naplózásáért felelős. 
  * <p>
- * It helps visualize the sequence diagrams by automatically indenting method 
- * calls and returns based on the current call depth. 
- * It also centralizes user input handling for test decisions.
+ * Segít a szekvenciadiagramok vizualizálásában azáltal, hogy az aktuális hívási 
+ * mélység alapján automatikusan behúzza a metódushívásokat és a visszatéréseket. 
+ * Emellett központosítja a felhasználói bemenetek kezelését a tesztek során hozott döntésekhez.
  */
 public class Skeleton {
 
     /**
-     * Tracks the current depth of method calls to provide proper indentation.
+     * Nyomon követi a metódushívások aktuális mélységét a megfelelő behúzás biztosítása érdekében.
      */
     private static int depth = 0;
 
     /**
-     * Logs the entry point of a method call.
-     * Automatically increases the indentation depth for subsequent calls.
-     * Output format: {@code >>> [className].methodName}
+     * Naplózza egy metódushívás belépési pontját.
+     * Automatikusan növeli a behúzás mélységét a későbbi hívásokhoz.
+     * Kimeneti formátum: {@code >>> [className].methodName}
      *
-     * @param className  the name of the class making the call (e.g., "Car")
-     * @param methodName the name of the method being called, including parameters (e.g., "move()")
+     * @param className  a hívást kezdeményező osztály neve (pl. "Car")
+     * @param methodName a meghívott metódus neve, a paraméterekkel együtt (pl. "move()")
      */
     public static void printCall(String className, String methodName) {
         printIndent();
@@ -32,12 +32,12 @@ public class Skeleton {
     }
 
     /**
-     * Logs the return from a method call.
-     * Automatically decreases the indentation depth.
-     * Output format: {@code <<< return returnValue}
+     * Naplózza a visszatérést egy metódushívásból.
+     * Automatikusan csökkenti a behúzás mélységét.
+     * Kimeneti formátum: {@code <<< return returnValue}
      *
-     * @param returnValue a string representation of the returned value. 
-     * If the method is void, pass an empty string ("").
+     * @param returnValue a visszatérési érték szöveges reprezentációja. 
+     * Ha a metódus visszatérési típusa void, egy üres stringet ("") kell átadni.
      */
     public static void printReturn(String returnValue) {
         depth--;
@@ -50,10 +50,10 @@ public class Skeleton {
     }
 
     /**
-     * Logs an internal state change within an object.
-     * Output format: {@code [STATE] description}
+     * Naplózza egy objektum belső állapotának megváltozását.
+     * Kimeneti formátum: {@code [STATE] leírás}
      *
-     * @param stateDescription a brief description of the state change (e.g., "Speed set to 0")
+     * @param stateDescription az állapotváltozás rövid leírása (pl. "Sebesség beállítva 0-ra")
      */
     public static void printState(String stateDescription) {
         printIndent();
@@ -61,12 +61,12 @@ public class Skeleton {
     }
 
     /**
-     * Prints a standardized question to the console and reads an integer 
-     * answer from the user. Useful for interactive testing.
+     * Kiír egy szabványosított kérdést a konzolra, és beolvas egy egész szám (integer) 
+     * választ a felhasználótól. Hasznos az interaktív teszteléshez.
      *
-     * @param scanner the Scanner object to read user input
-     * @param question the question to display to the user
-     * @return the integer value entered by the user
+     * @param scanner a felhasználói bemenet olvasásához használt Scanner objektum
+     * @param question a felhasználónak megjelenítendő kérdés
+     * @return a felhasználó által megadott egész szám
      */
     public static int requestInput(Scanner scanner, String question) {
         printIndent();
@@ -77,8 +77,8 @@ public class Skeleton {
     }
 
     /**
-     * Helper method to print the correct number of spaces based on the 
-     * current call depth. Prints two spaces per depth level.
+     * Segédmetódus, amely az aktuális hívási mélység alapján megfelelő számú 
+     * szóközt ír ki. Mélységi szintenként két szóközt nyomtat.
      */
     private static void printIndent() {
         for (int i = 0; i < depth; i++) {

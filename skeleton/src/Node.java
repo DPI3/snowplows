@@ -1,8 +1,8 @@
 package skeleton.src;
 
 /**
- * Abstract base class for all connection points (intersections, terminals, 
- * workplaces, residences) in the road network.
+ * Absztrakt alaposztály az úthálózat összes csatlakozási pontjához (kereszteződések, 
+ * végállomások, munkahelyek, lakóhelyek).
  */
 public abstract class Node {
     protected String id;
@@ -12,10 +12,10 @@ public abstract class Node {
     }
 
     /**
-     * Handles the event when a vehicle enters this node.
-     * Specific behavior is implemented by subclasses.
+     * Kezeli azt az eseményt, amikor egy jármű belép ebbe a csomópontba.
+     * A specifikus viselkedést az alosztályok valósítják meg.
      *
-     * @param vehicle the vehicle entering the node
+     * @param vehicle a csomópontba belépő jármű
      */
     public void onVehicleEnter(Vehicle vehicle) {
         Skeleton.printCall("Node", "onVehicleEnter(vehicle)");
@@ -23,10 +23,10 @@ public abstract class Node {
     }
 
     /**
-     * Checks if this node is the final destination for the vehicle.
-     * In the skeleton phase, it defaults to true for successful arrival tests.
+     * Ellenőrzi, hogy ez a csomópont-e a jármű végső úti célja.
+     * A szkeleton fázisban alapértelmezés szerint true-t ad vissza a sikeres megérkezés teszteléséhez.
      *
-     * @return true if the node is the destination, false otherwise
+     * @return true, ha a csomópont a célállomás, egyébként false
      */
     public boolean checkDestination() {
         Skeleton.printCall("Node", "checkDestination()");
@@ -35,7 +35,7 @@ public abstract class Node {
     }
     
     /**
-     * Removes the vehicle from active traffic once it reaches its destination.
+     * Eltávolítja a járművet az aktív forgalomból, amint eléri a célját.
      */
     public void removeFromTraffic() {
         Skeleton.printCall("Node", "removeFromTraffic()");
