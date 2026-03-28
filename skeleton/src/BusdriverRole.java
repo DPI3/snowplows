@@ -5,12 +5,12 @@ package skeleton.src;
  * Felelős a buszok mozgatásáért, útvonalak megtervezéséért
  * és a fordulók teljesítéséért két végállomás között.
  */
-public class BusDriverRole extends Role {
+public class BusdriverRole extends Role {
 
     /** A buszvezető által teljesített fordulók száma. */
     private int completedRounds;
 
-    public BusDriverRole() {}
+    public BusdriverRole() {}
 
     /**
      * A busz aktuális helyzetéből meghatározza a cél csomópontba vezető
