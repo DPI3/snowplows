@@ -1,20 +1,25 @@
 package skeleton.src;
-
 /**
- * Represents a terminal station specifically used by buses.
- * Serves as the starting and ending points of bus routes.
+ * A Terminal osztaly egy vegallomas csomopontot reprezental a halozatban.
+ *
+ * A vegallomas a buszok egyik kulcsfontossagu allomasa,
+ * ahol az erkezeshez kapcsolodo forgalmi esemenyek kezelhetok.
  */
-public class Terminal extends Node {
+public class Terminal extends Node{
     
-    public Terminal(String id) {
+    /**
+     * Terminal peldany letrehozasa.
+     *
+     * @param id a csomopont egyedi azonositoja
+     */
+    public Terminal(String id){
         super(id);
     }
 
     /**
-     * Handles a vehicle entering the terminal. If it is a bus, it may 
-     * increment completed rounds and get a new route.
+     * Kezeli a jarmu vegallomasra erkezesenek esemenyet.
      *
-     * @param vehicle the vehicle entering the terminal
+     * @param vehicle az erkezo jarmu
      */
     @Override
     public void onVehicleEnter(Vehicle vehicle) {

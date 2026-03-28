@@ -1,12 +1,22 @@
 package skeleton.src;
 
 /**
- * Represents a specialized dragon-fire cleaning head for the snowplow.
+ * A DragonHead a hókotró dragon fejének megvalósítása.
+ * 
+ * A Dragon fej nagyterjedelmű hó elmozdálásra képes, és hatékonyan működik
+ * az utakat takarító hókotrók fejeiként. Különféle útállapotban működhet,
+ * és alapvető hótakarítási feladatokra alkalmas.
  */
 public class DragonHead extends Head {
 
+    /**
+     * Megtisztítja a megadott sávot a hó eltávolításával.
+     *
+     * @param lane a takarítandó sáv
+     * @param snowplow a takarítást végző hókotró
+     */
     @Override
-    public void clean(Lane lane, Snowplow snowplow) {
+    public void clean(Lane lane, Snowplow snowplow){
         Skeleton.printCall("DragonHead", "clean(lane, snowplow)");
         
         // Itt végezzük el a takarítást...
@@ -22,8 +32,14 @@ public class DragonHead extends Head {
         Skeleton.printCall("DragonHead", "getHeadType()");
         Skeleton.printReturn("DragonHead");
         return "DragonHead"; 
+
     }
 
+    /**
+     * Visszaadja a Dragon fejnek az ára.
+     *
+     * @return a fej ára
+     */
     @Override
     public int getPrice() {
         Skeleton.printCall("DragonHead", "getPrice()");
