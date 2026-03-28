@@ -30,6 +30,10 @@ public class Bus extends Vehicle {
      */
     private Route currentRoute;
 
+    public Bus() {
+        super(); // Ez hívja a Vehicle() üres konstruktorát
+    }
+
     /**
      * Konstruktor a Bus objektum létrehozásához.
      *

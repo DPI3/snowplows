@@ -27,6 +27,10 @@ public class Car extends Vehicle {
      */
     private Route currentRoute;
 
+    public Car() {
+        super();
+    }
+
     /**
      * Konstruktor a Car objektum létrehozásához.
      *

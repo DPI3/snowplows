@@ -31,6 +31,13 @@ public abstract class Vehicle {
      */
     protected double speed;
 
+    /**
+     * Alapértelmezett konstruktor a teszteléshez.
+     */
+    public Vehicle() {
+        this.id = "default_id";
+        // A többi mező maradhat null vagy 0.0
+    }
 
     /**
      * Konstruktor a jármű inicializálásához.
@@ -54,7 +61,7 @@ public abstract class Vehicle {
      *
      * A szkeleton implementációban csak a metódushívás kerül naplózásra.
      */
-    protected void move() {
+    public void move() {
     }
 
     /**

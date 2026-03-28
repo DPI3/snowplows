@@ -16,6 +16,10 @@ public class Terminal extends Node{
         super(id);
     }
 
+    public Terminal() {
+        super("default_terminal");
+    }
+
     /**
      * Kezeli a jarmu vegallomasra erkezesenek esemenyet.
      *

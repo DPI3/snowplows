@@ -16,6 +16,10 @@ public class Intersection extends Node{
         super(id);
     }
 
+    public Intersection() {
+        super("default_intersection");
+    }
+
     /**
      * Kezeli a jarmu keresztezodesbe erkezesenek esemenyet.
      *

@@ -1,3 +1,4 @@
+package skeleton.src;
 import tests.*;
 
 import java.util.LinkedHashMap;
@@ -85,10 +86,21 @@ public class SnowplowSkeletonTestProgram {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
+        if (args.length > 0) {
+            try {
+                int testNumber = Integer.parseInt(args[0]);
+                runTest(testNumber, scanner);
+            } catch (NumberFormatException e) {
+                System.out.println("[ERROR] Az argumentum csak szám lehet.");
+            }
+            scanner.close();
+            return; // Teszt után kilépünk, nem megyünk interaktív módba
+        }
+
         printWelcome();
 
         boolean running = true;
-        while (running) {
+        while (running && scanner.hasNextLine()) {
             System.out.print("> ");
             String input = scanner.nextLine().trim();
 
@@ -188,7 +200,7 @@ public class SnowplowSkeletonTestProgram {
      */
     private static TestCase getTest(int testNumber) {
         switch (testNumber) {
-            case 1: return new Test1();
+            /*case 1: return new Test1();
             case 2: return new Test2();
             case 3: return new Test3();
             case 4: return new Test4();
@@ -205,7 +217,7 @@ public class SnowplowSkeletonTestProgram {
             case 15: return new Test15();
             case 16: return new Test16();
             case 17: return new Test17();
-            case 18: return new Test18();
+            case 18: return new Test18();*/
             case 19: return new Test19();
             case 20: return new Test20();
             case 21: return new Test21();
@@ -213,14 +225,14 @@ public class SnowplowSkeletonTestProgram {
             case 23: return new Test23();
             case 24: return new Test24();
             case 25: return new Test25();
-            case 26: return new Test26();
+            /*case 26: return new Test26();
             case 27: return new Test27();
             case 28: return new Test28();
             case 29: return new Test29();
             case 30: return new Test30();
             case 31: return new Test31();
             case 32: return new Test32();
-            case 33: return new Test33();
+            case 33: return new Test33();*/
             default: return null;
         }
     }

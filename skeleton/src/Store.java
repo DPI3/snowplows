@@ -1,5 +1,6 @@
 package skeleton.src;
-
+import java.util.List;
+import java.util.ArrayList;
 /**
  * A Store osztaly a jatek boltjat reprezentalja.
  *

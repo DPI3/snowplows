@@ -7,7 +7,8 @@ echo ========================================
 REM Ha az IDE-d automatikusan fordit, ezt a részt akár ki is törölheted,
 REM de parancssoros futtatásnál biztosra megyünk:
 echo [1/2] Java fajlok forditasa...
-javac -encoding UTF8 SnowplowSkeletonTestProgram.java src\*.java tests\*.java
+if not exist bin mkdir bin
+javac -d bin src/*.java tests/*.java SnowplowSkeletonTestProgram.java
 
 if %errorlevel% neq 0 (
     echo [HIBA] A forditas sikertelen! Kerd meg az IDE-det a hibak javitasaert.
@@ -24,7 +25,7 @@ for %%i in (19 20 21 22 23 24 25) do (
     echo Teszt %%i futtatasa...
     
     REM 1. A Java program futtatasa, a testfiles bemenetkent adasa, es a kimenet elmentese
-    java SnowplowSkeletonTestProgram < testfiles\test%%i_in.txt > temp_out.txt
+    java -cp bin skeleton.src.SnowplowSkeletonTestProgram !testnum! > temp_out.txt
     
     REM 2. A generalt kimenet es az elvart (assert) kimenet osszehasonlitasa (szokozok es ures sorok ignoralasaval)
     fc /W /N asserts\test%%i_assert.txt temp_out.txt > nul
