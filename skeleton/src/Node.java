@@ -7,6 +7,10 @@ package skeleton.src;
 public abstract class Node {
     protected String id;
 
+    public Node(String id) {
+        this.id = id;
+    }
+
     /**
      * Handles the event when a vehicle enters this node.
      * Specific behavior is implemented by subclasses.

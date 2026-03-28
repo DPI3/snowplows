@@ -7,7 +7,20 @@ import java.util.Scanner;
  * Maintains its own state regarding snow thickness, ice, and accidents.
  */
 public class Lane {
-    
+
+    private LaneState state = new Clear();
+
+    /**
+     * Changes the current state of the lane (e.g., when it snows or gets cleaned).
+     * @param newState the new state to apply
+     */
+    public void setState(LaneState newState) {
+        Skeleton.printCall("Lane", "setState(newState)");
+        this.state = newState;
+        Skeleton.printState("Lane state changed to: " + newState.getClass().getSimpleName());
+        Skeleton.printReturn("");
+    }    
+
     /**
      * Checks if the lane is currently passable for a vehicle.
      * In the skeleton phase, it prompts the tester for the lane's state.
