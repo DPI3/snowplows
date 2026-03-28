@@ -1,0 +1,14 @@
+[RUNNING] 5. Jármű sávváltása teszt
+Decision: A sáv járható?
+1: Igen (passable)
+2: Nem (not passable)
+>> 1
+>>>[Vehicle].changeLane(lane2)
+    >>>[Lane : lane2].isPassable()
+    <<<return true
+    >>>[Vehicle].setCurrentLane(lane2)
+    <<<return
+    >>>[Vehicle].updatePositionOn(lane2)
+    <<<return
+<<<return
+[RESULT] The test completed successfully.
