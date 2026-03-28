@@ -1,9 +1,8 @@
 package skeleton;
-import skeleton.tests.*;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
+import skeleton.tests.*;
 
 
 /**
@@ -210,7 +209,6 @@ public class SnowplowSkeletonTestProgram {
             case 8: return new Test8();
             case 9: return new Test9();
             case 10: return new Test10();
-            case 11: return new Test11();
             case 12: return new Test12();
             case 13: return new Test13();
             case 14: return new Test14();
@@ -218,6 +216,7 @@ public class SnowplowSkeletonTestProgram {
             case 16: return new Test16();
             case 17: return new Test17();
             case 18: return new Test18();*/
+            case 11: return new Test11();
             case 19: return new Test19();
             case 20: return new Test20();
             case 21: return new Test21();
