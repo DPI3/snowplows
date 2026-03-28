@@ -1,32 +1,27 @@
 package tests;
 
+import skeleton.src.*;
 import java.util.Scanner;
 
 /**
- * A 25. teszteset megvalósítása: Autó célba érése teszt.
- * A teszt ellenőrzi, hogy mi történik, amikor egy civil autó sikeresen eléri a célállomását. [cite: 470]
+ * Implementation of Test 25: Car reaching its destination test.
+ * Simulates a car entering a node (like an intersection or residence),
+ * checking if it is the destination, and removing the car from traffic if so.
  */
 public class Test25 implements TestCase {
 
     /**
-     * A tesztszekvencia végrehajtása.
-     * Az autó behajt a csomópontba, ellenőrzi, hogy célba ért-e, majd eltűnik a forgalomból. [cite: 1155-1170, 1848-1862]
+     * Runs the test sequence.
+     * Triggers the node's vehicle entry logic.
      *
-     * @param scanner a bemenet olvasására szolgáló objektum
+     * @param scanner the scanner object to read user input
      */
     @Override
     public void run(Scanner scanner) {
-        System.out.println(">>> [Skeleton].move() // Autó mozgása");
-        System.out.println(">>> [Node].onVehicleEnter(c)");
+        Node node = new Intersection(); // Using an Intersection as the concrete Node
+        Car car = new Car();
         
-        System.out.println(">>> [Node].checkDestination()");
-        System.out.println("<<< return true");
-        
-        System.out.println(">>> [Node].removeFromTraffic()");
-        System.out.println("[STATE] Autó inaktívvá válik, eltűnik a hálózatról");
-        System.out.println("<<< return");
-        
-        System.out.println("<<< return (from Node.onVehicleEnter)");
-        System.out.println("<<< return (from Skeleton.move)");
+        // The sequence starts when the vehicle enters the node
+        node.onVehicleEnter(car);
     }
 }

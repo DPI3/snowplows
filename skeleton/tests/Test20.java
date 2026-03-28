@@ -1,36 +1,31 @@
 package tests;
 
+import skeleton.src.*;
 import java.util.Scanner;
 
 /**
- * A 20. teszteset megvalósítása: Busz útvonalhoz rendelése teszt.
- * Azt vizsgálja, hogy a BusDriverRole sikeresen hozzá tud-e rendelni egy célállomást
- * és a legrövidebb útvonalat a buszhoz. [cite: 456]
+ * Implementation of Test 20: Assigning a route to a bus.
+ * Verifies that the BusDriverRole can request the shortest path from the 
+ * RoadNetwork and assign it to the Bus.
  */
 public class Test20 implements TestCase {
 
     /**
-     * A tesztszekvencia végrehajtása.
-     * Meghívja az assignRoute metódust, lekéri a legrövidebb utat, beállítja a busz útvonalát, majd elindítja. [cite: 1043-1055, 1759-1770]
+     * Runs the test sequence.
+     * Initializes a driver, a bus, and a destination, then assigns the route.
      *
-     * @param scanner a bemenet olvasására szolgáló objektum
+     * @param scanner the scanner object to read user input
      */
     @Override
     public void run(Scanner scanner) {
-        System.out.println(">>> [BusDriverRole].assignRoute(b, dest)");
+        BusDriverRole driver = new BusDriverRole();
+        Bus bus = new Bus();
+        Terminal destination = new Terminal(); // Node subclass based on UML
         
-        System.out.println(">>> [RoadNetwork].getShortestPath(from, dest)");
-        System.out.println("<<< return r");
+        // 1. Assign route
+        driver.assignRoute(bus, destination);
         
-        System.out.println(">>> [Bus].setCurrentRoute(r)");
-        System.out.println("[STATE] Bus.currentRoute = r");
-        System.out.println("<<< return");
-        
-        System.out.println("<<< return (from assignRoute)");
-        
-        System.out.println(">>> [Game].tick()");
-        System.out.println(">>> [Bus].move()");
-        System.out.println("<<< return");
-        System.out.println("<<< return");
+        // 2. The bus starts moving after the assignment
+        bus.move();
     }
 }

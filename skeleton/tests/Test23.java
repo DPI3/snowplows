@@ -1,39 +1,25 @@
 package tests;
 
+import skeleton.src.*;
 import java.util.Scanner;
 
 /**
- * A 23. teszteset megvalósítása: Autó haladása járható sávban teszt.
- * A teszt ellenőrzi, hogy a Car képes-e az útvonalon következő sávba lépni, ha az járható állapotban van. [cite: 460]
+ * Implementation of Test 23: Car moving on a passable lane test.
+ * Verifies that a car can successfully move to the next lane if it is clear.
  */
 public class Test23 implements TestCase {
 
     /**
-     * A tesztszekvencia végrehajtása.
-     * Szimulálja, ahogy a civil autó lekéri a következő sávot, ellenőrzi a járhatóságot, majd rálép a sávra. [cite: 1113-1129, 1821-1834]
+     * Runs the test sequence.
      *
-     * @param scanner a bemenet olvasására szolgáló objektum
+     * @param scanner the scanner object to read user input
      */
     @Override
     public void run(Scanner scanner) {
-        System.out.println(">>> [Skeleton].tick()");
-        System.out.println(">>> [Car].move()");
+        Car car = new Car();
         
-        System.out.println(">>> [Route].getNextLane(cl)");
-        System.out.println("<<< return nl");
-        
-        System.out.println(">>> [Lane].isPassable()");
-        System.out.println("<<< return true");
-        
-        System.out.println(">>> [Car].setCurrentLane(nl)");
-        System.out.println("[STATE] Car.currentLane = nl");
-        System.out.println("<<< return");
-        
-        System.out.println(">>> [Car].setPositionOnLane(newPosition)");
-        System.out.println("[STATE] position frissítve");
-        System.out.println("<<< return");
-        
-        System.out.println("<<< return (from Car.move)");
-        System.out.println("<<< return (from Skeleton.tick)");
+        // Starting the action. In the skeleton, isPassable() should return true
+        // based on the testfile input.
+        car.move();
     }
 }

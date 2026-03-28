@@ -1,36 +1,26 @@
 package tests;
 
+import skeleton.src.*;
 import java.util.Scanner;
 
 /**
- * A 21. teszteset megvalósítása: Busz közlekedés teszt.
- * A busz a kijelölt útvonal mentén halad, figyelembe véve az út állapotát, az esetleges akadályokat és sávváltásokat. [cite: 458]
+ * Implementation of Test 21: Bus movement test.
+ * Simulates a bus moving along its assigned route on a passable lane,
+ * checking for accidents and updating its position.
  */
 public class Test21 implements TestCase {
 
     /**
-     * A tesztszekvencia végrehajtása.
-     * A tesztelés során a busz haladását szimuláljuk, ahol a sáv járható (passable == true). [cite: 1056-1093, 1771-1797]
+     * Runs the test sequence.
+     * Triggers the move action of the bus.
      *
-     * @param scanner a bemenet olvasására szolgáló objektum
+     * @param scanner the scanner object to read user input
      */
     @Override
     public void run(Scanner scanner) {
-        System.out.println(">>> [Game].tick()");
-        System.out.println(">>> [Bus].move()");
+        Bus bus = new Bus();
         
-        System.out.println(">>> [Route].getNextLane(currentLane)");
-        System.out.println("<<< return nextLane");
-        
-        System.out.println(">>> [Lane].isPassable()");
-        System.out.println("<<< return true"); 
-        
-        System.out.println("[STATE] update position");
-        
-        System.out.println(">>> [Lane].hasAccident()");
-        System.out.println("<<< return false");
-        
-        System.out.println("<<< return (from Bus.move)");
-        System.out.println("<<< return (from Game.tick)");
+        // Starting the action. Inside move(), it should check isPassable()
+        bus.move();
     }
 }

@@ -1,39 +1,26 @@
 package tests;
 
+import skeleton.src.*;
 import java.util.Scanner;
 
 /**
- * A 22. teszteset megvalósítása: Busz forduló teljesítése teszt.
- * A teszt ellenőrzi, hogy a busz helyesen növeli a fordulószámot, amikor eléri a végállomást, és új útvonalat kap visszafelé. [cite: 459]
+ * Implementation of Test 22: Bus completing a round test.
+ * Simulates a bus reaching its destination terminal, incrementing the driver's
+ * completed rounds, and obtaining a new route for the return trip.
  */
 public class Test22 implements TestCase {
 
     /**
-     * A tesztszekvencia végrehajtása.
-     * A busz eléri a terminált, a BusDriverRole fordulószáma nő, majd új utat kap. [cite: 1094-1112, 1798-1820]
+     * Runs the test sequence.
      *
-     * @param scanner a bemenet olvasására szolgáló objektum
+     * @param scanner the scanner object to read user input
      */
     @Override
     public void run(Scanner scanner) {
-        System.out.println(">>> [Bus].move()");
-        System.out.println(">>> [Bus].checkTerminalReached()");
-        System.out.println("<<< return true");
+        Bus bus = new Bus();
         
-        System.out.println(">>> [BusDriverRole].incrementCompletedRounds()");
-        System.out.println("[STATE] completedRounds++");
-        System.out.println("<<< return");
-        
-        System.out.println(">>> [RoadNetwork].getShortestPath(terminalB, terminalA)");
-        System.out.println("<<< return r");
-        
-        System.out.println(">>> [Bus].setCurrentRoute(r)");
-        System.out.println("[STATE] Bus.currentRoute = r");
-        System.out.println("<<< return");
-        
-        System.out.println(">>> [Bus].move() // Elindulás a visszaúton");
-        System.out.println("<<< return");
-        
-        System.out.println("<<< return (from initial move)");
+        // Starting the movement. The internal logic of the domain classes 
+        // should handle the checkTerminalReached() logic.
+        bus.move(); 
     }
 }
