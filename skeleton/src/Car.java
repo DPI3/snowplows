@@ -37,6 +37,8 @@ public class Car extends Vehicle {
         Skeleton.printReturn("");
     }
 
+
+
     /**
      * Konstruktor a Car objektum létrehozásához.
      *
@@ -55,6 +57,15 @@ public class Car extends Vehicle {
         this.workplace = workplace;
         this.currentRoute = currentRoute;
     }
+
+    /**
+     * Beállítja a személyautó aktuális útvonalát.
+     * @param route a beállítandó útvonal
+     */
+    public void setCurrentRoute(Route route) {
+        this.currentRoute = route;
+    }
+
 
     /**
      * A személyautó mozgását hajtja végre.

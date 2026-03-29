@@ -40,6 +40,13 @@ public class Bus extends Vehicle {
         Skeleton.printCall("Bus", "Bus()");
         Skeleton.printReturn("");
     }
+    /**
+     * Beállítja a busz aktuális útvonalát.
+     * @param route a beállítandó útvonal
+     */
+    public void setCurrentRoute(Route route) {
+        this.currentRoute = route;
+    }
 
     /**
      * Konstruktor a Bus objektum létrehozásához.
