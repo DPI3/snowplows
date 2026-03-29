@@ -17,6 +17,7 @@ public class CleanerRole extends Role {
     public CleanerRole() {
         Skeleton.printCall("CleanerRole", "CleanerRole()");
         this.money = 1000;
+        Snowplow snowplow= new Snowplow();
         Skeleton.printReturn("");
     }
 
