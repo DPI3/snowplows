@@ -18,12 +18,13 @@ public class Test4 implements TestCase {
     @Override
     public void run() {
 
-        // Inicializálunk egy konkrét járművet (pl. Car) és egy kereszteződést
+        // Inicializálunk egy konkrét járművet (pl. Car) és kereszteződést
         Vehicle vehicle = new Car(); 
-        
-        //hozzá kéne adni a kereszteződést az autó vonalához???
+         Intersection intersection = new Intersection();
+         intersection.onVehicleEnter(vehicle);
+       
         
         // A mozgási folyamat indítása a szekvenciadiagram alapján
-        vehicle.move();
+        //vehicle.move();
     }
 }

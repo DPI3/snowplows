@@ -90,8 +90,10 @@ public abstract class Vehicle {
         this.move();
     }
 
-    public void setCurrentLane(Lane lane) {
-        this.currentLane = lane;
+    public void setCurrentLane(Lane lane){
+        Skeleton.printCall("Vehicle", "setCurrentLane(lane)");
+        currentLane=lane;
+        Skeleton.printReturn("");
     }
 
     public double getSpeed() {
