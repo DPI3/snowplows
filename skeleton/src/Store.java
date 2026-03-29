@@ -1,6 +1,5 @@
 package skeleton.src;
 import java.util.List;
-import java.util.ArrayList;
 /**
  * A Store osztaly a jatek boltjat reprezentalja.
  *
@@ -17,7 +16,9 @@ public class Store{
      * @param inventory a bolt indulokeszlete
      */
     public Store(List<Buyable> inventory){
+        Skeleton.printCall("Store", "Store(inventory)");
         this.inventory = inventory;
+        Skeleton.printReturn("");
     }
 
     /**
@@ -28,6 +29,24 @@ public class Store{
      * @return true, ha a vasarlas sikeres volt
      */
     public boolean buy(CleanerRole cleanerRole, Buyable item){
-        return true;
+        Skeleton.printCall("Store", "buy(cleanerRole, item)");
+
+        int price = item.getPrice();
+        int money = cleanerRole.getMoney();
+        int decision = Skeleton.requestInput("Elegendő a pénz a vásárláshoz? (1: Igen, 2: Nem)");
+
+        if (decision == 1 && money >= price && inventory.contains(item)) {
+            cleanerRole.changeMoney(-price);
+            if (item instanceof Head) {
+                cleanerRole.addHead((Head) item);
+            }
+            Skeleton.printState("Sikeres vásárlás.");
+            Skeleton.printReturn("");
+            return true;
+        }
+
+        Skeleton.printState("Sikertelen vásárlás.");
+        Skeleton.printReturn("");
+        return false;
     }
 }

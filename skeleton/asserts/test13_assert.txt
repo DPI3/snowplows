@@ -1,0 +1,24 @@
+[RUNNING] 13. Sikeres kotrófej vásárlás teszt
+>>>[Test13].run(scanner)
+  >>>[CleanerRole].CleanerRole()
+  <<<return
+  >>>[DragonHead].DragonHead()
+  <<<return
+  >>>[Store].Store(inventory)
+  <<<return
+  >>>[Store].buy(cleanerRole, item)
+    >>>[DragonHead].getPrice()
+    <<<return
+    >>>[CleanerRole].getMoney()
+    <<<return
+    Decision: Elegendő a pénz a vásárláshoz? (1: Igen, 2: Nem)
+    >> 1
+    >>>[CleanerRole].changeMoney(amount)
+    <<<return
+    >>>[CleanerRole].addHead(newHead)
+      [STATE] Új fej hozzáadva a felszereléshez.
+    <<<return
+    [STATE] Sikeres vásárlás.
+  <<<return
+<<<return
+[RESULT] The test completed successfully.

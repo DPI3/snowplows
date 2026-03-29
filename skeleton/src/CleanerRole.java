@@ -11,9 +11,12 @@ public class CleanerRole extends Role {
     /** A takarító jelenlegi pénzmennyisége. */
     private int money;
 
+    /** A takarító birtokolt feje. */
+    private Head currentHead;
+
     public CleanerRole() {
         Skeleton.printCall("CleanerRole", "CleanerRole()");
-        Snowplow snowplow= new Snowplow();
+        this.money = 1000;
         Skeleton.printReturn("");
     }
 
@@ -26,8 +29,28 @@ public class CleanerRole extends Role {
      */
     public boolean buy(Role role, Buyable item) {
         Skeleton.printCall("CleanerRole", "buy(role, item)");
-        
+
+        Skeleton.printReturn("");
         return false;
+    }
+
+    public int getMoney() {
+        Skeleton.printCall("CleanerRole", "getMoney()");
+        Skeleton.printReturn("");
+        return money;
+    }
+
+    public void changeMoney(int amount) {
+        Skeleton.printCall("CleanerRole", "changeMoney(amount)");
+        money += amount;
+        Skeleton.printReturn("");
+    }
+
+    public void addHead(Head newHead) {
+        Skeleton.printCall("CleanerRole", "addHead(newHead)");
+        currentHead = newHead;
+        Skeleton.printState("Új fej hozzáadva a felszereléshez.");
+        Skeleton.printReturn("");
     }
 
     /**

@@ -9,6 +9,11 @@ package skeleton.src;
  */
 public class DragonHead extends Head {
 
+    public DragonHead() {
+        Skeleton.printCall("DragonHead", "DragonHead()");
+        Skeleton.printReturn("");
+    }
+
     /**
      * Megtisztítja a megadott sávot a hó eltávolításával.
      *
@@ -49,9 +54,8 @@ public class DragonHead extends Head {
         Skeleton.printCall("DragonHead", "getPrice()");
         
         int price = 500; // Példa érték
-        
-        // A visszatérési értéket is jelezzük a logban
-        Skeleton.printReturn(String.valueOf(price)); 
+
+        Skeleton.printReturn("");
         return price;
     }
 }
