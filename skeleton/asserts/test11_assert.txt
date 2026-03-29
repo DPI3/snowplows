@@ -1,38 +1,34 @@
 [RUNNING] 11. Takarítás sárkány fejjel teszt
->>>[Test11].run(scanner)
+>>>[Test11].run()
   >>>[CleanerRole].CleanerRole()
     >>>[Snowplow].Snowplow()
       >>>[ThrowerHead].ThrowerHead()
       <<<return
     <<<return
   <<<return
-  >>>[DragonHead].DragonHead()
-  <<<return
   >>>[Snowplow].Snowplow()
     >>>[ThrowerHead].ThrowerHead()
     <<<return
   <<<return
+  >>>[Vehicle].changeLane(targetLane)
+    [STATE] A jármű aktuális sávja megváltozott.
+  <<<return true
+  >>>[DragonHead].DragonHead()
+  <<<return
   >>>[Snowplow].changeHead(newHead)
     [STATE] A hókotró feje lecserélve.
   <<<return
-  >>>[CleanerRole].controlSnowplow(sp, lane)
+  >>>[CleanerRole].controlSnowplow(snowplow)
     >>>[Snowplow].clean(lane)
-      >>>[DragonHead].clean(l, sp)
+      >>>[DragonHead].clean(lane, snowplow)
+        >>>[Lane].setState(newState)
+          [STATE] Lane state changed to: Clear
+        <<<return
         >>>[Lane].change(amount)
         <<<return
         [STATE] Recognize cleaning, add money (modify attribute)
       <<<return
     <<<return
-  <<<return
-  >>>[Snowplow].clean(lane)
-    >>>[DragonHead].clean(l, sp)
-      >>>[Lane].change(amount)
-      <<<return
-      [STATE] Recognize cleaning, add money (modify attribute)
-    <<<return
-  <<<return
-  >>>[Game].tick()
-    [STATE] currentRound növelve: 1
   <<<return
 <<<return
 [RESULT] The test completed successfully.

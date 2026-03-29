@@ -1,61 +1,64 @@
 package skeleton.src;
 
 /**
- * A DragonHead a hókotró dragon fejének megvalósítása.
- * 
- * A Dragon fej nagyterjedelmű hó elmozdálásra képes, és hatékonyan működik
- * az utakat takarító hókotrók fejeiként. Különféle útállapotban működhet,
- * és alapvető hótakarítási feladatokra alkalmas.
+ * A DragonHead a hókotró sárkány fejének megvalósítása.
+ *
+ * A sárkány fej biokerozin felhasználásával képes elolvasztani
+ * a havat vagy a jeget, és tiszta útszakaszt hagy maga után.
  */
 public class DragonHead extends Head {
 
+    /**
+     * Létrehoz egy DragonHead objektumot.
+     */
     public DragonHead() {
         Skeleton.printCall("DragonHead", "DragonHead()");
         Skeleton.printReturn("");
     }
 
     /**
-     * Megtisztítja a megadott sávot a hó eltávolításával.
+     * Megtisztítja a megadott sávot a sárkány fej segítségével.
      *
      * @param lane a takarítandó sáv
      * @param snowplow a takarítást végző hókotró
      */
     @Override
     public void clean(Lane lane, Snowplow snowplow) {
-        // A tesztelő által elvárt hívás naplózása
         Skeleton.printCall("DragonHead", "clean(lane, snowplow)");
-        
-        // Meghívjuk a Lane-en a change metódust (az UML alapján paramétere int)
-        lane.change(10); // A pontos szám a belső logikádtól függ
-        
-        // A szekvenciadiagramon lévő állapotváltozás kiírása
-        Skeleton.printState("Recognize cleaning, add money (modify attribute)");
-        
-        // Visszatérés naplózása
-        Skeleton.printReturn("");
-    }
-    
-    // KERESD EZT A RÉSZT: Ha van olyan metódusod, ami nem void, 
-    // például egy típuslekérdezés:
-    public String getHeadType() {
-        Skeleton.printCall("DragonHead", "getHeadType()");
-        Skeleton.printReturn("DragonHead");
-        return "DragonHead"; 
 
+        // A use-case alapján a sárkány fej elolvasztja a havat vagy jeget,
+        // majd tiszta útszakaszt hagy maga után.
+        lane.setState(new Clear());
+        lane.change(10);
+
+        Skeleton.printState("Recognize cleaning, add money (modify attribute)");
+
+        Skeleton.printReturn("");
     }
 
     /**
-     * Visszaadja a Dragon fejnek az ára.
+     * Visszaadja a fej típusát.
+     *
+     * @return a fej típusa
+     */
+    public String getHeadType() {
+        Skeleton.printCall("DragonHead", "getHeadType()");
+        Skeleton.printReturn("DragonHead");
+        return "DragonHead";
+    }
+
+    /**
+     * Visszaadja a sárkány fej árát.
      *
      * @return a fej ára
      */
     @Override
     public int getPrice() {
         Skeleton.printCall("DragonHead", "getPrice()");
-        
-        int price = 500; // Példa érték
 
-        Skeleton.printReturn("");
+        int price = 500;
+
+        Skeleton.printReturn(String.valueOf(price));
         return price;
     }
 }
