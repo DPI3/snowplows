@@ -20,6 +20,8 @@ public class Test6 implements TestCase {
         // Inicializálunk egy hókotrót
         Snowplow snowplow = new Snowplow();
         
+        //utak hozzáadása??
+
         // A mozgási folyamat indítása a szekvenciadiagram alapján
         snowplow.move();
     }

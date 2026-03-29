@@ -24,8 +24,9 @@ public class Test3 implements TestCase {
         Weather weather = new Weather();
         RoadNetwork roadNetwork = new RoadNetwork();
         Tunnel tunnel = new Tunnel();
-        roadNetwork.addRoadSection(tunnel);
         
+        // Az objektumhierarchia felépítése: RoadNetwork -> Tunnel???
+
         // A szekvencia indítása a diagram szerint
         weather.snowfallTick(roadNetwork);
     }

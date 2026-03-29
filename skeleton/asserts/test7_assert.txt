@@ -4,14 +4,14 @@ Decision: Az útszakasz állapota
 2: Jégpáncél (IceSheet)
 3: Feltört jég (BrokenIce)
 >> 1
->>>[CleanerRole].controlSnowplow(snowplow, lane)
+>>>[CleanerRole].controlSnowplow(snowplow)
     >>>[Snowplow].move()
     <<<return
     >>>[Snowplow].clean(lane)
-        >>>[Lane : lane].getLaneState()
+        >>>[Lane].getLaneState()
         <<<return ThinSnow
         >>>[SweeperHead].clean(lane, snowplow)
-            >>>[Lane : lane].setLaneState(Clear)
+            >>>[Lane].setLaneState(Clear)
                 [STATE] Lane.state = Clear
             <<<return
             >>>[CleanerRole].increaseMoney(amount)

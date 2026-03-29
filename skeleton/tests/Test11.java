@@ -28,6 +28,6 @@ public class Test11 implements TestCase {
         snowplow.changeHead(dragonHead);
         
         // 2. A CleanerRole a hókotrót a takarítani kívánt útszakaszra irányítja
-        cleanerRole.controlSnowplow(snowplow, lane);
+        cleanerRole.controlSnowplow(snowplow);
     }
 }

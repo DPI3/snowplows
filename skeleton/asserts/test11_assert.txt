@@ -1,5 +1,5 @@
 [RUNNING] 11. Takarítás sárkány fejjel teszt
->>>[CleanerRole].controlSnowplow(sp, l)
+>>>[CleanerRole].controlSnowplow(sp)
 >>>[Snowplow].clean(l)
 >>>[DragonHead].clean(l, sp)
 [STATE] Checking biokerosene level

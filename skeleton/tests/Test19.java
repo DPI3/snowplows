@@ -23,7 +23,7 @@ public class Test19 implements TestCase {
         Lane l = new Lane();
         
         // 1. Lépés: Hókotró irányítása
-        c.controlSnowplow(sp, l);
+        c.controlSnowplow(sp);
         
         // 2. Lépés: Pontszám lekérdezése
         c.getScore();

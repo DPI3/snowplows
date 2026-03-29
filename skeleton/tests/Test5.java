@@ -19,10 +19,10 @@ public class Test5 implements TestCase {
     public void run(Scanner scanner) {
         // Inicializálás
         Vehicle vehicle = new Car();
-        Lane lane2 = new Lane();
+        Lane targetLane = new Lane();
 
 
         // A sávváltási folyamat indítása a szekvenciadiagramnak megfelelően
-        vehicle.changeLane(lane2);
+        vehicle.changeLane(targetLane);
     }
 }

@@ -29,10 +29,10 @@ public class CleanerRole extends Role {
      *
      * @param snowplow a vezérelni kívánt hókotró
      */
-    public void controlSnowplow(Snowplow sp, Lane l) {
-        Skeleton.printCall("CleanerRole", "controlSnowplow(sp, l)");
+    public void controlSnowplow(Snowplow sp) {
+        Skeleton.printCall("CleanerRole", "controlSnowplow(sp)");
         
-        sp.clean(l); // Továbbhívás a hókotróra
+        sp.clean(sp.currentLane); // Továbbhívás a hókotróra
         
         Skeleton.printReturn("");
     }

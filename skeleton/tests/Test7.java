@@ -20,13 +20,15 @@ public class Test7 implements TestCase {
         // Inicializálás
         CleanerRole cleanerRole = new CleanerRole();
         Snowplow snowplow = new Snowplow();
-        Lane lane = new Lane();
+        Lane targetLane = new Lane();
+        snowplow.changeLane(targetLane);
+        
         SweeperHead sweeperHead = new SweeperHead();
 
         // Előfeltétel: A hókotró feje söprő fej
         snowplow.changeHead(sweeperHead);
 
         // A takarítási folyamat indítása a szekvenciadiagramnak megfelelően
-        cleanerRole.controlSnowplow(snowplow, lane);
+        cleanerRole.controlSnowplow(snowplow);
     }
 }

@@ -1,5 +1,5 @@
 [RUNNING] 19. Pontszerzés takarítással teszt
->>>[CleanerRole].controlSnowplow(sp, l)
+>>>[CleanerRole].controlSnowplow(sp)
   >>>[Snowplow].clean(l)
     >>>[DragonHead].clean(l, sp)
       >>>[Lane].change(amount)

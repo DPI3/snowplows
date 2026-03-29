@@ -21,7 +21,8 @@ public class Test4 implements TestCase {
 
         // Inicializálunk egy konkrét járművet (pl. Car) és egy kereszteződést
         Vehicle vehicle = new Car(); 
-        Intersection intersection = new Intersection();
+        
+        //hozzá kéne adni a kereszteződést az autó vonalához???
         
         // A mozgási folyamat indítása a szekvenciadiagram alapján
         vehicle.move();

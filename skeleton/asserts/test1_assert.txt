@@ -1,5 +1,5 @@
 [RUNNING] 1. Játék indítása, inicializáció teszt
->>>[Game].start()
+>>>[Game].Game()
     >>>[BusdriverRole].BusdriverRole()
         >>>[Bus].Bus()
         <<<return

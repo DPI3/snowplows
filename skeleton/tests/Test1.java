@@ -21,10 +21,8 @@ public class Test1 implements TestCase{
     @Override
     public void run(Scanner scanner) {
         
-        // A diagram alapján a Skeleton a Game objektum start() metódusát hívja
+        // Iniciáljuk a Game objetumot, ami elindítja a láncreakciót
         Game game = new Game();
-        
-        // Meghívjuk a start metódust, ami elindítja a láncreakciót
-        game.start();
+       
     }
 }
