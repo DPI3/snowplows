@@ -21,5 +21,5 @@ public interface TestCase {
      *
      * @param scanner a bemenet olvasására szolgáló objektum
      */
-    void run(Scanner scanner);
+    void run();
 }

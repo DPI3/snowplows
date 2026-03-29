@@ -15,7 +15,7 @@ public class Test23 implements TestCase {
      * @param scanner the scanner object to read user input
      */
     @Override
-    public void run(Scanner scanner) {
+    public void run() {
         // A teszt indítása a Skeleton.tick() hívással [cite: 4048]
         Skeleton.printCall("Skeleton", "tick()");
 

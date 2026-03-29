@@ -1,6 +1,7 @@
 package skeleton.src;
 
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * A Game osztály a szimuláció központi vezérlője.

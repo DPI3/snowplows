@@ -17,13 +17,17 @@ public class Test21 implements TestCase {
      * @param scanner the scanner object to read user input
      */
     @Override
-    public void run(Scanner scanner) {
-        // Az assert szerint a Game.tick() az első hívás
+    public void run() {
+        // 1. A szimuláció kezdete (Game szint)
         Skeleton.printCall("Game", "tick()");
         
+        // Itt létrehozol egy buszt
         Bus bus = new Bus();
         
-        // Starting the action. Inside move(), it should check isPassable()
-        bus.move();
+        // 2. A Game meghívja a Bus tick-jét
+        bus.tick(); 
+
+        // 3. Lezárjuk a Game.tick() hívást
+        Skeleton.printReturn(""); 
     }
 }

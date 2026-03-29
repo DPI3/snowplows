@@ -17,7 +17,7 @@ public class Test25 implements TestCase {
      * @param scanner the scanner object to read user input
      */
     @Override
-    public void run(Scanner scanner) {
+    public void run() {
         Node node = new Intersection(); // Using an Intersection as the concrete Node
         Car car = new Car();
         

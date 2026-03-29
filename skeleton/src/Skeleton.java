@@ -17,6 +17,13 @@ public class Skeleton {
      */
     private static int depth = 0;
 
+    private static Scanner scanner;
+
+    // 2. Új metódus a Scanner beállítására
+    public static void setScanner(Scanner s) {
+        scanner = s;
+    }
+
     /**
      * Naplózza egy metódushívás belépési pontját.
      * Automatikusan növeli a behúzás mélységét a későbbi hívásokhoz.
@@ -70,14 +77,14 @@ public class Skeleton {
      * @param question a felhasználónak megjelenítendő kérdés
      * @return a felhasználó által megadott egész szám
      */
-    public static int requestInput(Scanner scanner, String question) {
+    public static int requestInput(String question) {
         printIndent();
         System.out.println("Decision: " + question);
         printIndent();
         System.out.print(">> ");
         
+        // A belső, statikus scannert használjuk
         int input = scanner.nextInt();
-        // Kiírjuk a számot is, hogy bekerüljön a naplóba az összehasonlításhoz
         System.out.println(input); 
         
         return input;

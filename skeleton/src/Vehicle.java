@@ -1,4 +1,7 @@
 package skeleton.src;
+
+import java.util.Scanner;
+
 /**
  * A Vehicle absztrakt osztály a rendszerben szereplő járművek közös ősosztálya.
  *
@@ -79,8 +82,7 @@ public abstract class Vehicle {
      * A jármű minden időegységben ezt a metódust hívja meg.
      */
     public void tick() {
-        Skeleton.printCall("Vehicle", "tick()");
-        move();
-        Skeleton.printReturn("");
+        // A tick hívja a move-ot
+        this.move();
     }
 }

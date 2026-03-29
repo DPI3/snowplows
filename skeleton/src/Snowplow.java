@@ -1,4 +1,7 @@
 package skeleton.src;
+
+import java.util.Scanner;
+
 /**
  * A Snowplow osztály egy hókotró járművet reprezentál.
  *

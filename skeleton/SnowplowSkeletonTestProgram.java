@@ -3,7 +3,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 import skeleton.tests.*;
-
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.IOException;
 
 /**
  * A SnowplowSkeletonTestProgram osztály a szkeleton rendszer
@@ -85,10 +89,12 @@ public class SnowplowSkeletonTestProgram {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
+        skeleton.src.Skeleton.setScanner(scanner);
+
         if (args.length > 0) {
             try {
                 int testNum = Integer.parseInt(args[0]);
-                runTest(testNum, scanner);
+                runTest(testNum);
                 return; // A teszt lefutása után kilépünk, nem megyünk a menübe
             } catch (NumberFormatException e) {
                 // Ha nem szám az argumentum, megyünk tovább a normál menüre
@@ -110,7 +116,7 @@ public class SnowplowSkeletonTestProgram {
                 System.out.println("Snowplow Skeleton TestProgram terminated.");
                 running = false;
             } else if (input.toLowerCase().startsWith("run test")) {
-                runTestCommand(input, scanner);
+                runTestCommand(input);
             } else if (input.isEmpty()) {
                 // no operation
             } else {
@@ -150,9 +156,8 @@ public class SnowplowSkeletonTestProgram {
      * majd meghívja annak run() metódusát.
      *
      * @param testNumber a futtatandó teszt sorszáma
-     * @param scanner a felhasználói bemenet kezelésére szolgáló objektum
      */
-    private static void runTestCommand(String input, Scanner scanner) {
+    private static void runTestCommand(String input) {
         String[] parts = input.split("\\s+");
 
         if (parts.length != 3) {
@@ -163,13 +168,13 @@ public class SnowplowSkeletonTestProgram {
 
         try {
             int testNumber = Integer.parseInt(parts[2]);
-            runTest(testNumber, scanner);
+            runTest(testNumber);
         } catch (NumberFormatException e) {
             System.out.println("[ERROR] Test number must be an integer.");
         }
     }
 
-    private static void runTest(int testNumber, Scanner scanner) {
+    private static void runTest(int testNumber) {
         if (!TESTS.containsKey(testNumber)) {
             System.out.println("[ERROR] Test not found.");
             return;
@@ -182,9 +187,58 @@ public class SnowplowSkeletonTestProgram {
             return;
         }
 
+        // 1. Eredeti konzol kimenet elmentése
+        PrintStream originalOut = System.out;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        // 2. "T-elágazás" létrehozása: egy stream, ami egyszerre ír a képernyőre ÉS a memóriába
+        java.io.OutputStream teeStream = new java.io.OutputStream() {
+            @Override
+            public void write(int b) {
+                originalOut.write(b);
+                baos.write(b);
+            }
+            @Override
+            public void write(byte[] b, int off, int len) {
+                originalOut.write(b, off, len);
+                baos.write(b, off, len);
+            }
+        };
+        PrintStream customOut = new PrintStream(teeStream, true);
+
+        // 3. Kimenet átirányítása a kettős streambe
+        System.setOut(customOut);
+
+        // 4. Teszt futtatása (a RUNNING és RESULT is ide kerül, hogy benne legyen az assertben!)
         System.out.println("[RUNNING] " + testNumber + ". " + TESTS.get(testNumber));
-        test.run(scanner);
+        
+        test.run();
+        
         System.out.println("[RESULT] The test completed successfully.");
+
+        // 5. Eredeti kimenet visszaállítása
+        System.setOut(originalOut);
+
+        // 6. Összehasonlítás az assert fájllal
+        try {
+            String assertFilePath = "asserts/test" + testNumber + "_assert.txt";
+            String expectedOutput = new String(Files.readAllBytes(Paths.get(assertFilePath)));
+
+            String actualOutput = baos.toString();
+
+            // Sortörések (Windows \r\n vs Linux \n) és extra szóközök egységesítése
+            String normalizedActual = actualOutput.replaceAll("\\r\\n", "\n").trim();
+            String normalizedExpected = expectedOutput.replaceAll("\\r\\n", "\n").trim();
+
+            if (normalizedActual.equals(normalizedExpected)) {
+                // System.err-t használunk, hogy a .bat fájlos fájlba-irányítást (> temp_out.txt) ez ne rontsa el!
+                System.err.println("\n[ZÖLD] A " + testNumber + ". teszt SIKERES! (Kimenet megegyezik)");
+            } else {
+                System.err.println("\n[PIROS] A " + testNumber + ". teszt ELBUKOTT! (Kimenet eltér)");
+            }
+        } catch (IOException e) {
+            System.err.println("\n[SARGA] A teszt lefutott, de nem található az assert fájl: asserts/test" + testNumber + "_assert.txt");
+        }
     }
 
 

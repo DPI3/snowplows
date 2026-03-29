@@ -16,7 +16,7 @@ public class Test22 implements TestCase {
      * @param scanner the scanner object to read user input
      */
     @Override
-    public void run(Scanner scanner) {
+    public void run() {
         Bus bus = new Bus();
         
         // Starting the movement. The internal logic of the domain classes 

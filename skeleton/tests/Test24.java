@@ -16,7 +16,7 @@ public class Test24 implements TestCase {
      * @param scanner the scanner object to read user input
      */
     @Override
-    public void run(Scanner scanner) {
+    public void run() {
         Car car = new Car();
         
         // Starting the action. Inside move(), the nextLane.isPassable(scanner) 

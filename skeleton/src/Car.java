@@ -1,5 +1,7 @@
 package skeleton.src;
 
+import java.util.Scanner;
+
 /**
  * A Car osztály egy személygépkocsit reprezentál a rendszerben.
  *

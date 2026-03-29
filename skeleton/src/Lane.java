@@ -32,7 +32,7 @@ public class Lane {
         Skeleton.printCall("Lane", "isPassable()");
         
         // Döntés bekérése a Skeleton segédosztályon keresztül
-        int answer = Skeleton.requestInput(scanner, "Is the lane passable? (1: Yes, 2: No)");
+        int answer = Skeleton.requestInput("Is the lane passable? (1: Yes, 2: No)");
         boolean result = (answer == 1);
         
         Skeleton.printReturn(String.valueOf(result));
@@ -48,7 +48,7 @@ public class Lane {
     public boolean hasAccident(Scanner scanner) {
         Skeleton.printCall("Lane", "hasAccident()");
         
-        int answer = Skeleton.requestInput(scanner, "Does the lane have an accident? (1: Yes, 2: No)");
+        int answer = Skeleton.requestInput("Does the lane have an accident? (1: Yes, 2: No)");
         boolean result = (answer == 1);
         
         Skeleton.printReturn(String.valueOf(result));

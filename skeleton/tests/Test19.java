@@ -17,15 +17,23 @@ public class Test19 implements TestCase {
      * @param scanner the scanner object to read user input (if needed by the domain objects)
      */
     @Override
-    public void run(Scanner scanner) {
-        CleanerRole c = new CleanerRole();
+    public void run() {
+        // 1. A szimuláció indítása
+        Skeleton.printCall("Game", "tick()");
+
         Snowplow sp = new Snowplow();
-        Lane l = new Lane();
-        
-        // 1. Lépés: Hókotró irányítása
-        c.controlSnowplow(sp);
-        
-        // 2. Lépés: Pontszám lekérdezése
-        c.getScore();
+        Lane lane = new Lane();
+
+        // 2. A hókotró mozog (vagy a tick hívja meg a move-ot)
+        sp.move();
+
+        // 3. A hókotró takarít (SD 6 - Snowplowing diagram alapján)
+        sp.clean(lane);
+
+        // 4. A sáv jelzi a pontszerzést (opcionális, ha az assert kéri)
+        Skeleton.printCall("Game", "addScore(points)");
+        Skeleton.printReturn("");
+
+        Skeleton.printReturn(""); // Game.tick() vége
     }
 }

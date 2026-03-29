@@ -20,7 +20,7 @@ echo.
 echo [2/2] Tesztek futtatasa...
 
 REM Végigmegyünk a 19-től 25-ig tartó teszteken
-for %%i in (19) do (
+for %%i in (21) do (
     echo ----------------------------------------
     echo Teszt %%i futtatasa...
 

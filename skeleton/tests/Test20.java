@@ -17,7 +17,7 @@ public class Test20 implements TestCase {
      * @param scanner the scanner object to read user input
      */
     @Override
-    public void run(Scanner scanner) {
+    public void run() {
         BusdriverRole driver = new BusdriverRole();
         Bus bus = new Bus();
         Terminal destination = new Terminal(); // Node subclass based on UML
