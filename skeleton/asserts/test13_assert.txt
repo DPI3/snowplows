@@ -1,6 +1,10 @@
 [RUNNING] 13. Sikeres kotrófej vásárlás teszt
 >>>[Test13].run(scanner)
   >>>[CleanerRole].CleanerRole()
+    >>>[Snowplow].Snowplow()
+      >>>[ThrowerHead].ThrowerHead()
+      <<<return
+    <<<return
   <<<return
   >>>[DragonHead].DragonHead()
   <<<return
