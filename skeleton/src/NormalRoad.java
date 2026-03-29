@@ -14,8 +14,14 @@ public class NormalRoad extends Road{
      */
     @Override
     public void applyWeatherEffects(Weather weather){
-        Skeleton.printCall("NormalRoad", "applyWeatherEffects(Weather)");
-        weather.snowfallTick(this);
+        Skeleton.printCall("Road", "applyWeatherEffects()");
+                // Döntési pont bekérése a Skeleton segítségével
+        int snowamount = Skeleton.requestInput("Mennyi hó esett? (1: Kevés, 2: Sok)");
+
+        for(int i=0; i<lanes.size(); i++){
+            lanes.get(i).applyWeather(snowamount);
+        }
+        
         Skeleton.printReturn("");
     }
 }

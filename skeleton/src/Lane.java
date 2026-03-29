@@ -63,4 +63,27 @@ public class Lane {
         
         Skeleton.printReturn("");
     }
+
+    public void applyWeather(int snowamount) {
+        Skeleton.printCall("Lane", "applyWeather(snowAmount)");
+
+         if (snowamount == 1) {
+            // Logoljuk, hogy az állapotkezelő mit fog visszaadni (szimulált return)
+            Skeleton.printCall("LaneState", "handleWeatherChange(snowAmount)");
+            Skeleton.printReturn("ThinSnow");
+            //Skeleton.printState("Lane.state = ThinSnow.");
+            
+            // Tényleges állapotváltás
+            this.setState(new ThinSnow());
+        } else {
+            // Itt kezelhető a "Sok hó" ág
+            Skeleton.printCall("LaneState", "handleWeatherChange(snowAmount)");
+            Skeleton.printReturn("DeepSnow");
+
+            //Skeleton.printState("Lane.state = ThinSnow.");
+            this.setState(new DeepSnow());
+        }
+
+        Skeleton.printReturn("");
+    }
 }

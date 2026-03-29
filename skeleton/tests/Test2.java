@@ -22,12 +22,10 @@ public class Test2 implements TestCase {
 
         // Szükséges objektumok példányosítása
         Weather weather = new Weather();
-        RoadNetwork roadNetwork = new RoadNetwork();
         Road road = new NormalRoad();
         Lane lane = new Lane();
 
-        // Az objektumhierarchia felépítése: RoadNetwork -> Road -> Lane??
-
+        road.addLane(lane);
         
         
        // A havazási folyamat indítása a szekvenciadiagram alapján

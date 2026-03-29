@@ -14,4 +14,8 @@ public abstract class Road {
         Skeleton.printCall("RoadNetwork", "applyWeatherEffects()");
         Skeleton.printReturn("");
     }
+    
+    public void addLane(Lane lane){
+        lanes.add(lane);
+    }
 }

@@ -1,17 +1,15 @@
 [RUNNING] 2. Havazás hatása az útállapotra teszt
 >>>[Weather].snowfallTick(road)
-    >>>[Road].weatherEffects()
-        >>>[Road].applyWeatherEffects()
-            >>>[Lane].applyWeather(snowAmount)
-                >>>[LaneState].handleWeatherChange(snowAmount)
-                Decision: Mennyi hó esett? (1: Kevés, 2: Sok)
-                >> 1
-                <<<return ThinSnow
-                >>>[Lane].changeState(ThinSnow)
-                    [STATE] Lane.state = ThinSnow
-                <<<return
-            <<<return
-        <<<return
+  >>>[Road].applyWeatherEffects()
+    Decision: Mennyi hó esett? (1: Kevés, 2: Sok)
+    >> 1
+    >>>[Lane].applyWeather(snowAmount)
+      >>>[LaneState].handleWeatherChange(snowAmount)
+      <<<return ThinSnow
+      >>>[Lane].setState(newState)
+        [STATE] Lane state changed to: ThinSnow
+      <<<return
     <<<return
+  <<<return
 <<<return
 [RESULT] The test completed successfully.
