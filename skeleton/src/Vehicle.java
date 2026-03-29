@@ -89,4 +89,12 @@ public abstract class Vehicle {
         // A tick hívja a move-ot
         this.move();
     }
+
+    public void setCurrentLane(Lane lane) {
+        this.currentLane = lane;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
 }

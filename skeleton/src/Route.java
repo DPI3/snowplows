@@ -25,4 +25,8 @@ public class Route {
         Skeleton.printReturn("nextLane");
         return nextLane;
     }
+
+    public List<Lane> getLanes() {
+        return lanes;
+    }
 }

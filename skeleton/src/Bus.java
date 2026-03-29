@@ -134,4 +134,8 @@ public class Bus extends Vehicle {
 
         Skeleton.printReturn("");
     }
+
+    public int getImmobileTime() {
+        return immobileTime;
+    }
 }

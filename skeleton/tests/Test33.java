@@ -10,7 +10,7 @@ import java.util.Scanner;
  * metódus valóban a legoptimálisabb útvonalat adja-e vissza, ahol
  * az egyik rövidebb út járhatatlan (baleset vagy mély hó miatt).
  */
-public class Test33 extends TestCase {
+public class Test33 implements TestCase {
 
     /**
      * A tesztszekvencia futtatása.
@@ -22,8 +22,8 @@ public class Test33 extends TestCase {
      * @param scanner a scanner objektum a felhasználói bevitel olvasásához
      */
     @Override
-    public void run(Scanner scanner) {
-
+    public void run() {
+        Scanner scanner = new Scanner(System.in);
         // Úthálózat létrehozása
         RoadNetwork roadNetwork = new RoadNetwork();
 
@@ -52,7 +52,7 @@ public class Test33 extends TestCase {
 
         // Assert: az útvonal nem tartalmaz járhatatlan sávot
         for (Lane lane : result.getLanes()) {
-            assert lane.isPassable(scanner)
+            assert lane.isPassable()
                     : "FAIL: Route should not contain impassable lanes";
         }
 

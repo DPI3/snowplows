@@ -90,5 +90,11 @@ public class Game {
     Car car2= new Car();
     
     Skeleton.printReturn("");
-}
+    }
+
+    public void end() {
+        Skeleton.printCall("Game", "end()");
+        Skeleton.printState("Game state set to FINISHED");
+        Skeleton.printReturn("");
+    }
 }

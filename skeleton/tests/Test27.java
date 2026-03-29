@@ -10,7 +10,7 @@ import java.util.Scanner;
  * vékony hóval (ThinSnow) borított sávon, akkor a sáv állapota
  * jégpáncéllá (IceSheet) változik-e.
  */
-public class Test27 extends TestCase {
+public class Test27 implements TestCase {
 
     /**
      * A tesztszekvencia futtatása.
@@ -21,17 +21,19 @@ public class Test27 extends TestCase {
      * @param scanner a scanner objektum a felhasználói bevitel olvasásához (nem használt)
      */
     @Override
-    public void run(Scanner scanner) {
-
+    public void run() {
+        Scanner scanner = new Scanner(System.in);
         // Előfeltétel: sáv létrehozása ThinSnow állapottal
         Lane lane = new Lane();
         lane.setState(new ThinSnow());
 
         // Autók létrehozása
-        Car car1 = new Car(lane);
-        Car car2 = new Car(lane);
-        Car car3 = new Car(lane);
-
+        Car car1 = new Car();
+        car1.setCurrentLane(lane);
+        Car car2 = new Car();
+        car2.setCurrentLane(lane);
+        Car car3 = new Car();
+        car3.setCurrentLane(lane);
         // Loop: több autó áthalad a sávon
         // car1 áthalad - határérték még nem érve el
         car1.move();

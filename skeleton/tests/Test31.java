@@ -11,7 +11,7 @@ import java.util.Scanner;
  * A teszteset ellenőrzi, hogy egy balesetet szenvedett busz
  * a megadott idő letelte után újra képes-e elindulni.
  */
-public class Test31 extends TestCase {
+public class Test31 implements TestCase {
 
     /**
      * A tesztszekvencia futtatása.
@@ -19,11 +19,10 @@ public class Test31 extends TestCase {
      * egy korábbi ütközés miatt.
      * A busz nem mozdul, de az immobileTime csökken tickenként,
      * amíg el nem éri a 0-t, majd újra elindul.
-     *
-     * @param scanner a scanner objektum a felhasználói bevitel olvasásához
      */
     @Override
-    public void run(Scanner scanner) {
+    public void run() {
+        Scanner scanner = new Scanner(System.in);
 
         // Előfeltétel: busz létrehozása immobileTime > 0 értékkel
         Bus bus = new Bus("bus1", null, 0.0, 0.0, null, null, 3, null);
@@ -36,7 +35,6 @@ public class Test31 extends TestCase {
         // Game létrehozása
         Game game = new Game(0, 10, vehicles, players);
 
-        // Loop: tick()-ek amíg immobileTime > 0
         // 1. tick - immobileTime csökken, busz nem mozdul
         game.tick();
 

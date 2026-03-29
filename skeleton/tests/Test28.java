@@ -9,7 +9,7 @@ import java.util.Scanner;
  * A teszteset ellenőrzi, hogy két autó ütközése esetén a Lane
  * járhatatlanná válik, és mindkét autó megáll.
  */
-public class Test28 extends TestCase {
+public class Test28 implements TestCase {
 
     /**
      * A tesztszekvencia futtatása.
@@ -20,8 +20,8 @@ public class Test28 extends TestCase {
      * @param scanner a scanner objektum a felhasználói bevitel olvasásához
      */
     @Override
-    public void run(Scanner scanner) {
-
+    public void run() {
+        Scanner scanner = new Scanner(System.in);
         // Előfeltétel: sáv létrehozása IceSheet állapottal (csúszós, ütközés lehetséges)
         Lane lane = new Lane();
         lane.setState(new IceSheet());
@@ -40,7 +40,7 @@ public class Test28 extends TestCase {
                 : "FAIL: Lane.hasAccident should be true after collision";
 
         // Assert: a sáv járhatatlanná vált? (tesztelő 2-t ad meg: nem járható)
-        boolean passable = lane.isPassable(scanner);
+        boolean passable = lane.isPassable();
         assert !passable
                 : "FAIL: Lane should be impassable after collision";
 
