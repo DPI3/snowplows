@@ -1,33 +1,40 @@
 package skeleton.src;
+
 /**
- * A SaltSpreaderHead a hokotro soszoro fejenek megvalositasa.
+ * A SaltSpreaderHead a hókotró sószóró fejének megvalósítása.
  *
- * A soszoro fej so kijuttatasaval segit a jegesedes csokkenteseben,
- * illetve a felulet biztonsagosabba teteleben.
+ * A sószóró fej só kijuttatásával segít a havas vagy jeges út
+ * megtisztításában.
  */
-public class SaltSpreaderHead extends Head{
+public class SaltSpreaderHead extends Head {
 
     /**
-     * Kezeli a megadott savot soszorassal.
+     * Kezeli a megadott sávot sószórással.
      *
-     * @param lane a kezelendo sav
-     * @param snowplow a muveletet vegzo hokotro
+     * @param lane a kezelendő sáv
+     * @param snowplow a műveletet végző hókotró
      */
     @Override
     public void clean(Lane lane, Snowplow snowplow) {
-        Skeleton.printCall(this.getClass().getSimpleName(), "clean(lane, snowplow)");
+        Skeleton.printCall("SaltSpreaderHead", "clean(lane, snowplow)");
+
+        lane.setState(new Clear());
+        lane.change(10);
+
+        Skeleton.printState("Recognize cleaning, add money (modify attribute)");
+
         Skeleton.printReturn("");
     }
 
     /**
-     * Visszaadja a soszoro fej arat.
+     * Visszaadja a sószóró fej árát.
      *
-     * @return a fej ara
+     * @return a fej ára
      */
     @Override
     public int getPrice() {
-        Skeleton.printCall(this.getClass().getSimpleName(), "getPrice()");
-        int price = 400; // Adj meg egy tetszőleges számot
+        Skeleton.printCall("SaltSpreaderHead", "getPrice()");
+        int price = 400;
         Skeleton.printReturn(String.valueOf(price));
         return price;
     }
