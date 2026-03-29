@@ -1,15 +1,11 @@
 package skeleton.src;
-import java.util.Scanner;
 /**
  * A Vehicle absztrakt osztály a rendszerben szereplő járművek közös ősosztálya.
  *
- * Az osztály tartalmazza a járművek alapvető tulajdonságait,
- * mint például az aktuális sáv, pozíció és sebesség.
+ * Tartalmazza a járművek alapvető tulajdonságait és viselkedését,
+ * például a mozgást, sávváltást és az időlépésenkénti működést.
  *
- * A Vehicle osztály felelős az általános mozgási viselkedés definiálásáért,
- * amelyet a leszármazott osztályok (Car, Bus, Snowplow) használnak.
- *
- * Az osztály absztrakt, így közvetlenül nem példányosítható.
+ * A konkrét járműtípusok (Car, Bus, Snowplow) ebből az osztályból származnak.
  */
 public abstract class Vehicle {
     /**
@@ -18,12 +14,12 @@ public abstract class Vehicle {
     protected String id;
 
     /**
-     * Az a sáv, amelyben a jármű jelenleg tartózkodik.
+     * Az aktuális sáv, amelyben a jármű jelenleg tartózkodik.
      */
     protected Lane currentLane;
 
     /**
-     * A jármű pozíciója az aktuális sávon belül.
+     * A jármű pozíciója a sávon belül.
      */
     protected double positionOnLane;
 
@@ -32,25 +28,16 @@ public abstract class Vehicle {
      */
     protected double speed;
 
-    /**
-     * Alapértelmezett konstruktor a teszteléshez.
-     */
-    public Vehicle() {
-        this.id = "default_id";
-        // A többi mező maradhat null vagy 0.0
-    }
 
     /**
      * Konstruktor a jármű inicializálásához.
      *
-     * @param id a jármű azonosítója
-     * @param currentLane az aktuális sáv
-     * @param positionOnLane a pozíció a sávon
-     * @param speed a jármű sebessége
+     * @param id azonosító
+     * @param currentLane aktuális sáv
+     * @param positionOnLane pozíció a sávon
+     * @param speed sebesség
      */
-    public Vehicle(String id, Lane currentLane, double positionOnLane, double speed) {
-        
-        
+    public Vehicle(String id, Lane currentLane, double positionOnLane, double speed) {   
         this.id = id;
         this.currentLane = currentLane;
         this.positionOnLane = positionOnLane;
@@ -62,15 +49,29 @@ public abstract class Vehicle {
      *
      * A szkeleton implementációban csak a metódushívás kerül naplózásra.
      */
-    public abstract void move(Scanner scanner);
+    public abstract void move();
+
+    /**
+     * Sávváltás végrehajtása.
+     *
+     * A metódus megpróbálja a járművet a megadott cél sávba helyezni.
+     *
+     * @param targetLane a cél sáv
+     * @return true, ha a sávváltás sikeres, különben false
+     */
+    public boolean changeLane(Lane targetLane) {
+        // Alapértelmezett viselkedés: mindig sikeres sávváltás
+        this.currentLane = targetLane;
+        return true;
+    }
 
     /**
      * Egy szimulációs lépést (tick) hajt végre.
      *
      * A jármű minden időegységben ezt a metódust hívja meg.
      */
-    public void tick(Scanner scanner) {
-        // A tick hívja a move-ot
-        this.move(scanner);
+    public void tick() {
+        // Alapértelmezett viselkedés: mozgás végrehajtása
+        move();
     }
 }
