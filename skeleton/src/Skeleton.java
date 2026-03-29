@@ -27,7 +27,8 @@ public class Skeleton {
      */
     public static void printCall(String className, String methodName) {
         printIndent();
-        System.out.println(">>> [" + className + "]." + methodName);
+        // Nincs szóköz a >>> és a [ között
+        System.out.println(">>>[" + className + "]." + methodName);
         depth++;
     }
 
@@ -42,10 +43,11 @@ public class Skeleton {
     public static void printReturn(String returnValue) {
         depth--;
         printIndent();
+        // Nincs szóköz a <<< és a return között
         if (returnValue == null || returnValue.isEmpty()) {
-            System.out.println("<<< return");
+            System.out.println("<<<return");
         } else {
-            System.out.println("<<< return " + returnValue);
+            System.out.println("<<<return " + returnValue);
         }
     }
 
@@ -73,7 +75,12 @@ public class Skeleton {
         System.out.println("Decision: " + question);
         printIndent();
         System.out.print(">> ");
-        return scanner.nextInt();
+        
+        int input = scanner.nextInt();
+        // Kiírjuk a számot is, hogy bekerüljön a naplóba az összehasonlításhoz
+        System.out.println(input); 
+        
+        return input;
     }
 
     /**
@@ -81,8 +88,7 @@ public class Skeleton {
      * szóközt ír ki. Mélységi szintenként két szóközt nyomtat.
      */
     private static void printIndent() {
-        for (int i = 0; i < depth; i++) {
-            System.out.print("  "); 
-        }
+        // Két szóköz behúzás szintenként
+        for (int i = 0; i < depth; i++) System.out.print("  ");
     }
 }

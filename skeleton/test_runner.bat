@@ -5,14 +5,13 @@ echo ========================================
 echo  Snowplow Skeleton Automatikus Tesztelo
 echo ========================================
 
-REM Ha az IDE-d automatikusan fordit, ezt a részt akár ki is törölheted,
-REM de parancssoros futtatásnál biztosra megyünk:
 echo [1/2] Java fajlok forditasa...
 if not exist bin mkdir bin
+REM ez a teljes listája az összes testnek alábbi sorban, amik nem fordulnak le hibát dobnak
 REM javac -d bin src/*.java tests/*.java SnowplowSkeletonTestProgram.java
 javac -d bin src/*.java tests/TestCase.java tests/Test19.java tests/Test20.java tests/Test21.java tests/Test22.java tests/Test23.java tests/Test24.java tests/Test25.java SnowplowSkeletonTestProgram.java
 if %errorlevel% neq 0 (
-    echo [HIBA] A forditas sikertelen! Kerd meg az IDE-det a hibak javitasaert.
+    echo [HIBA] A forditas sikertelen!
     pause
     exit /b
 )
@@ -25,7 +24,7 @@ for %%i in (19 20 21 22 23 24 25) do (
     echo ----------------------------------------
     echo Teszt %%i futtatasa...
 
-    java -cp bin skeleton.SnowplowSkeletonTestProgram %%i > temp_out.txt
+    java -cp bin skeleton.SnowplowSkeletonTestProgram %%i < testfiles\test%%i_in.txt > temp_out.txt
 
     fc /W /N asserts\test%%i_assert.txt temp_out.txt > nul
 

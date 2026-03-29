@@ -87,13 +87,12 @@ public class SnowplowSkeletonTestProgram {
 
         if (args.length > 0) {
             try {
-                int testNumber = Integer.parseInt(args[0]);
-                runTest(testNumber, scanner);
+                int testNum = Integer.parseInt(args[0]);
+                runTest(testNum, scanner);
+                return; // A teszt lefutása után kilépünk, nem megyünk a menübe
             } catch (NumberFormatException e) {
-                System.out.println("[ERROR] Az argumentum csak szám lehet.");
+                // Ha nem szám az argumentum, megyünk tovább a normál menüre
             }
-            scanner.close();
-            return; // Teszt után kilépünk, nem megyünk interaktív módba
         }
 
         printWelcome();

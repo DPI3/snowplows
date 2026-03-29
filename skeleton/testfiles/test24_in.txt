@@ -1,3 +1,1 @@
-﻿run test 24
 2
-exit

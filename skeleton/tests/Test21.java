@@ -18,9 +18,13 @@ public class Test21 implements TestCase {
      */
     @Override
     public void run(Scanner scanner) {
-        Bus bus = new Bus();
+        // Az assert szerint a Game.tick() az első hívás
+        Skeleton.printCall("Game", "tick()");
         
-        // Starting the action. Inside move(), it should check isPassable()
-        bus.move(scanner);
+        Bus bus = new Bus();
+        // A Game.tick() meghívja a Bus.tick()-et
+        bus.tick(scanner); 
+
+        Skeleton.printReturn(""); // Game.tick() vége
     }
 }

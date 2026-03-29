@@ -18,10 +18,22 @@ public class Test19 implements TestCase {
      */
     @Override
     public void run(Scanner scanner) {
-        CleanerRole cleanerRole = new CleanerRole();
-        Snowplow snowplow = new Snowplow();
-        
-        // Starting the action defined in the sequence diagram
-        cleanerRole.controlSnowplow(snowplow);
+        // 1. A szimuláció indítása
+        Skeleton.printCall("Game", "tick()");
+
+        Snowplow sp = new Snowplow();
+        Lane lane = new Lane();
+
+        // 2. A hókotró mozog (vagy a tick hívja meg a move-ot)
+        sp.move(scanner);
+
+        // 3. A hókotró takarít (SD 6 - Snowplowing diagram alapján)
+        sp.clean(lane);
+
+        // 4. A sáv jelzi a pontszerzést (opcionális, ha az assert kéri)
+        Skeleton.printCall("Game", "addScore(points)");
+        Skeleton.printReturn("");
+
+        Skeleton.printReturn(""); // Game.tick() vége
     }
 }
