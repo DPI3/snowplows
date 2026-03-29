@@ -262,7 +262,7 @@ public class SnowplowSkeletonTestProgram {
             case 8: return new Test8();
             case 9: return new Test9();
             case 10: return new Test10();*/
-            case 11: return new Test11();
+            //case 11: return new Test11();
             /*case 12: return new Test12();
             case 13: return new Test13();
             case 14: return new Test14();
@@ -271,9 +271,9 @@ public class SnowplowSkeletonTestProgram {
             case 17: return new Test17();
             case 18: return new Test18();
             case 19: return new Test19();
-            case 20: return new Test20();
+            case 20: return new Test20();*/
             case 21: return new Test21();
-            case 22: return new Test22();
+            /*case 22: return new Test22();
             case 23: return new Test23();
             case 24: return new Test24();
             case 25: return new Test25();

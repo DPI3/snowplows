@@ -17,7 +17,7 @@ public class Test2 implements TestCase {
      * @param scanner a scanner objektum a felhasználói bevitel olvasásához (a hómennyiség eldöntéséhez)
      */
     @Override
-    public void run(Scanner scanner) {
+    public void run() {
 
 
         // Szükséges objektumok példányosítása
@@ -31,6 +31,6 @@ public class Test2 implements TestCase {
         
         
        // A havazási folyamat indítása a szekvenciadiagram alapján
-        weather.snowfallTick(roadNetwork);
+        weather.snowfallTick(road);
     }
 }

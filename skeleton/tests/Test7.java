@@ -16,7 +16,7 @@ public class Test7 implements TestCase {
      * @param scanner a scanner objektum a felhasználói bevitel olvasásához (a döntési ponthoz szükséges)
      */
     @Override
-    public void run(Scanner scanner) {
+    public void run() {
         // Inicializálás
         CleanerRole cleanerRole = new CleanerRole();
         Snowplow snowplow = new Snowplow();
@@ -29,6 +29,6 @@ public class Test7 implements TestCase {
         snowplow.changeHead(sweeperHead);
 
         // A takarítási folyamat indítása a szekvenciadiagramnak megfelelően
-        cleanerRole.controlSnowplow(snowplow);
+        cleanerRole.controlSnowplow(snowplow, targetLane);
     }
 }

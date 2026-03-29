@@ -16,7 +16,7 @@ public class Test5 implements TestCase {
      * @param scanner a scanner objektum a felhasználói bevitel olvasásához (a járhatósági döntéshez szükséges)
      */
     @Override
-    public void run(Scanner scanner) {
+    public void run() {
         // Inicializálás
         Vehicle vehicle = new Car();
         Lane targetLane = new Lane();

@@ -19,7 +19,7 @@ public class Test1 implements TestCase{
      * @param scanner a scanner objektum a felhasználói bevitel olvasásához (nem használt)
      */
     @Override
-    public void run(Scanner scanner) {
+    public void run() {
         
         // Iniciáljuk a Game objetumot, ami elindítja a láncreakciót
         Game game = new Game();

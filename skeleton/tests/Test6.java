@@ -16,7 +16,7 @@ public class Test6 implements TestCase {
      * @param scanner a scanner objektum a felhasználói bevitel olvasásához (nem használt)
      */
     @Override
-    public void run(Scanner scanner) {
+    public void run() {
         // Inicializálunk egy hókotrót
         Snowplow snowplow = new Snowplow();
         

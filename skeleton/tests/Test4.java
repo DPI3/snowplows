@@ -17,7 +17,7 @@ public class Test4 implements TestCase {
      * @param scanner a scanner objektum a felhasználói bevitel olvasásához (nem használt)
      */
     @Override
-    public void run(Scanner scanner) {
+    public void run() {
 
         // Inicializálunk egy konkrét járművet (pl. Car) és egy kereszteződést
         Vehicle vehicle = new Car(); 

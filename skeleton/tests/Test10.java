@@ -27,7 +27,7 @@ public class Test10 implements TestCase {
      * @param scanner a felhasználói bemenet olvasására szolgáló objektum
      */
     @Override
-    public void run(Scanner scanner) {
+    public void run() {
         Skeleton.printCall("Test10", "run(scanner)");
 
         Game game = new Game(0, 10, new ArrayList<>(), new ArrayList<>());
