@@ -89,4 +89,10 @@ public abstract class Vehicle {
         // A tick hívja a move-ot
         this.move();
     }
+
+    public void setCurrentLane(Lane lane){
+        Skeleton.printCall("Vehicle", "setCurrentLane(lane)");
+        currentLane=lane;
+        Skeleton.printReturn("");
+    }
 }

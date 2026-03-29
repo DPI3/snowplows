@@ -26,7 +26,9 @@ public class Intersection extends Node{
      * @param vehicle az erkezo jarmu
      */
     @Override
-    public void onVehicleEnter(Vehicle vehicle){
-
+    public void onVehicleEnter(Vehicle vehicle) {
+        Skeleton.printCall("Node", "onVehicleEnter(vehicle)");
+        vehicle.setCurrentLane(new Lane()); //Ideiglenes, a logika még nincsen kész
+        Skeleton.printReturn("");
     }
 }
