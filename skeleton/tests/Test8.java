@@ -18,14 +18,14 @@ public class Test8 implements TestCase {
         Skeleton.printCall("Test8", "run()");
 
         CleanerRole cleanerRole = new CleanerRole();
-        Lane lane = new Lane();
-        ThrowerHead throwerHead = new ThrowerHead();
         Snowplow snowplow = new Snowplow();
+        Lane targetLane = new Lane();
+        snowplow.changeLane(targetLane);
 
-        // 1. Előfeltétel: a hókotró aktuális feje a hányó fej
-        snowplow.changeHead(throwerHead);
+        // Előfeltétel: A hókotró feje hányó fej
+        ThrowerHead throwerHead = new ThrowerHead();
 
-        // 2. A takarító irányítja a hókotrót a tisztítandó sávra
+        // A takarítási folyamat indítása a szekvenciadiagramnak megfelelően
         cleanerRole.controlSnowplow(snowplow);
 
         Skeleton.printReturn("");
