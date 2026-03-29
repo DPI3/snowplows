@@ -1,0 +1,34 @@
+[RUNNING] 30. Ütközés: busz-busz teszt
+[STATE] Előfeltétel: A és B busz csúszás miatt összeütköznek
+
+>>>[Bus : busA].move()
+    >>>[Lane : lane].pozíció frissítése
+    <<<return
+>>>[Bus : busB].move()
+    >>>[Lane : lane].pozíció frissítése
+        >>>[Lane : lane].ütközés detektálása
+            [STATE] Lane.hasAccident = true
+            >>>[LaneState].setState(Impassable)
+                [STATE] Lane.state = Impassable
+            <<<return
+        <<<return
+        >>>[Bus : busA].setImmobileTime()
+            [STATE] Bus.immobileTime = N
+        <<<return
+        >>>[Bus : busB].setImmobileTime()
+            [STATE] Bus.immobileTime = N
+        <<<return
+    <<<return
+<<<return
+
+Decision: Van-e baleset a sávon?
+1: Igen
+2: Nem
+>> 1
+
+Decision: Járható-e a sáv?
+1: Igen
+2: Nem
+>> 2
+
+[RESULT] Teszt sikeresen lefutott.
