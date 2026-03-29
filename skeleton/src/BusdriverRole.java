@@ -12,7 +12,7 @@ public class BusdriverRole extends Role {
 
     public BusdriverRole() {
         Skeleton.printCall("BusdriverRole", "BusdriverRole()");
-
+        Bus bus= new Bus();
         Skeleton.printReturn("");
     }
 

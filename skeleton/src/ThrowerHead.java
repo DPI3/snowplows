@@ -7,6 +7,10 @@ package skeleton.src;
  */
 public class ThrowerHead extends Head{
 
+    public ThrowerHead(){
+        Skeleton.printCall("ThrowerHead", "ThrowerHead()");
+        Skeleton.printReturn("");
+    }
     /**
      * Megtisztitja a megadott savot a ho eltavolitasaval.
      *

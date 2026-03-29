@@ -33,6 +33,8 @@ public class Car extends Vehicle {
      */
     public Car() {
         super();
+        Skeleton.printCall("Car", "Car()");
+        Skeleton.printReturn("");
     }
 
     /**

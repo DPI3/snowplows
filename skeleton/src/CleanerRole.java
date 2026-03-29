@@ -13,7 +13,7 @@ public class CleanerRole extends Role {
 
     public CleanerRole() {
         Skeleton.printCall("CleanerRole", "CleanerRole()");
-
+        Snowplow snowplow= new Snowplow();
         Skeleton.printReturn("");
     }
 

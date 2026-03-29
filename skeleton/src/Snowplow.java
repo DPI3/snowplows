@@ -33,6 +33,9 @@ public class Snowplow extends Vehicle {
      */
     public Snowplow() {
         super();
+        Skeleton.printCall("Snowplow", "Snowplow()");
+        ThrowerHead throwerHead= new ThrowerHead();
+        Skeleton.printReturn("");
     }
 
     /**
