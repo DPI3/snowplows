@@ -83,6 +83,12 @@ public class Game {
     this.vehicles = new java.util.ArrayList<>();
     this.players = new java.util.ArrayList<>();
 
+     BusdriverRole busdriverRole= new BusdriverRole();
+    CleanerRole cleanerRole = new CleanerRole();
+
+    Car car1= new Car();
+    Car car2= new Car();
+    
     Skeleton.printReturn("");
 }
 }
