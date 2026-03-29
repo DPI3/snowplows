@@ -1,18 +1,15 @@
 [RUNNING] 9. Takarítás jégtörő fejjel teszt
->>>[Test9].run(scanner)
-    >>>[CleanerRole].CleanerRole()
-        >>>[Snowplow].Snowplow()
-            >>>[IceBreakerHead].IceBreakerHead()
-            <<<return
-        <<<return
-    <<<return
-    >>>[Snowplow].changeHead(newHead)
-    <<<return
-    >>>[CleanerRole].controlSnowplow(sp)
-    <<<return
+>>>[Test9].run()
+  >>>[CleanerRole].CleanerRole()
+  <<<return
+  >>>[Snowplow].changeHead(newHead)
+    [STATE] A hókotró feje lecserélve.
+  <<<return
+  >>>[CleanerRole].controlSnowplow(sp, lane)
     >>>[Snowplow].clean(lane)
-        >>>[IceBreakerHead].clean(lane, snowplow)
-        <<<return
+      >>>[IcebreakerHead].clean(lane, snowplow)
+      <<<return
     <<<return
+  <<<return
 <<<return
 [RESULT] The test completed successfully.

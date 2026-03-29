@@ -1,21 +1,12 @@
 package skeleton.tests;
 
-import java.util.ArrayList;
-import java.util.Scanner;
 import skeleton.src.*;
 
 /**
  * 9. teszteset: Takarítás jégtörő fejjel teszt.
  *
- * A teszteset ellenőrzi, hogy a hókotró jégtörő fejjel megfelelően takarítja az utat.
- *
- * Forgatókönyv:
- * 1. Előfeltétel: a hókotró aktuális feje a jégtörő fej
- * 2. A CleanerRole a hókotrót a takarítani kívánt útszakaszra irányítja
- * 3. Döntés: az útszakasz havas, jégpáncélos vagy feltört jeges
- * 4. Ha az útszakasz havas vagy feltört jeges, a jégtörő fej nem tudja eltakarítani
- * 5. Ha az útszakasz jégpáncélos, a jégtörő fej feltöri a jeget
- * 6. A jégtörő fej feltört jeges útszakaszt hagy maga után
+ * A teszteset ellenőrzi, hogy a hókotró jégtörő fejjel
+ * megfelelően takarítja az utat.
  */
 public class Test9 implements TestCase {
 
@@ -26,9 +17,9 @@ public class Test9 implements TestCase {
      */
     @Override
     public void run() {
-        Skeleton.printCall("Test9", "run(scanner)");
 
-        Game game = new Game(0, 10, new ArrayList<>(), new ArrayList<>());
+        Skeleton.printCall("Test9", "run()");
+
         CleanerRole cleanerRole = new CleanerRole();
         Lane lane = new Lane();
         IcebreakerHead iceBreakerHead = new IcebreakerHead();
@@ -37,18 +28,8 @@ public class Test9 implements TestCase {
         // 1. Előfeltétel: a hókotró aktuális feje a jégtörő fej
         snowplow.changeHead(iceBreakerHead);
 
-        // 2. A CleanerRole a hókotrót a takarítani kívánt útszakaszra irányítja
+        // 2. A takarító a hókotrót a tisztítandó sávra irányítja
         cleanerRole.controlSnowplow(snowplow, lane);
-
-        // 3-6. A hókotró megpróbálja megtisztítani az útszakaszt
-        // A konkrét viselkedés:
-        // - havas vagy feltört jeges útszakasz esetén nincs sikeres takarítás
-        // - jégpáncél esetén a fej feltöri a jeget
-        // - a visszamaradó állapot feltört jég
-        snowplow.clean(lane);
-
-        // Opcionális léptetés
-        game.tick();
 
         Skeleton.printReturn("");
     }
