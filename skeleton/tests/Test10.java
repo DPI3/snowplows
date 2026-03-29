@@ -40,7 +40,7 @@ public class Test10 implements TestCase {
         snowplow.changeHead(saltSpreaderHead);
 
         // 2. A CleanerRole a hókotrót a takarítani kívánt útszakaszra irányítja
-        cleanerRole.controlSnowplow(snowplow);
+        cleanerRole.controlSnowplow(snowplow, lane);
 
         // 3-8. A hókotró megpróbálja letakarítani az útszakaszt
         // A konkrét viselkedést a SaltSpreaderHead.clean(...) valósítja meg:

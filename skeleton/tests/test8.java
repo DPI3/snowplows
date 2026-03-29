@@ -44,7 +44,7 @@ public class Test8 implements TestCase {
         snowplow.changeHead(throwerHead);
 
         // 2. A takarító irányítja a hókotrót
-        cleanerRole.controlSnowplow(snowplow);
+        cleanerRole.controlSnowplow(snowplow, lane);
 
         // 3. A hókotró megpróbálja letakarítani az útszakaszt
         snowplow.clean(lane);
