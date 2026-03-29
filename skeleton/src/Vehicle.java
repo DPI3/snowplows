@@ -76,6 +76,10 @@ public abstract class Vehicle {
         return true;
     }
 
+    public void updatePositionOn(Lane lane){ 
+        positionOnLane++; //Ideiglenes
+
+    }
     /**
      * Egy szimulációs lépést (tick) hajt végre.
      *

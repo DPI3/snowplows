@@ -28,11 +28,11 @@ public class Lane {
      * @param scanner a tesztelő bemenetének olvasásához használt scanner
      * @return true, ha járható, false, ha blokkolva van (pl. mély hó miatt)
      */
-    public boolean isPassable(Scanner scanner) {
+    public boolean isPassable() {
         Skeleton.printCall("Lane", "isPassable()");
         
         // Döntés bekérése a Skeleton segédosztályon keresztül
-        int answer = Skeleton.requestInput("Is the lane passable? (1: Yes, 2: No)");
+        int answer = Skeleton.requestInput("A sáv járható? (1: Igen, 2: Nem)");
         boolean result = (answer == 1);
         
         Skeleton.printReturn(String.valueOf(result));

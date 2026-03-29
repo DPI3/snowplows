@@ -67,4 +67,28 @@ public class Car extends Vehicle {
         Skeleton.printState("A személyautó előrehalad az aktuális sávban.");
         Skeleton.printReturn("");
     }
+
+    @Override 
+        public boolean changeLane(Lane targetLane) {
+        Skeleton.printCall("Car", "changeLane(targetLane)");
+
+        boolean passable = targetLane.isPassable();
+
+        if (passable) {
+            // 2. Beállítjuk az új sávot
+            currentLane= targetLane;
+            Skeleton.printState("currentLane = targetLane");
+
+            // 3. Frissítjük a pozíciót
+            updatePositionOn(targetLane);
+            Skeleton.printState("position updated on targetLane");
+
+            Skeleton.printReturn("true");
+            return true;
+        }
+
+        Skeleton.printReturn("false");
+        return false;
+    }
+
 }
