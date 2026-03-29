@@ -17,5 +17,4 @@
     [STATE] A busz várakozik, immobileTime csökkent: 0
   <<<return
 <<<return
-[RESULT] Teszt sikeresen lefutott.
 [RESULT] The test completed successfully.
