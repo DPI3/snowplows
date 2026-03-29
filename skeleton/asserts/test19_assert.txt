@@ -1,7 +1,22 @@
 [RUNNING] 19. Pontszerzés takarítással teszt
->>>[CleanerRole].controlSnowplow(sp)
-  >>>[Snowplow].clean(l)
-    >>>[DragonHead].clean(l, sp)
+>>>[CleanerRole].CleanerRole()
+  >>>[Snowplow].Snowplow()
+    >>>[ThrowerHead].ThrowerHead()
+    <<<return
+  <<<return
+<<<return
+>>>[Snowplow].Snowplow()
+  >>>[ThrowerHead].ThrowerHead()
+  <<<return
+<<<return
+>>>[DragonHead].DragonHead()
+<<<return
+>>>[Snowplow].changeHead(newHead)
+  [STATE] A hókotró feje lecserélve.
+<<<return
+>>>[CleanerRole].controlSnowplow(snowplow)
+  >>>[Snowplow].clean(lane)
+    >>>[DragonHead].clean(lane, snowplow)
       >>>[Lane].change(amount)
       <<<return
       [STATE] Recognize cleaning, add money (modify attribute)

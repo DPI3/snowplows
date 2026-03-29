@@ -1,8 +1,12 @@
 .vs/
 bin/
+.idea
+.vs
+out
 skeleton/bin
 *.class
 snowplows.iml
 skeleton/temp.txt
 skeleton/temp_out.txt
 skeleton/SnowplowSkeletonTestProgram.java
+SnowplowSkeletonTestProgram.java

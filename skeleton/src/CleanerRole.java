@@ -61,7 +61,7 @@ public class CleanerRole extends Role {
      */
     public void controlSnowplow(Snowplow sp) {
         // 1. Az assert által elvárt pontos hívás naplózása, már csak 1 paraméterrel
-        Skeleton.printCall("CleanerRole", "controlSnowplow(sp)");
+        Skeleton.printCall("CleanerRole", "controlSnowplow(snowplow)");
 
         // 2. Lekérjük a hókotró aktuális sávját az ősosztály (Vehicle) segítségével
         Lane lane = sp.getCurrentLane();
