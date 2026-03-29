@@ -1,43 +1,46 @@
 package skeleton.src;
-/**
- * A ThrowerHead a hokotro hohajito fejenek megvalositasa.
- *
- * A hohajito fej a felgyult hot az utrol eltavolitja,
- * es segit az ut gyors felszabaditasaban.
- */
-public class ThrowerHead extends Head{
 
-    public ThrowerHead(){
+/**
+ * A ThrowerHead a hókotró hóhajító fejének megvalósítása.
+ *
+ * A hóhajító fej a havat az út mellé, messzebbre szórja.
+ */
+public class ThrowerHead extends Head {
+
+    public ThrowerHead() {
         Skeleton.printCall("ThrowerHead", "ThrowerHead()");
         Skeleton.printReturn("");
     }
+
     /**
-     * Megtisztitja a megadott savot a ho eltavolitasaval.
+     * Megtisztítja a megadott sávot a hó eltávolításával.
      *
-     * @param lane a takaritando sav
-     * @param snowplow a muveletet vegzo hokotro
+     * @param lane a takarítandó sáv
+     * @param snowplow a műveletet végző hókotró
      */
     @Override
     public void clean(Lane lane, Snowplow snowplow) {
         Skeleton.printCall("ThrowerHead", "clean(lane, snowplow)");
-        
-        // A hófúvó fej eltávolítja a havat az útról
-        
+
+        lane.setState(new Clear());
+        lane.change(10);
+
+        Skeleton.printState("Recognize cleaning, add money (modify attribute)");
+
         Skeleton.printReturn("");
     }
 
     /**
-     * Visszaadja a hohajito fej arat.
+     * Visszaadja a hóhajító fej árát.
      *
-     * @return a fej ara
+     * @return a fej ára
      */
     @Override
     public int getPrice() {
         Skeleton.printCall("ThrowerHead", "getPrice()");
-        
-        // Adjunk neki egy egyedi árat, pl. 600
+
         int price = 600;
-        
+
         Skeleton.printReturn(String.valueOf(price));
         return price;
     }

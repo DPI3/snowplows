@@ -26,6 +26,9 @@ public class Test8 implements TestCase {
         ThrowerHead throwerHead = new ThrowerHead();
 
         // A takarítási folyamat indítása a szekvenciadiagramnak megfelelően
+        snowplow.changeHead(throwerHead);
+
+        // A takarítási folyamat indítása a szekvenciadiagramnak megfelelően
         cleanerRole.controlSnowplow(snowplow);
 
         Skeleton.printReturn("");

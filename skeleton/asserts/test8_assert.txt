@@ -1,29 +1,33 @@
 [RUNNING] 8. Takarítás hányó fejjel teszt
->>>[CleanerRole].CleanerRole()
+>>>[Test8].run()
+  >>>[CleanerRole].CleanerRole()
+    >>>[Snowplow].Snowplow()
+      >>>[ThrowerHead].ThrowerHead()
+      <<<return
+    <<<return
+  <<<return
   >>>[Snowplow].Snowplow()
     >>>[ThrowerHead].ThrowerHead()
     <<<return
   <<<return
-<<<return
->>>[Snowplow].Snowplow()
+  >>>[Vehicle].changeLane(targetLane)
+    [STATE] A jármű aktuális sávja megváltozott.
+  <<<return true
   >>>[ThrowerHead].ThrowerHead()
   <<<return
-<<<return
->>>[Vehicle].changeLane(targetLane)
-  [STATE] A jármű aktuális sávja megváltozott.
-<<<return true
->>>[Snowplow].changeHead(newHead)
-  [STATE] A hókotró feje lecserélve.
-<<<return
->>>[CleanerRole].controlSnowplow(sp)
-  >>>[Snowplow].clean(lane)
-    >>>[ThrowerHead].clean(lane, snowplow)
-      >>>[Lane].setState(newState)
-        [STATE] Lane state changed to: Clear
+  >>>[Snowplow].changeHead(newHead)
+    [STATE] A hókotró feje lecserélve.
+  <<<return
+  >>>[CleanerRole].controlSnowplow(sp)
+    >>>[Snowplow].clean(lane)
+      >>>[ThrowerHead].clean(lane, snowplow)
+        >>>[Lane].setState(newState)
+          [STATE] Lane state changed to: Clear
+        <<<return
+        >>>[Lane].change(amount)
+        <<<return
+        [STATE] Recognize cleaning, add money (modify attribute)
       <<<return
-      >>>[Lane].change(amount)
-      <<<return
-      [STATE] Recognize cleaning, add money (modify attribute)
     <<<return
   <<<return
 <<<return
