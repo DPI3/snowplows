@@ -1,6 +1,9 @@
 [RUNNING] 6. Hókotró haladása teszt
+>>>[Snowplow].Snowplow()
+  >>>[ThrowerHead].ThrowerHead()
+  <<<return
+<<<return
 >>>[Snowplow].move()
-    >>>[Snowplow].updatePosition()
-    <<<return
+  [STATE] A hókotró előrehalad az aktuális sávban.
 <<<return
 [RESULT] The test completed successfully.
