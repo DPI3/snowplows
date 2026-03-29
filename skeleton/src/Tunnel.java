@@ -14,8 +14,8 @@ public class Tunnel extends Road{
      */
     @Override
     public void applyWeatherEffects(Weather weather){
-        Skeleton.printCall("Tunnel", "applyWeatherEffects(Weather)");
-        weather.snowfallTick(this);
+        Skeleton.printCall("Tunnel", "applyWeatherEffects(weather)");
+        
         Skeleton.printReturn("");
     }
 }
