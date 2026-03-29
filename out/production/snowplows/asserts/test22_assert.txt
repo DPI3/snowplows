@@ -1,0 +1,14 @@
+[RUNNING] 22. Busz forduló teljesítése teszt
+>>>[Bus].move()
+  >>>[Bus].checkTerminalReached()
+  <<<return true
+  >>>[BusdriverRole].incrementCompletedRounds()
+  <<<return
+  >>>[RoadNetwork].getShortestPath(terminalB, terminalA)
+  <<<return r
+  >>>[Bus].setCurrentRoute(r)
+  <<<return
+  >>>[Bus].move()
+  <<<return
+<<<return
+[RESULT] The test completed successfully.

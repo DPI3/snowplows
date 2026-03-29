@@ -1,0 +1,18 @@
+[RUNNING] 1. Játék indítása, inicializáció teszt
+>>>[Game].Game()
+    >>>[BusdriverRole].BusdriverRole()
+        >>>[Bus].Bus()
+        <<<return
+    <<<return
+    >>>[CleanerRole].CleanerRole()
+        >>>[Snowplow].Snowplow()
+            >>>[ThrowerHead].ThrowerHead()
+            <<<return
+        <<<return
+    <<<return
+    >>>[Car].Car()
+    <<<return
+    >>>[Car].Car()
+    <<<return
+<<<return
+[RESULT] The test completed successfully.

@@ -1,0 +1,30 @@
+[RUNNING] 8. Takarítás hányó fejjel teszt
+>>>[Game].start()
+    >>>[BusdriverRole].BusdriverRole()
+        >>>[Bus].Bus()
+        <<<return
+    <<<return
+    >>>[CleanerRole].CleanerRole()
+        >>>[Snowplow].Snowplow()
+            >>>[ThrowerHead].ThrowerHead()
+            <<<return
+        <<<return
+    <<<return
+    >>>[Car].Car()
+    <<<return
+    >>>[Car].Car()
+    <<<return
+<<<return
+>>>[CleanerRole].CleanerRole()
+    >>>[Snowplow].Snowplow()
+        >>>[ThrowerHead].ThrowerHead()
+        <<<return
+    <<<return
+<<<return
+>>>[CleanerRole].cleanRoad([Snowplow])
+<<<return
+>>>[Snowplow].cleanWithThrowerHead()
+<<<return
+>>>[CleanerRole].increaseMoney()
+<<<return
+[RESULT] The test completed successfully.

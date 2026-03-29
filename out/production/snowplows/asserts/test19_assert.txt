@@ -1,0 +1,13 @@
+[RUNNING] 19. Pontszerzés takarítással teszt
+>>>[CleanerRole].controlSnowplow(sp)
+  >>>[Snowplow].clean(l)
+    >>>[DragonHead].clean(l, sp)
+      >>>[Lane].change(amount)
+      <<<return
+      [STATE] Recognize cleaning, add money (modify attribute)
+    <<<return
+  <<<return
+<<<return
+>>>[CleanerRole].getScore()
+<<<return currentScore
+[RESULT] The test completed successfully.

@@ -1,0 +1,36 @@
+[RUNNING] 31. Busz mozgásképtelenség megszűnése teszt
+[STATE] Előfeltétel: Bus.immobileTime = 3 (korábbi ütközés miatt)
+
+>>>[Game].tick()
+    >>>[Bus : bus].tick()
+        [immobileTime > 0]
+        [STATE] Bus.immobileTime-- (3 -> 2)
+        [A busz nem mozdul, immobileTime csökken eggyel]
+    <<<return
+<<<return
+
+>>>[Game].tick()
+    >>>[Bus : bus].tick()
+        [immobileTime > 0]
+        [STATE] Bus.immobileTime-- (2 -> 1)
+        [A busz nem mozdul, immobileTime csökken eggyel]
+    <<<return
+<<<return
+
+>>>[Game].tick()
+    >>>[Bus : bus].tick()
+        [immobileTime == 0]
+        [A busz újra mozoghat]
+        >>>[Bus : bus].move()
+            >>>[Route : r].getNextLane(currentLane)
+            <<<return nextLane
+            >>>[Lane : nextLane].isPassable()
+            <<<return true
+            >>>[Bus : bus].setCurrentLane(nextLane)
+                [STATE] Bus.currentLane = nextLane
+            <<<return
+        <<<return
+    <<<return
+<<<return
+
+[RESULT] Teszt sikeresen lefutott.

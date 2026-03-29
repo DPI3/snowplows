@@ -1,0 +1,10 @@
+[RUNNING] 25. Autó célba érése teszt
+>>>[Car].move()
+  >>>[Node].onVehicleEnter(c)
+    >>>[Node].checkDestination()
+    <<<return true
+    >>>[Car].removeFromTraffic()
+    <<<return
+  <<<return
+<<<return
+[RESULT] The test completed successfully.
