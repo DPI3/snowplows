@@ -1,0 +1,24 @@
+[RUNNING] 16. Sikertelen vásárlás teszt
+>>>[Test16].run(scanner)
+  >>>[CleanerRole].CleanerRole()
+    >>>[Snowplow].Snowplow()
+      >>>[ThrowerHead].ThrowerHead()
+      <<<return
+    <<<return
+  <<<return
+  >>>[Store].Store(inventory)
+  <<<return
+  >>>[CleanerRole].buy(item)
+    >>>[Store].buy(cleanerRole, item)
+      >>>[Buyable].getPrice()
+      <<<return
+      >>>[CleanerRole].getMoney()
+      <<<return
+      Decision: Elegendő a pénz a vásárláshoz? (1: Igen, 2: Nem)
+      >> 2
+      [STATE] Sikertelen vásárlás: nincs elég pénz.
+      <<<return false
+    <<<return false
+  <<<return
+<<<return
+[RESULT] The test completed successfully.
