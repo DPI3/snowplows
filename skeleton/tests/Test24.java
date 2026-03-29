@@ -1,7 +1,7 @@
 package skeleton.tests;
 
-import skeleton.src.*;
 import java.util.Scanner;
+import skeleton.src.*;
 
 /**
  * Implementation of Test 24: Car stuck on an impassable road test.
@@ -21,6 +21,6 @@ public class Test24 implements TestCase {
         
         // Starting the action. Inside move(), the nextLane.isPassable(scanner) 
         // will ask the user, and the testfile will provide 'false'.
-        car.move(scanner);
+        car.move();
     }
 }

@@ -1,7 +1,7 @@
 package skeleton.tests;
 
-import skeleton.src.*;
 import java.util.Scanner;
+import skeleton.src.*;
 
 /**
  * Implementation of Test 23: Car moving on a passable lane test.
@@ -22,7 +22,7 @@ public class Test23 implements TestCase {
         Car car = new Car();
         
         // Itt a car.move() hívás következik
-        car.move(scanner);
+        car.move();
 
         // A tick() hívás vége
         Skeleton.printReturn("");

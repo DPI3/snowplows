@@ -25,7 +25,7 @@ public class Test11 implements TestCase {
         Lane lane = new Lane();
         
         // 1. Előfeltétel: A hókotró aktuális feje a sárkány fej
-        snowplow.setHead(dragonHead);
+        snowplow.changeHead(dragonHead);
         
         // 2. A CleanerRole a hókotrót a takarítani kívánt útszakaszra irányítja
         cleanerRole.controlSnowplow(snowplow, lane);

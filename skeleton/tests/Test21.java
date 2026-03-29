@@ -1,7 +1,7 @@
 package skeleton.tests;
 
-import skeleton.src.*;
 import java.util.Scanner;
+import skeleton.src.*;
 
 /**
  * Implementation of Test 21: Bus movement test.
@@ -22,9 +22,8 @@ public class Test21 implements TestCase {
         Skeleton.printCall("Game", "tick()");
         
         Bus bus = new Bus();
-        // A Game.tick() meghívja a Bus.tick()-et
-        bus.tick(scanner); 
-
-        Skeleton.printReturn(""); // Game.tick() vége
+        
+        // Starting the action. Inside move(), it should check isPassable()
+        bus.move();
     }
 }

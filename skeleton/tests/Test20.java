@@ -1,7 +1,7 @@
 package skeleton.tests;
 
-import skeleton.src.*;
 import java.util.Scanner;
+import skeleton.src.*;
 
 /**
  * Implementation of Test 20: Assigning a route to a bus.
@@ -26,6 +26,6 @@ public class Test20 implements TestCase {
         driver.assignRoute(bus, destination);
         
         // 2. The bus starts moving after the assignment
-        bus.move(scanner);
+        bus.move();
     }
 }

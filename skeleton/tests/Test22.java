@@ -1,7 +1,7 @@
 package skeleton.tests;
 
-import skeleton.src.*;
 import java.util.Scanner;
+import skeleton.src.*;
 
 /**
  * Implementation of Test 22: Bus completing a round test.
@@ -21,6 +21,6 @@ public class Test22 implements TestCase {
         
         // Starting the movement. The internal logic of the domain classes 
         // should handle the checkTerminalReached() logic.
-        bus.move(scanner); 
+        bus.move(); 
     }
 }
