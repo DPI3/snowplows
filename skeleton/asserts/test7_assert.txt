@@ -15,7 +15,7 @@
 >>>[Snowplow].changeHead(newHead)
   [STATE] A hókotró feje lecserélve.
 <<<return
->>>[CleanerRole].controlSnowplow(sp, lane)
+>>>[CleanerRole].controlSnowplow(sp)
   >>>[Snowplow].clean(lane)
     >>>[SweeperHead].clean(lane, snowplow)
       >>>[Lane].setState(newState)
