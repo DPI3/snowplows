@@ -1,23 +1,12 @@
 package skeleton.tests;
 
-import java.util.ArrayList;
-import java.util.Scanner;
 import skeleton.src.*;
 
 /**
  * 10. teszteset: Takarítás sószóró fejjel teszt.
  *
- * A teszteset ellenőrzi, hogy a hókotró sószóró fejjel megfelelően takarítja az utat.
- *
- * Forgatókönyv:
- * 1. Előfeltétel: a hókotró aktuális feje a sószóró fej
- * 2. A CleanerRole a hókotrót a takarítani kívánt útszakaszra irányítja
- * 3. Döntés: van-e megfelelő mennyiségű só a hókotróban
- * 4. Ha nincs elég só, a sószóró fej hatástalanná válik
- * 5. Ha van elég só, a sószóró fej beszórja sóval az utat
- * 6. A só elolvasztja a havat vagy jeget
- * 7. A CleanerRole megkapja a jutalmat
- * 8. A sószóró fej tiszta útszakaszt hagy maga után
+ * A teszteset ellenőrzi, hogy a hókotró sószóró fejjel
+ * megfelelően takarítja az utat.
  */
 public class Test10 implements TestCase {
 
@@ -28,9 +17,9 @@ public class Test10 implements TestCase {
      */
     @Override
     public void run() {
-        Skeleton.printCall("Test10", "run(scanner)");
 
-        Game game = new Game(0, 10, new ArrayList<>(), new ArrayList<>());
+        Skeleton.printCall("Test10", "run()");
+
         CleanerRole cleanerRole = new CleanerRole();
         Lane lane = new Lane();
         SaltSpreaderHead saltSpreaderHead = new SaltSpreaderHead();
@@ -39,17 +28,8 @@ public class Test10 implements TestCase {
         // 1. Előfeltétel: a hókotró aktuális feje a sószóró fej
         snowplow.changeHead(saltSpreaderHead);
 
-        // 2. A CleanerRole a hókotrót a takarítani kívánt útszakaszra irányítja
+        // 2. A takarító a hókotrót a tisztítandó sávra irányítja
         cleanerRole.controlSnowplow(snowplow, lane);
-
-        // 3-8. A hókotró megpróbálja letakarítani az útszakaszt
-        // A konkrét viselkedést a SaltSpreaderHead.clean(...) valósítja meg:
-        // - ha nincs elég só, nincs változás
-        // - ha van elég só, az út megtisztul
-        snowplow.clean(lane);
-
-        // opcionális játék-léptetés
-        game.tick();
 
         Skeleton.printReturn("");
     }

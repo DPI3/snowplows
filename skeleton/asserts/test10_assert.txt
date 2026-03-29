@@ -1,28 +1,19 @@
 [RUNNING] 10. Takarítás sószóró fejjel teszt
->>>[Test10].run(scanner)
-    >>>[CleanerRole].CleanerRole()
-        >>>[Snowplow].Snowplow()
-            >>>[ThrowerHead].ThrowerHead()
-            <<<return
-        <<<return
+>>>[Test10].run()
+  >>>[CleanerRole].CleanerRole()
+  <<<return
+  >>>[Snowplow].Snowplow()
+    >>>[ThrowerHead].ThrowerHead()
     <<<return
-    >>>[Lane].Lane()
-    <<<return
-    >>>[SaltSpreaderHead].SaltSpreaderHead()
-    <<<return
-    >>>[Snowplow].Snowplow()
-        >>>[ThrowerHead].ThrowerHead()
-        <<<return
-    <<<return
-    >>>[Snowplow].changeHead(newHead)
-    <<<return
-    >>>[CleanerRole].controlSnowplow([Snowplow])
-    <<<return
+  <<<return
+  >>>[Snowplow].changeHead(newHead)
+    [STATE] A hókotró feje lecserélve.
+  <<<return
+  >>>[CleanerRole].controlSnowplow(sp, lane)
     >>>[Snowplow].clean(lane)
-        >>>[SaltSpreaderHead].clean(lane, snowplow)
-        <<<return
+      >>>[SaltSpreaderHead].clean(lane, snowplow)
+      <<<return
     <<<return
-    >>>[Game].tick()
-    <<<return
+  <<<return
 <<<return
 [RESULT] The test completed successfully.
