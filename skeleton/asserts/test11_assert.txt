@@ -1,28 +1,28 @@
 [RUNNING] 11. Takarítás sárkány fejjel teszt
 >>>[Test11].run(scanner)
-    >>>[CleanerRole].CleanerRole()
-        >>>[Snowplow].Snowplow()
-            >>>[ThrowerHead].ThrowerHead()
-            <<<return
-        <<<return
-    <<<return
-    >>>[Lane].Lane()
-    <<<return
-    >>>[DragonHead].DragonHead()
-    <<<return
-    >>>[Snowplow].Snowplow()
-        >>>[ThrowerHead].ThrowerHead()
-        <<<return
-    <<<return
-    >>>[Snowplow].changeHead(newHead)
-    <<<return
-    >>>[CleanerRole].controlSnowplow([Snowplow])
-    <<<return
+  >>>[CleanerRole].CleanerRole()
+  <<<return
+  >>>[Snowplow].changeHead(newHead)
+    [STATE] A hókotró feje lecserélve.
+  <<<return
+  >>>[CleanerRole].controlSnowplow(sp, lane)
     >>>[Snowplow].clean(lane)
-        >>>[DragonHead].clean(lane, snowplow)
+      >>>[DragonHead].clean(l, sp)
+        >>>[Lane].change(amount)
         <<<return
+        [STATE] Recognize cleaning, add money (modify attribute)
+      <<<return
     <<<return
-    >>>[Game].tick()
+  <<<return
+  >>>[Snowplow].clean(lane)
+    >>>[DragonHead].clean(l, sp)
+      >>>[Lane].change(amount)
+      <<<return
+      [STATE] Recognize cleaning, add money (modify attribute)
     <<<return
+  <<<return
+  >>>[Game].tick()
+    [STATE] currentRound növelve: 1
+  <<<return
 <<<return
 [RESULT] The test completed successfully.

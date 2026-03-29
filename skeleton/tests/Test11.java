@@ -1,7 +1,6 @@
 package skeleton.tests;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 import skeleton.src.*;
 
 /**
@@ -27,8 +26,7 @@ public class Test11 implements TestCase {
      * @param scanner a felhasználói bemenet olvasására szolgáló objektum
      */
     @Override
-    public void run(Scanner scanner) {
-        System.out.println("[RUNNING] 11. Takarítás sárkány fejjel teszt");
+    public void run() {
 
         Skeleton.printCall("Test11", "run(scanner)");
 
@@ -42,7 +40,7 @@ public class Test11 implements TestCase {
         snowplow.changeHead(dragonHead);
 
         // 2. A CleanerRole a hókotrót a takarítani kívánt útszakaszra irányítja
-        cleanerRole.controlSnowplow(snowplow);
+        cleanerRole.controlSnowplow(snowplow, lane);
 
         // 3-7. A hókotró megpróbálja letakarítani az útszakaszt
         // A konkrét logika a DragonHead.clean(...) metódusban van:
@@ -55,6 +53,5 @@ public class Test11 implements TestCase {
 
         Skeleton.printReturn("");
 
-        System.out.println("[RESULT] The test completed successfully.");
     }
 }
