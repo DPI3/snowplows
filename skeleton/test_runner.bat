@@ -7,9 +7,7 @@ echo ========================================
 
 echo [1/2] Java fajlok forditasa...
 if not exist bin mkdir bin
-REM ez a teljes listája az összes testnek alábbi sorban, amik nem fordulnak le hibát dobnak
 javac -d bin src/*.java tests/*.java SnowplowSkeletonTestProgram.java
-REM javac -d bin src/*.java tests/TestCase.java tests/Test19.java tests/Test20.java tests/Test21.java tests/Test22.java tests/Test23.java tests/Test24.java tests/Test25.java SnowplowSkeletonTestProgram.java
 if %errorlevel% neq 0 (
     echo [HIBA] A forditas sikertelen!
     pause
@@ -28,11 +26,6 @@ for %%i in (1 2 3 4 5 6 7 8 9 10 11 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27
 
     fc /W /N asserts\test%%i_assert.txt temp_out.txt > nul
 
-    if errorlevel 1 (
-        echo [PIROS] A %%i. teszt ELBUKOTT!
-    ) else (
-        echo [ZOLD] A %%i. teszt SIKERES!
-    )
 )
 
 echo ----------------------------------------

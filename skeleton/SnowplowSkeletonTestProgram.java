@@ -232,9 +232,9 @@ public class SnowplowSkeletonTestProgram {
 
             if (normalizedActual.equals(normalizedExpected)) {
                 // System.err-t használunk, hogy a .bat fájlos fájlba-irányítást (> temp_out.txt) ez ne rontsa el!
-                System.err.println("\n[ZÖLD] A " + testNumber + ". teszt SIKERES! (Kimenet megegyezik)");
+                System.err.println("\nA " + testNumber + ". teszt SIKERES!");
             } else {
-                System.err.println("\n[PIROS] A " + testNumber + ". teszt ELBUKOTT! (Kimenet eltér)");
+                System.err.println("\nA " + testNumber + ". teszt ELBUKOTT!");
             }
         } catch (IOException e) {
             System.err.println("\n[SARGA] A teszt lefutott, de nem található az assert fájl: asserts/test" + testNumber + "_assert.txt");
