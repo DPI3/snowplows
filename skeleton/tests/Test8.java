@@ -26,7 +26,7 @@ public class Test8 implements TestCase {
         snowplow.changeHead(throwerHead);
 
         // 2. A takarító irányítja a hókotrót a tisztítandó sávra
-        cleanerRole.controlSnowplow(snowplow, lane);
+        cleanerRole.controlSnowplow(snowplow);
 
         Skeleton.printReturn("");
     }

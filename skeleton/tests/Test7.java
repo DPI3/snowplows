@@ -27,6 +27,6 @@ public class Test7 implements TestCase {
         snowplow.changeHead(sweeperHead);
 
         // A takarítási folyamat indítása a szekvenciadiagramnak megfelelően
-        cleanerRole.controlSnowplow(snowplow, targetLane);
+        cleanerRole.controlSnowplow(snowplow);
     }
 }

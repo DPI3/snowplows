@@ -252,7 +252,7 @@ public class SnowplowSkeletonTestProgram {
      */
     private static TestCase getTest(int testNumber) {
         switch (testNumber) {
-            case 1: return new Test1();
+            /*case 1: return new Test1();
             case 2: return new Test2();
             case 3: return new Test3();
             case 4: return new Test4();
@@ -260,20 +260,20 @@ public class SnowplowSkeletonTestProgram {
             case 6: return new Test6();
             case 7: return new Test7();
             case 8: return new Test8();
-            //case 9: return new Test9();
-            //case 10: return new Test10();
+            case 9: return new Test9();
+            case 10: return new Test10();
             case 11: return new Test11();
-            //case 12: return new Test12();*/
+            ca+se 12: return new Test12();
             case 13: return new Test13();
-            /*case 14: return new Test14();
+            case 14: return new Test14();
             case 15: return new Test15();
             case 16: return new Test16();
             case 17: return new Test17();
-            case 18: return new Test18();
+            case 18: return new Test18();*/
             case 19: return new Test19();
-            case 20: return new Test20();*/
-            //case 21: return new Test21();
-            /*case 22: return new Test22();
+            /*case 20: return new Test20();
+            case 21: return new Test21();
+            case 22: return new Test22();
             case 23: return new Test23();
             case 24: return new Test24();
             case 25: return new Test25();

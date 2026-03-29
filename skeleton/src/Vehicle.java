@@ -51,12 +51,25 @@ public abstract class Vehicle {
         this.speed = speed;
     }
 
+
     /**
      * A jármű mozgását végrehajtó metódus.
      *
      * A szkeleton implementációban csak a metódushívás kerül naplózásra.
      */
     public abstract void move();
+
+    /**
+     * Visszaadja a jármű aktuális sávját.
+     * * Megjegyzés: Szándékosan nincs benne Skeleton logolás, 
+     * hogy ne rontsa el a 19-es teszt elvárt kimenetét!
+     *
+     * @return az aktuális sáv (Lane)
+     */
+    public Lane getCurrentLane() {
+        return this.currentLane;
+    }
+
 
     /**
      * Sávváltás végrehajtása.

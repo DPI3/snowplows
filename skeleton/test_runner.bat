@@ -37,5 +37,5 @@ for %%i in (21) do (
 
 echo ----------------------------------------
 echo Teszteles befejezve.
-REM del temp_out.txt
+del temp_out.txt
 pause
