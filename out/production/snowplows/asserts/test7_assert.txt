@@ -1,13 +1,10 @@
 [RUNNING] 7. Takarítás söprő fejjel teszt
-Decision: Az útszakasz állapota
-1: Havas (ThinSnow/DeepSnow)
-2: Jégpáncél (IceSheet)
-3: Feltört jég (BrokenIce)
->> 1
->>>[CleanerRole].controlSnowplow(snowplow)
+>>>[CleanerRole].controlSnowplow(sp)
     >>>[Snowplow].move()
     <<<return
     >>>[Snowplow].clean(lane)
+        Decision: Az útszakasz állapota? (1: Havas (ThinSnow/DeepSnow), 2: Jégpáncél (IceSheet), 3: Feltört jég (BrokenIce))
+        >> 1
         >>>[Lane].getLaneState()
         <<<return ThinSnow
         >>>[SweeperHead].clean(lane, snowplow)

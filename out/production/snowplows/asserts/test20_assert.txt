@@ -1,5 +1,5 @@
 [RUNNING] 20. Busz útvonalhoz rendelése teszt
->>>[BusdriverRole].assignRoute(b, dest)
+>>>[BusdriverRole].assignRoute(bus, destination)
   >>>[RoadNetwork].getShortestPath(from, dest)
   <<<return r
   >>>[Bus].setCurrentRoute(r)

@@ -1,0 +1,6 @@
+[RUNNING] 21. Busz közlekedés teszt
+>>>[Game].tick()
+  >>>[Bus].move()
+    [STATE] A busz a currentRoute alapján megpróbál továbbhaladni.
+  <<<return
+[RESULT] The test completed successfully.

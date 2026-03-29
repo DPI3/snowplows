@@ -1,16 +1,28 @@
 [RUNNING] 11. Takarítás sárkány fejjel teszt
->>>[CleanerRole].controlSnowplow(sp)
->>>[Snowplow].clean(l)
->>>[DragonHead].clean(l, sp)
-[STATE] Checking biokerosene level
-[STATE] Has enough biokerosene
->>>[Lane].clear()
-[STATE] Gas turbine melts snow/ice, lane becomes clean
-<<<return
->>>[Scoreboard].change(amount)
-[STATE] Reward added to CleanerRole.money
-<<<return
-<<<return
-<<<return
+>>>[Test11].run(scanner)
+  >>>[CleanerRole].CleanerRole()
+  <<<return
+  >>>[Snowplow].changeHead(newHead)
+    [STATE] A hókotró feje lecserélve.
+  <<<return
+  >>>[CleanerRole].controlSnowplow(sp, lane)
+    >>>[Snowplow].clean(lane)
+      >>>[DragonHead].clean(l, sp)
+        >>>[Lane].change(amount)
+        <<<return
+        [STATE] Recognize cleaning, add money (modify attribute)
+      <<<return
+    <<<return
+  <<<return
+  >>>[Snowplow].clean(lane)
+    >>>[DragonHead].clean(l, sp)
+      >>>[Lane].change(amount)
+      <<<return
+      [STATE] Recognize cleaning, add money (modify attribute)
+    <<<return
+  <<<return
+  >>>[Game].tick()
+    [STATE] currentRound növelve: 1
+  <<<return
 <<<return
 [RESULT] The test completed successfully.

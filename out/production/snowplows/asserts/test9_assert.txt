@@ -8,7 +8,7 @@
     <<<return
     >>>[Snowplow].changeHead(newHead)
     <<<return
-    >>>[CleanerRole].controlSnowplow(snowplow)
+    >>>[CleanerRole].controlSnowplow(sp)
     <<<return
     >>>[Snowplow].clean(lane)
         >>>[IceBreakerHead].clean(lane, snowplow)

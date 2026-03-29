@@ -1,30 +1,15 @@
 [RUNNING] 8. Takarítás hányó fejjel teszt
->>>[Game].start()
-    >>>[BusdriverRole].BusdriverRole()
-        >>>[Bus].Bus()
-        <<<return
+>>>[Test8].run()
+  >>>[CleanerRole].CleanerRole()
+  <<<return
+  >>>[Snowplow].changeHead(newHead)
+    [STATE] A hókotró feje lecserélve.
+  <<<return
+  >>>[CleanerRole].controlSnowplow(sp, lane)
+    >>>[Snowplow].clean(lane)
+      >>>[ThrowerHead].clean(lane, snowplow)
+      <<<return
     <<<return
-    >>>[CleanerRole].CleanerRole()
-        >>>[Snowplow].Snowplow()
-            >>>[ThrowerHead].ThrowerHead()
-            <<<return
-        <<<return
-    <<<return
-    >>>[Car].Car()
-    <<<return
-    >>>[Car].Car()
-    <<<return
-<<<return
->>>[CleanerRole].CleanerRole()
-    >>>[Snowplow].Snowplow()
-        >>>[ThrowerHead].ThrowerHead()
-        <<<return
-    <<<return
-<<<return
->>>[CleanerRole].cleanRoad([Snowplow])
-<<<return
->>>[Snowplow].cleanWithThrowerHead()
-<<<return
->>>[CleanerRole].increaseMoney()
+  <<<return
 <<<return
 [RESULT] The test completed successfully.

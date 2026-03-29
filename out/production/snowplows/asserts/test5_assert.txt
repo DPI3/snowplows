@@ -1,9 +1,7 @@
 [RUNNING] 5. Jármű sávváltása teszt
-Decision: A sáv járható?
-1: Igen (passable)
-2: Nem (not passable)
->> 1
 >>>[Vehicle].changeLane(targetLane)
+    Decision: A sáv járható? (1: Igen, 2: Nem)
+    >> 1
     >>>[Lane].isPassable()
     <<<return true
     >>>[Vehicle].setCurrentLane(targetLane)
