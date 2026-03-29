@@ -1,8 +1,7 @@
 package skeleton.tests;
 
-import skeleton.src.*;
-
 import java.util.Scanner;
+import skeleton.src.*;
 
 /**
  * 8. teszteset: Takarítás hányó fejjel teszt.
@@ -33,25 +32,26 @@ public class Test8 implements TestCase {
      */
     @Override
     public void run(Scanner scanner) {
-        Game game = new Game();
-        game.start();
+        Skeleton.printCall("Test8", "run(scanner)");
 
+        Game game = new Game();
         CleanerRole cleanerRole = new CleanerRole();
+        Lane lane = new Lane();
+        ThrowerHead throwerHead = new ThrowerHead();
         Snowplow snowplow = new Snowplow();
 
-        // A modell alapján itt azt feltételezzük, hogy a Snowplow alapból
-        // rendelkezik ThrowerHead-del, vagy a konstruktorában létrejön.
-        //
-        // Az alábbi metódushívásokat a saját osztályaitok tényleges neveihez kell igazítani.
-        // A logika a use-case alapján van felépítve:
+        // 1. A hókotróra hányó fej kerül
+        snowplow.changeHead(throwerHead);
 
-        // 1. A takarító a hókotrót a megfelelő útszakaszra irányítja
+        // 2. A takarító irányítja a hókotrót
         cleanerRole.controlSnowplow(snowplow);
 
-        // 2. A hókotró megpróbálja letakarítani az útszakaszt hányó fejjel
-        snowplow.cleanWithThrowerHead();
+        // 3. A hókotró megpróbálja letakarítani az útszakaszt
+        snowplow.clean(lane);
 
-        // 3. A CleanerRole jutalma nő
-        cleanerRole.increaseMoney();
+        // 4. Egy szimulációs lépés végrehajtása opcionálisan
+        game.tick();
+
+        Skeleton.printReturn("");
     }
 }
