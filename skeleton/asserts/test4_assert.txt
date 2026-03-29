@@ -1,8 +1,8 @@
 [RUNNING] 4. Jármű behajtása kereszteződésbe teszt
->>>[Vehicle].move()
-    >>>[Intersection].onVehicleEnter(vehicle)
-        >>>[Vehicle].setCurrentLane(lane)
-        <<<return
-    <<<return
+>>>[Car].Car()
+<<<return
+>>>[Intersection].onVehicleEnter(vehicle)
+  >>>[Vehicle].setCurrentLane(lane)
+  <<<return
 <<<return
 [RESULT] The test completed successfully.

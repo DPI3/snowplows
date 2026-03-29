@@ -18,7 +18,7 @@ public class Test4 implements TestCase {
     @Override
     public void run() {
 
-        // Inicializálunk egy konkrét járművet (pl. Car)
+        // Inicializálunk egy konkrét járművet (pl. Car) és kereszteződést
         Vehicle vehicle = new Car(); 
          Intersection intersection = new Intersection();
          intersection.onVehicleEnter(vehicle);

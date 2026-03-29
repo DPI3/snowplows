@@ -27,7 +27,7 @@ public class Intersection extends Node{
      */
     @Override
     public void onVehicleEnter(Vehicle vehicle) {
-        Skeleton.printCall("Node", "onVehicleEnter(vehicle)");
+        Skeleton.printCall("Intersection", "onVehicleEnter(vehicle)");
         vehicle.setCurrentLane(new Lane()); //Ideiglenes, a logika még nincsen kész
         Skeleton.printReturn("");
     }
