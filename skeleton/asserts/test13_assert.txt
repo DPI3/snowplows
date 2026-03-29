@@ -12,7 +12,7 @@
   <<<return
   >>>[Store].buy(cleanerRole, item)
     >>>[DragonHead].getPrice()
-    <<<return
+    <<<return 500
     >>>[CleanerRole].getMoney()
     <<<return
     Decision: Elegendő a pénz a vásárláshoz? (1: Igen, 2: Nem)
