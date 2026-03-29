@@ -14,10 +14,13 @@ public class CleanerRole extends Role {
     /** A takarító birtokolt feje. */
     private Head currentHead;
 
+    /** A takarítóhoz tartozó hókotró. */
+    private Snowplow snowplow;
+
     public CleanerRole() {
         Skeleton.printCall("CleanerRole", "CleanerRole()");
         this.money = 1000;
-        Snowplow snowplow= new Snowplow();
+        this.snowplow = new Snowplow();
         Skeleton.printReturn("");
     }
 
@@ -35,6 +38,20 @@ public class CleanerRole extends Role {
         return false;
     }
 
+    /**
+     * Vásárlás a boltban.
+     *
+     * @param store a bolt
+     * @param item a megvásárolni kívánt elem
+     * @return true, ha a vásárlás sikeres
+     */
+    public boolean buy(Store store, Buyable item) {
+        Skeleton.printCall("CleanerRole", "buy(item)");
+        boolean result = store.buy(this, item);
+        Skeleton.printReturn(String.valueOf(result));
+        return result;
+    }
+
     public int getMoney() {
         Skeleton.printCall("CleanerRole", "getMoney()");
         Skeleton.printReturn("");
@@ -45,6 +62,26 @@ public class CleanerRole extends Role {
         Skeleton.printCall("CleanerRole", "changeMoney(amount)");
         money += amount;
         Skeleton.printReturn("");
+    }
+
+    public void decreaseMoney(int price) {
+        Skeleton.printCall("CleanerRole", "decreaseMoney(price)");
+        money -= price;
+        Skeleton.printReturn("");
+    }
+
+    public void addBiokerosene(int amount) {
+        Skeleton.printCall("CleanerRole", "addBiokerosene(amount)");
+        if (snowplow != null) {
+            snowplow.addBiokerosene(amount);
+        }
+        Skeleton.printReturn("");
+    }
+
+    public Snowplow getSnowplow() {
+        Skeleton.printCall("CleanerRole", "getSnowplow()");
+        Skeleton.printReturn("");
+        return snowplow;
     }
 
     public void addHead(Head newHead) {

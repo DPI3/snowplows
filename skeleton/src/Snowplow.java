@@ -1,7 +1,5 @@
 package skeleton.src;
 
-import java.util.Scanner;
-
 /**
  * A Snowplow osztály egy hókotró járművet reprezentál.
  *
@@ -86,6 +84,19 @@ public class Snowplow extends Vehicle {
         }
 
         Skeleton.printReturn("");
+    }
+
+    public void addBiokerosene(int amount) {
+        Skeleton.printCall("Snowplow", "addBiokerosene(amount)");
+        biokeroseneStock += amount;
+        Skeleton.printState("biokeroseneStock értéke megnövelve.");
+        Skeleton.printReturn("");
+    }
+
+    public int getBiokeroseneStock() {
+        Skeleton.printCall("Snowplow", "getBiokeroseneStock()");
+        Skeleton.printReturn(String.valueOf(biokeroseneStock));
+        return biokeroseneStock;
     }
 
     /**
