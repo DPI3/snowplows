@@ -43,7 +43,5 @@ public class Test28 implements TestCase {
         boolean passable = lane.isPassable();
         assert !passable
                 : "FAIL: Lane should be impassable after collision";
-
-        System.out.println("[RESULT] Teszt sikeresen lefutott.");
     }
 }

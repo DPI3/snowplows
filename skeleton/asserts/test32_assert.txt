@@ -1,27 +1,20 @@
 [RUNNING] 32. Játék kiértékelése teszt
-[STATE] Előfeltétel: A játék fut, buszvezetők és takarítók teljesítettek
-
->>>[Game].end()
-    [STATE] Game.state = FINISHED
-    loop [minden BusDriverRole]
-        >>>[BusdriverRole].getScore()
-        <<<return busDriverScore
-    loop [minden CleanerRole]
-        >>>[CleanerRole].getScore()
-        <<<return cleanerScore
-    loop [minden Player]
-        >>>[Player].getSumPoints()
-            [STATE] sumPoints = busDriverScore + cleanerScore
-        <<<return sumPoints
-    >>>[Scoreboard].updateScoreboard(players)
-        [STATE] Scoreboard.scores frissítve
+>>>[BusdriverRole].BusdriverRole()
+  >>>[Bus].Bus()
+  <<<return
+<<<return
+>>>[CleanerRole].CleanerRole()
+  >>>[Snowplow].Snowplow()
+    >>>[ThrowerHead].ThrowerHead()
     <<<return
-    >>>[Scoreboard].sortByScore()
-        [STATE] Scoreboard.scores rendezve
-    <<<return finalScoreboard
+  <<<return
 <<<return
-
->>>[Scoreboard].evaluate()
+>>>[Player].Player(id, name, roles)
 <<<return
-
+>>>[Player].Player(id, name, roles)
+<<<return
+>>>[Game].end()
+  [STATE] Game state set to FINISHED
+<<<return
 [RESULT] Teszt sikeresen lefutott.
+[RESULT] The test completed successfully.

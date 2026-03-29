@@ -34,4 +34,4 @@
 [STATE] Lane.state = IceSheet
 [STATE] Lane.isPassable() = true (csúszós, de járható)
 
-[RESULT] Teszt sikeresen lefutott.
+[RESULT] The test completed successfully.

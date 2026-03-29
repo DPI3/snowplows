@@ -47,7 +47,5 @@ public class Test32 implements TestCase {
 
         // Játék befejezése - game.end() kiértékeli a pontokat
         game.end();
-
-        System.out.println("[RESULT] Teszt sikeresen lefutott.");
     }
 }
