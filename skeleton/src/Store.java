@@ -36,7 +36,7 @@ public class Store{
         int decision = Skeleton.requestInput("Elegendő a pénz a vásárláshoz? (1: Igen, 2: Nem)");
 
         if (decision == 1 && money >= price && inventory.contains(item)) {
-            cleanerRole.decreaseMoney(price);
+            cleanerRole.changeMoney(-price);
             if (item instanceof Head) {
                 cleanerRole.addHead((Head) item);
             } else {
@@ -44,12 +44,12 @@ public class Store{
                 cleanerRole.addBiokerosene(biokeroseneAmount);
             }
             Skeleton.printState("Sikeres vásárlás.");
-            Skeleton.printReturn("true");
+            Skeleton.printReturn("");
             return true;
         }
 
         Skeleton.printState("Sikertelen vásárlás.");
-        Skeleton.printReturn("false");
+        Skeleton.printReturn("");
         return false;
     }
 }
