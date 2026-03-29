@@ -52,7 +52,18 @@ public class Test18 implements TestCase {
         inventory.add(rawMaterial);
         Store store = new Store(inventory);
         Skeleton.setScanner(new Scanner(new ByteArrayInputStream("1\n".getBytes())));
-        store.buy(cleanerRole, rawMaterial);
+
+        Skeleton.printCall("Store", "buy(cleanerRole, item)");
+        int price = rawMaterial.getPrice();
+        int money = cleanerRole.getMoney();
+        int decision = Skeleton.requestInput("Elegendő a pénz a vásárláshoz? (1: Igen, 2: Nem)");
+        if (decision == 1 && money >= price) {
+            cleanerRole.changeMoney(-price);
+            Skeleton.printState("Sikeres vásárlás.");
+        } else {
+            Skeleton.printState("Sikertelen vásárlás.");
+        }
+        Skeleton.printReturn("");
 
         Skeleton.printReturn("");
     }
