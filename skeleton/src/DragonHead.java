@@ -23,7 +23,7 @@ public class DragonHead extends Head {
     @Override
     public void clean(Lane lane, Snowplow snowplow) {
         // A tesztelő által elvárt hívás naplózása
-        Skeleton.printCall("DragonHead", "clean(l, sp)");
+        Skeleton.printCall("DragonHead", "clean(lane, snowplow)");
         
         // Meghívjuk a Lane-en a change metódust (az UML alapján paramétere int)
         lane.change(10); // A pontos szám a belső logikádtól függ
