@@ -1,10 +1,9 @@
 [RUNNING] 25. Autó célba érése teszt
+>>>[Node].Node()
+<<<return
 >>>[Car].move()
-  >>>[Node].onVehicleEnter(c)
-    >>>[Node].checkDestination()
-    <<<return true
-    >>>[Car].removeFromTraffic()
-    <<<return
+  >>>[Node].onVehicleEnter(vehicle)
   <<<return
+  [STATE] IDLE (Destination reached)
 <<<return
 [RESULT] The test completed successfully.

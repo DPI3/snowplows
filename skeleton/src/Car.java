@@ -72,10 +72,62 @@ public class Car extends Vehicle {
      *
      * Skeleton implementációban csak a metódushívásokat és az állapotváltozásokat naplózza.
      */
+    /**
+     * Egy szimulációs lépést hajt végre az autón.
+     */
+    @Override
+    public void tick() {
+        Skeleton.printCall("Car", "tick()");
+        this.move();
+        Skeleton.printReturn("");
+    }
+
+    /**
+     * A személyautó mozgását hajtja végre.
+     * Lekérdezi a következő sávot, és ha az járhatatlan, megáll.
+     */
     @Override
     public void move() {
         Skeleton.printCall("Car", "move()");
-        Skeleton.printState("A személyautó előrehalad az aktuális sávban.");
+
+        if (this.currentRoute == null) {
+
+            if (this.workplace != null) {
+                this.workplace.onVehicleEnter(this);
+            }
+            Skeleton.printState("IDLE (Destination reached)");
+            Skeleton.printReturn("");
+            return; 
+        }
+
+        Skeleton.printCall("Route", "getNextLane(cl)");
+        Skeleton.printReturn("nl");
+
+        int passableInput = Skeleton.requestInput("A sáv járható? (1: Igen, 2: Nem)");
+        
+        if (passableInput == 1) {
+            Skeleton.printCall("Lane", "isPassable()");
+            Skeleton.printReturn("true");
+            Skeleton.printState("update position");
+        } else {
+            Skeleton.printCall("Lane", "isPassable()");
+            Skeleton.printReturn("false");
+            
+            this.stopAndWait();
+        }
+
+        Skeleton.printReturn("");
+    }
+
+    /**
+     * Az autó megáll és várakozik, mert az előtte lévő út járhatatlan.
+     */
+    public void stopAndWait() {
+        Skeleton.printCall("Car", "stopAndWait()");
+        
+        this.speed = 0; // A sebességet nullázzuk
+        Skeleton.printState("Speed set to 0, position remains");
+        
         Skeleton.printReturn("");
     }
 

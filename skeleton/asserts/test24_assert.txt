@@ -1,5 +1,10 @@
 [RUNNING] 24. Autó elakadása járhatatlan úton teszt
+>>>[Car].Car()
+<<<return
+>>>[Vehicle].setCurrentLane(lane)
+<<<return
 >>>[Game].tick()
+  [STATE] currentRound növelve: 1
   >>>[Car].tick()
     >>>[Car].move()
       >>>[Route].getNextLane(cl)

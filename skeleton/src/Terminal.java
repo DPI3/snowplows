@@ -28,7 +28,6 @@ public class Terminal extends Node{
     @Override
     public void onVehicleEnter(Vehicle vehicle) {
         Skeleton.printCall("Terminal", "onVehicleEnter(vehicle)");
-        checkDestination();
         Skeleton.printReturn("");
     }
 }

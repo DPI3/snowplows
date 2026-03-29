@@ -1,26 +1,35 @@
 package skeleton.tests;
 
-import java.util.Scanner;
 import skeleton.src.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Implementation of Test 24: Car stuck on an impassable road test.
- * Verifies that if the next lane is impassable (e.g., due to an accident 
- * or heavy snow), the car's speed is set to 0 and it waits.
+ * A 24. teszteset (Autó elakadása járhatatlan úton teszt) implementációja.
+ * A teszt azt vizsgálja, hogyan viselkedik az autó, ha a lekérdezett 
+ * következő sáv (pl. mély hó miatt) járhatatlan.
  */
 public class Test24 implements TestCase {
 
     /**
-     * Runs the test sequence.
-     *
-     * @param scanner the scanner object to read user input
+     * Futtatja a tesztesetet.
+     * Példányosítja az autót, az útvonalat és a sávot, majd beállítja a kezdőállapotot.
+     * Ezt követően az autót hozzáadja a játékhoz, és elindítja a szimulációs lépést.
      */
     @Override
     public void run() {
         Car car = new Car();
+        Route route = new Route();
+        Lane currentLane = new Lane();
         
-        // Starting the action. Inside move(), the nextLane.isPassable(scanner) 
-        // will ask the user, and the testfile will provide 'false'.
-        car.move();
+        car.setCurrentRoute(route);
+        car.setCurrentLane(currentLane);
+        
+        List<Vehicle> vehicles = new ArrayList<>();
+        vehicles.add(car);
+        
+        Game game = new Game(0, 10, vehicles, new ArrayList<>());
+        
+        game.tick();
     }
 }

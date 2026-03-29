@@ -1,12 +1,21 @@
 package skeleton.src;
+
 /**
  * A Workplace osztaly egy munkahely csomopontot reprezental a halozatban.
  *
  * A munkahely a szemelygepkocsik egyik celallomasa, ahol a jarmuvek
  * forgalmi esemenyei feldolgozhatok.
  */
-public class Workplace extends Node{
+public class Workplace extends Node {
     
+    /**
+     * Üres paraméteres konstruktor a teszteléshez.
+     * Meghívja az ősosztály (Node) konstruktorát.
+     */
+    public Workplace() {
+        super();
+    }
+
     /**
      * Workplace peldany letrehozasa.
      *
@@ -23,6 +32,6 @@ public class Workplace extends Node{
      */
     @Override
     public void onVehicleEnter(Vehicle vehicle){
-
+        super.onVehicleEnter(vehicle);
     }
 }
