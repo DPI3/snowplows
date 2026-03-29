@@ -1,5 +1,7 @@
 [RUNNING] 21. Busz közlekedés teszt
 >>>[Game].tick()
+  >>>[Bus].Bus()
+  <<<return
   >>>[Bus].tick()
     >>>[Bus].move()
       >>>[Route].getNextLane(currentLane)
