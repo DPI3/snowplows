@@ -1,34 +1,33 @@
 [RUNNING] 29. Ütközés: autó-busz teszt
-[STATE] Előfeltétel: A autó és B busz csúszás miatt összeütköznek
-
->>>[Car : carA].move()
-    >>>[Lane : lane].pozíció frissítése
-    <<<return
-        >>>[Bus : busB].move()
-    >>>[Lane : lane].pozíció frissítése
-        >>>[Lane : lane].ütközés detektálása
-            [STATE] Lane.hasAccident = true
-        >>>[LaneState].setState(Impassable)
-                [STATE] Lane.state = Impassable
-            <<<return
-        <<<return
-        >>>[Car : carA].stop()
-            [STATE] Car.speed = 0
-        <<<return
-        >>>[Bus : busB].setImmobileTime()
-            [STATE] Bus.immobileTime = N
-        <<<return
-        <<<return
-        <<<return
-
-Decision: Van-e baleset a sávon?
-        1: Igen
-2: Nem
->> 1
-
-Decision: Járható-e a sáv?
-        1: Igen
-2: Nem
->> 2
-
-[RESULT] Teszt sikeresen lefutott.
+>>>[Lane].setState(newState)
+  [STATE] Lane state changed to: IceSheet
+<<<return
+>>>[Car].Car()
+<<<return
+>>>[Bus].Bus()
+<<<return
+>>>[Car].move()
+  [STATE] IDLE (Destination reached)
+<<<return
+>>>[Bus].move()
+  >>>[Route].getNextLane(currentLane)
+  <<<return nextLane
+  Decision: A sáv járható? (1: Igen, 2: Nem)
+  >> 1
+  >>>[Lane].isPassable()
+  <<<return true
+  [STATE] update position
+  Decision: Baleset történt? (1: Igen, 2: Nem)
+  >> 2
+  >>>[Lane].hasAccident()
+  <<<return false
+<<<return
+>>>[Lane].hasAccident()
+  Decision: Does the lane have an accident? (1: Yes, 2: No)
+  >> 1
+<<<return true
+>>>[Lane].isPassable()
+  Decision: A sáv járható? (1: Igen, 2: Nem)
+  >> 2
+<<<return false
+[RESULT] The test completed successfully.

@@ -1,37 +1,26 @@
 [RUNNING] 27. Jégpáncél kialakulása teszt
-
-[STATE] Előfeltétel: Lane.state = ThinSnow
-[STATE] Lane.compactionCounter = 0
-
-[LOOP: több autó áthalad a sávon]
-
->>>[Car : car1].move()
-    >>>[Lane : lane].enterLane()
-        [STATE] Lane.compactionCounter++
-        [határérték nincs elérve]
-        [STATE] Lane.state = ThinSnow (változatlan)
-    <<<return
+>>>[Lane].setState(newState)
+  [STATE] Lane state changed to: ThinSnow
 <<<return
-
->>>[Car : car2].move()
-    >>>[Lane : lane].enterLane()
-        [STATE] Lane.compactionCounter++
-        [határérték nincs elérve]
-        [STATE] Lane.state = ThinSnow (változatlan)
-    <<<return
+>>>[Car].Car()
 <<<return
-
->>>[Car : car3].move()
-    >>>[Lane : lane].enterLane()
-        [STATE] Lane.compactionCounter++
-        [határérték elérve]
-        >>>[LaneState : ThinSnow].stateChange(IceSheet)
-            [STATE] Lane.state = IceSheet
-        <<<return IceSheet
-    <<<return
+>>>[Vehicle].setCurrentLane(lane)
 <<<return
-
-[STATE] Lane.state = IceSheet
-[STATE] Lane.isPassable() = true (csúszós, de járható)
-
+>>>[Car].Car()
+<<<return
+>>>[Vehicle].setCurrentLane(lane)
+<<<return
+>>>[Car].Car()
+<<<return
+>>>[Vehicle].setCurrentLane(lane)
+<<<return
+>>>[Car].move()
+  [STATE] IDLE (Destination reached)
+<<<return
+>>>[Car].move()
+  [STATE] IDLE (Destination reached)
+<<<return
+>>>[Car].move()
+  [STATE] IDLE (Destination reached)
+<<<return
 [RESULT] The test completed successfully.

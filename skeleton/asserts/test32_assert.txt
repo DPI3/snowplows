@@ -16,5 +16,4 @@
 >>>[Game].end()
   [STATE] Game state set to FINISHED
 <<<return
-[RESULT] Teszt sikeresen lefutott.
 [RESULT] The test completed successfully.

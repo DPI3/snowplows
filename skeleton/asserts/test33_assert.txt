@@ -7,5 +7,4 @@
 <<<return
 >>>[RoadNetwork].getShortestPath(from, dest)
 <<<return r
-[RESULT] Teszt sikeresen lefutott.
 [RESULT] The test completed successfully.
