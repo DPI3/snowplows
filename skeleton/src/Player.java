@@ -29,9 +29,17 @@ public class Player {
      * @param roles a játékos szerepkörei
      */
     public Player(int id, String name, List<Role> roles) {
+        Skeleton.printCall("Player", "Player(id, name, roles)");
         this.id = id;
         this.name = name;
         this.roles = roles;
+
+        Skeleton.printReturn("");
+    }
+
+    public Player(){
+        Skeleton.printCall("Player", "Player()");
+        Skeleton.printReturn("");
     }
 
     /**
@@ -40,6 +48,8 @@ public class Player {
      * @return a játékos neve
      */
     public String getName() {
+        Skeleton.printCall("Player", "getName()");
+        Skeleton.printReturn("name");
         return name;
     }
 
@@ -49,6 +59,10 @@ public class Player {
      * @return a játékos összesített pontszáma
      */
     public int getSumPoints() {
-        return 0;
+        Skeleton.printCall("Player", "getSumPoints()");
+        int points=0;
+        //összeadás
+        Skeleton.printReturn("sumPoints");
+        return points;
     }
 }

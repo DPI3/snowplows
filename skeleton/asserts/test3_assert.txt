@@ -1,6 +1,6 @@
 [RUNNING] 3. Alagút időjárás-mentessége teszt
->>>[Weather].snowfallTick(roadNetwork)
-    >>>[RoadNetwork].weatherEffects()
+>>>[Weather].snowfallTick(road)
+    >>>[Road].weatherEffects()
         >>>[Tunnel].applyWeatherEffect(weather)
         <<<return
     <<<return

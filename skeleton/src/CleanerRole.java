@@ -11,7 +11,11 @@ public class CleanerRole extends Role {
     /** A takarító jelenlegi pénzmennyisége. */
     private int money;
 
-    public CleanerRole() {}
+    public CleanerRole() {
+        Skeleton.printCall("CleanerRole", "CleanerRole()");
+
+        Skeleton.printReturn("");
+    }
 
     /**
      * Vásárlási művelet a Store-ban. A takarító megvásárolhat hókotrót, kotrófejet vagy nyersanyagot.
@@ -21,6 +25,8 @@ public class CleanerRole extends Role {
      * @return true, ha a vásárlás sikeres volt
      */
     public boolean buy(Role role, Buyable item) {
+        Skeleton.printCall("CleanerRole", "buy(role, item)");
+        
         return false;
     }
 
@@ -46,10 +52,8 @@ public class CleanerRole extends Role {
     public int getScore() {
         Skeleton.printCall("CleanerRole", "getScore()");
         
-        // (A korábbi assert fájlod alapján ide be kell tenni a Scoreboard hívást a teszthez)
-        // scoreboard.getScore();
         
-        Skeleton.printReturn("currentScore");
-        return money; // Vagy amiből a pontszám számítódik a valóságban
+        Skeleton.printReturn("cleanerScore");
+        return money; // Ideiglenes
     }
 }

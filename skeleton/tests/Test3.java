@@ -22,12 +22,11 @@ public class Test3 implements TestCase {
     public void run(Scanner scanner) {
         // Inicializálás
         Weather weather = new Weather();
-        RoadNetwork roadNetwork = new RoadNetwork();
         Tunnel tunnel = new Tunnel();
         
         // Az objektumhierarchia felépítése: RoadNetwork -> Tunnel???
 
         // A szekvencia indítása a diagram szerint
-        weather.snowfallTick(roadNetwork);
+        weather.snowfallTick(tunnel);
     }
 }

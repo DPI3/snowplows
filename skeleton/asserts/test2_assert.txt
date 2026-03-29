@@ -1,13 +1,11 @@
 [RUNNING] 2. Havazás hatása az útállapotra teszt
-Decision: Mennyi hó esett?
-1: Kevés
-2: Sok
->> 1
->>>[Weather].snowfallTick(roadNetwork)
-    >>>[RoadNetwork].weatherEffects()
+>>>[Weather].snowfallTick(road)
+    >>>[Road].weatherEffects()
         >>>[Road].applyWeatherEffects()
             >>>[Lane].applyWeather(snowAmount)
-                >>>[LaneState : currentState].handleWeatherChange(snowAmount)
+                >>>[LaneState].handleWeatherChange(snowAmount)
+                Decision: Mennyi hó esett? (1: Kevés, 2: Sok)
+                >> 1
                 <<<return ThinSnow
                 >>>[Lane].changeState(ThinSnow)
                     [STATE] Lane.state = ThinSnow

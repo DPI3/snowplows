@@ -9,5 +9,5 @@
   <<<return
 <<<return
 >>>[CleanerRole].getScore()
-<<<return currentScore
+<<<return cleanerScore
 [RESULT] The test completed successfully.

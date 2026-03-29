@@ -10,7 +10,11 @@ public class BusdriverRole extends Role {
     /** A buszvezető által teljesített fordulók száma. */
     private int completedRounds;
 
-    public BusdriverRole() {}
+    public BusdriverRole() {
+        Skeleton.printCall("BusdriverRole", "BusdriverRole()");
+
+        Skeleton.printReturn("");
+    }
 
     /**
      * A busz aktuális helyzetéből meghatározza a cél csomópontba vezető
@@ -21,6 +25,9 @@ public class BusdriverRole extends Role {
      * @return a művelet eredménye
      */
     public int assignRoute(Bus bus, Node destination) {
+        Skeleton.printCall("BusdriverRole", "assignRoute(bus, destination)");
+
+        Skeleton.printReturn("");
         return 0;
     }
 
@@ -31,6 +38,8 @@ public class BusdriverRole extends Role {
      */
     @Override
     public int getScore() {
-        return 0;
+        Skeleton.printCall("BusdriverRole", "getScore()");
+        Skeleton.printReturn("busDriverScore");
+        return completedRounds*10; //ideiglenes
     }
 }
