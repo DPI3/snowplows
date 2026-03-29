@@ -1,13 +1,29 @@
 [RUNNING] 9. Takarítás jégtörő fejjel teszt
 >>>[Test9].run()
   >>>[CleanerRole].CleanerRole()
+    >>>[Snowplow].Snowplow()
+      >>>[ThrowerHead].ThrowerHead()
+      <<<return
+    <<<return
+  <<<return
+  >>>[Snowplow].Snowplow()
+    >>>[ThrowerHead].ThrowerHead()
+    <<<return
+  <<<return
+  >>>[Vehicle].changeLane(targetLane)
+    [STATE] A jármű aktuális sávja megváltozott.
+  <<<return true
+  >>>[IcebreakerHead].IcebreakerHead()
   <<<return
   >>>[Snowplow].changeHead(newHead)
     [STATE] A hókotró feje lecserélve.
   <<<return
-  >>>[CleanerRole].controlSnowplow(sp, lane)
+  >>>[CleanerRole].controlSnowplow(snowplow)
     >>>[Snowplow].clean(lane)
       >>>[IcebreakerHead].clean(lane, snowplow)
+        >>>[Lane].setState(newState)
+          [STATE] Lane state changed to: Brokenice
+        <<<return
       <<<return
     <<<return
   <<<return
