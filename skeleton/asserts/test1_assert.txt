@@ -1,4 +1,4 @@
-[RUNNING] 1. Játék indítása, inicializáció teszt
+[RUNNING] 1. Játék indítása, inicializáló teszt
 >>>[Game].Game()
     >>>[BusdriverRole].BusdriverRole()
         >>>[Bus].Bus()
