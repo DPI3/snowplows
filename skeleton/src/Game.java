@@ -54,6 +54,16 @@ public class Game {
      * A szkeleton implementációban csak a metódushívás kerül naplózásra.
      */
     public void tick() {
+        Skeleton.printCall("Game", "tick()");
+
+        currentRound++;
+        Skeleton.printState("currentRound növelve: " + currentRound);
+
+        for (Vehicle v : vehicles) {
+            v.tick();
+        }
+
+        Skeleton.printReturn("");
     }
 
     /**
@@ -63,4 +73,15 @@ public class Game {
     public boolean isOver() {
         return false; // ideiglenes
     }
+
+    public Game() {
+    Skeleton.printCall("Game", "Game()");
+
+    this.currentRound = 0;
+    this.maxRound = 10; // tetszőleges default
+    this.vehicles = new java.util.ArrayList<>();
+    this.players = new java.util.ArrayList<>();
+
+    Skeleton.printReturn("");
+}
 }
