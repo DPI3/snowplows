@@ -13,7 +13,6 @@ public class Test5 implements TestCase {
      * A tesztszekvencia futtatása.
      * Inicializálja a járművet és a célsávot (Lane).
      *
-     * @param scanner a scanner objektum a felhasználói bevitel olvasásához (a járhatósági döntéshez szükséges)
      */
     @Override
     public void run() {

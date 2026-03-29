@@ -15,8 +15,6 @@ public class Test3 implements TestCase {
      * Inicializálja az időjáráskezelőt és az úthálózatot, amelyben egy 
      * alagút objektum található. A teszt során elindul a havazási ciklus, 
      * és ellenőrizzük, hogy az alagút havazik-e.
-     *
-     * @param scanner a scanner objektum a felhasználói bevitel olvasásához (nem használt)
      */
     @Override
     public void run() {

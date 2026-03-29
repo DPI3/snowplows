@@ -12,8 +12,6 @@ public class Test7 implements TestCase {
     /**
      * A tesztszekvencia futtatása.
      * Inicializálja a takarítót, a hókotrót a söprő fejjel, valamint egy útsávot.
-     *
-     * @param scanner a scanner objektum a felhasználói bevitel olvasásához (a döntési ponthoz szükséges)
      */
     @Override
     public void run() {

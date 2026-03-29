@@ -15,8 +15,6 @@ public class Test1 implements TestCase{
      * A tesztszekvencia futtatása.
      * Elindítja az objektumorientált világ felépítését. A folyamat során sorban létrejönnek a szerepkörök 
      * és a járművek a szekvenciadiagramon látható sorrendben.
-     *
-     * @param scanner a scanner objektum a felhasználói bevitel olvasásához (nem használt)
      */
     @Override
     public void run() {

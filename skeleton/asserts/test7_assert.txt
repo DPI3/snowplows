@@ -1,20 +1,30 @@
 [RUNNING] 7. Takarítás söprő fejjel teszt
->>>[CleanerRole].controlSnowplow(sp)
-    >>>[Snowplow].move()
+>>>[CleanerRole].CleanerRole()
+  >>>[Snowplow].Snowplow()
+    >>>[ThrowerHead].ThrowerHead()
     <<<return
-    >>>[Snowplow].clean(lane)
-        Decision: Az útszakasz állapota? (1: Havas (ThinSnow/DeepSnow), 2: Jégpáncél (IceSheet), 3: Feltört jég (BrokenIce))
-        >> 1
-        >>>[Lane].getLaneState()
-        <<<return ThinSnow
-        >>>[SweeperHead].clean(lane, snowplow)
-            >>>[Lane].setLaneState(Clear)
-                [STATE] Lane.state = Clear
-            <<<return
-            >>>[CleanerRole].increaseMoney(amount)
-                [STATE] CleanerRole.money += amount
-            <<<return
-        <<<return
+  <<<return
+<<<return
+>>>[Snowplow].Snowplow()
+  >>>[ThrowerHead].ThrowerHead()
+  <<<return
+<<<return
+>>>[Vehicle].changeLane(targetLane)
+  [STATE] A jármű aktuális sávja megváltozott.
+<<<return true
+>>>[Snowplow].changeHead(newHead)
+  [STATE] A hókotró feje lecserélve.
+<<<return
+>>>[CleanerRole].controlSnowplow(sp, lane)
+  >>>[Snowplow].clean(lane)
+    >>>[SweeperHead].clean(lane, snowplow)
+      >>>[Lane].setState(newState)
+        [STATE] Lane state changed to: Clear
+      <<<return
+      >>>[Lane].change(amount)
+      <<<return
+      [STATE] Recognize cleaning, add money (modify attribute)
     <<<return
+  <<<return
 <<<return
 [RESULT] The test completed successfully.

@@ -14,7 +14,6 @@ public class Test2 implements TestCase {
      * A tesztszekvencia futtatása.
      * Inicializálja az időjáráskezelőt, az úthálózatot és egy konkrét sávot. 
      *
-     * @param scanner a scanner objektum a felhasználói bevitel olvasásához (a hómennyiség eldöntéséhez)
      */
     @Override
     public void run() {

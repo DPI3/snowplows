@@ -16,7 +16,14 @@ public class SweeperHead extends Head{
     @Override
     public void clean(Lane lane, Snowplow snowplow){
         Skeleton.printCall("SweeperHead", "clean(lane, snowplow)");
-        // Takarítás logikája...
+        
+        lane.setState(new Clear());
+        // Meghívjuk a Lane-en a change metódust (az UML alapján paramétere int)
+        lane.change(10); // A pontos szám a belső logikádtól függ
+        
+        // A szekvenciadiagramon lévő állapotváltozás kiírása
+        Skeleton.printState("Recognize cleaning, add money (modify attribute)");
+        
         Skeleton.printReturn("");
     }
 

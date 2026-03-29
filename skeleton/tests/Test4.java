@@ -14,7 +14,6 @@ public class Test4 implements TestCase {
      * Inicializálja a járművet és a kereszteződést, majd összekapcsolja őket, 
      * hogy szimulálja a jármű mozgását a csomópont felé.
      *
-     * @param scanner a scanner objektum a felhasználói bevitel olvasásához (nem használt)
      */
     @Override
     public void run() {
