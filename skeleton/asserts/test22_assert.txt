@@ -1,14 +1,36 @@
 [RUNNING] 22. Busz forduló teljesítése teszt
->>>[Bus].move()
-  >>>[Bus].checkTerminalReached()
-  <<<return true
-  >>>[BusdriverRole].incrementCompletedRounds()
+>>>[BusdriverRole].BusdriverRole()
+  >>>[Bus].Bus()
   <<<return
-  >>>[RoadNetwork].getShortestPath(terminalB, terminalA)
-  <<<return r
-  >>>[Bus].setCurrentRoute(r)
-  <<<return
-  >>>[Bus].move()
+<<<return
+>>>[Bus].Bus()
+<<<return
+>>>[Game].tick()
+  [STATE] currentRound növelve: 1
+  >>>[Bus].tick()
+    >>>[Bus].move()
+      >>>[Bus].checkTerminalReached()
+      <<<return true
+      >>>[BusdriverRole].incrementCompletedRounds()
+      <<<return
+      >>>[RoadNetwork].getShortestPath(from, dest)
+      <<<return r
+      >>>[Bus].setCurrentRoute(r)
+      <<<return
+      >>>[Bus].move()
+        >>>[Route].getNextLane(currentLane)
+        <<<return nextLane
+        Decision: A sáv járható? (1: Igen, 2: Nem)
+        >> 1
+        >>>[Lane].isPassable()
+        <<<return true
+        [STATE] update position
+        Decision: Baleset történt? (1: Igen, 2: Nem)
+        >> 2
+        >>>[Lane].hasAccident()
+        <<<return false
+      <<<return
+    <<<return
   <<<return
 <<<return
 [RESULT] The test completed successfully.

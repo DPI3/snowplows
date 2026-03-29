@@ -17,6 +17,9 @@
 >>>[CleanerRole].controlSnowplow(snowplow)
   >>>[Snowplow].clean(lane)
     >>>[DragonHead].clean(lane, snowplow)
+      >>>[Lane].setState(newState)
+        [STATE] Lane state changed to: Clear
+      <<<return
       >>>[Lane].change(amount)
       <<<return
       [STATE] Recognize cleaning, add money (modify attribute)

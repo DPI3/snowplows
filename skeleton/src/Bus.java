@@ -32,6 +32,9 @@ public class Bus extends Vehicle {
      */
     private Route currentRoute;
 
+    /** A buszhoz rendelt sofőr szerepkör. */
+    private BusdriverRole driver;
+
     /**
      * Üres konstruktor a skeleton célokra.
      */
@@ -40,12 +43,23 @@ public class Bus extends Vehicle {
         Skeleton.printCall("Bus", "Bus()");
         Skeleton.printReturn("");
     }
-    /**
-     * Beállítja a busz aktuális útvonalát.
-     * @param route a beállítandó útvonal
-     */
+    /** Beállítja a busz aktuális útvonalát és naplózza a hívást. */
     public void setCurrentRoute(Route route) {
+        Skeleton.printCall("Bus", "setCurrentRoute(r)");
         this.currentRoute = route;
+        Skeleton.printReturn("");
+    }
+
+    /** Beállítja a buszhoz a sofőrt. */
+    public void setDriver(BusdriverRole driver) {
+        this.driver = driver;
+    }
+
+    /** Ellenőrzi a végállomás elérését a szekvenciadiagram alapján. */
+    public boolean checkTerminalReached() {
+        Skeleton.printCall("Bus", "checkTerminalReached()");
+        Skeleton.printReturn("true");
+        return true;
     }
 
     /**
@@ -97,46 +111,52 @@ public class Bus extends Vehicle {
     public void move() {
         Skeleton.printCall("Bus", "move()");
 
-        // 1. Következő sáv lekérése [cite: 3090-3091]
+        if (this.currentRoute == null) {
+            if (this.checkTerminalReached()) {
+                if (this.driver != null) {
+                    this.driver.incrementCompletedRounds(); //
+                }
+                
+                RoadNetwork rn = new RoadNetwork();
+                // Új útvonal kérése a hálózattól az UML paraméterekkel
+                Route r = rn.getShortestPath(terminalB, terminalA);
+                
+                this.setCurrentRoute(r);
+                this.move(); // Rekurzív hívás a szekvenciadiagram szerint
+                
+                Skeleton.printReturn("");
+                return;
+            }
+        }
+
         Skeleton.printCall("Route", "getNextLane(currentLane)");
         Skeleton.printReturn("nextLane");
 
-        // 2. Járhatóság ellenőrzése döntési ponttal [cite: 3092-3093]
+        // Járhatóság ellenőrzése (Input bekérése a teszthez)
         int passableInput = Skeleton.requestInput("A sáv járható? (1: Igen, 2: Nem)");
         
         if (passableInput == 1) {
             Skeleton.printCall("Lane", "isPassable()");
             Skeleton.printReturn("true");
-            Skeleton.printState("update position"); // [cite: 3099]
+            
+            // Pozíció frissítése a haladáshoz
+            Skeleton.printState("update position");
+
+            // Baleset ellenőrzése (Csak ha a sáv járható volt)
+            int accidentInput = Skeleton.requestInput("Baleset történt? (1: Igen, 2: Nem)");
+            if (accidentInput == 1) {
+                Skeleton.printCall("Lane", "hasAccident()");
+                Skeleton.printReturn("true");
+                Skeleton.printState("Bus waits due to accident");
+            } else {
+                Skeleton.printCall("Lane", "hasAccident()");
+                Skeleton.printReturn("false");
+            }
         } else {
+            // Ha nem járható (pl. nagy hó), a busz megáll
             Skeleton.printCall("Lane", "isPassable()");
             Skeleton.printReturn("false");
-
-            // Sávváltási kísérlet akadály esetén [cite: 3101-3104]
-            Skeleton.printCall("Road", "getAdjacentLane(currentLane, index)");
-            Skeleton.printReturn("adjLane");
-
-            int adjPassableInput = Skeleton.requestInput("A szomszédos sáv járható? (1: Igen, 2: Nem)");
-            if (adjPassableInput == 1) {
-                Skeleton.printCall("Lane", "isPassable()");
-                Skeleton.printReturn("true");
-                Skeleton.printState("change lanes and move forward"); // [cite: 3107]
-            } else {
-                Skeleton.printCall("Lane", "isPassable()");
-                Skeleton.printReturn("false");
-                Skeleton.printState("wait (speed = 0)"); // [cite: 3109]
-            }
-        }
-
-        // 3. Baleset ellenőrzése [cite: 3111-3113]
-        int accidentInput = Skeleton.requestInput("Baleset történt? (1: Igen, 2: Nem)");
-        if (accidentInput == 1) {
-            Skeleton.printCall("Lane", "hasAccident()");
-            Skeleton.printReturn("true");
-            Skeleton.printState("activate immobileTime"); // [cite: 3114]
-        } else {
-            Skeleton.printCall("Lane", "hasAccident()");
-            Skeleton.printReturn("false");
+            Skeleton.printState("Bus stopped (Lane impassable)");
         }
 
         Skeleton.printReturn("");

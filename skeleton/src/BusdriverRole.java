@@ -32,6 +32,15 @@ public class BusdriverRole extends Role {
     }
 
     /**
+     * Növeli a teljesített fordulók számát.
+     */
+    public void incrementCompletedRounds() {
+        Skeleton.printCall("BusdriverRole", "incrementCompletedRounds()");
+        this.completedRounds++;
+        Skeleton.printReturn("");
+    }
+
+    /**
      * A buszvezető szerepkör pontszámát adja vissza, ami a teljesített fordulók számán alapul.
      *
      * @return a szerepkör pontszáma

@@ -1,26 +1,31 @@
 package skeleton.tests;
 
-import java.util.Scanner;
 import skeleton.src.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Implementation of Test 22: Bus completing a round test.
- * Simulates a bus reaching its destination terminal, incrementing the driver's
- * completed rounds, and obtaining a new route for the return trip.
+ * A 22. teszteset (Busz forduló teljesítése teszt) implementációja.
+ * A dokumentáció és a szekvenciadiagram alapján ellenőrzi, hogy a végállomást elérve 
+ * a busz növeli-e a sofőr fordulószámát és lekér-e új útvonalat.
  */
 public class Test22 implements TestCase {
 
     /**
-     * Runs the test sequence.
-     *
-     * @param scanner the scanner object to read user input
+     * Futtatja a tesztesetet.
+     * Példányosítja a sofőrt és a buszt, majd a játék (Game) léptetésével
+     * kiváltja a mozgási és érkezési folyamatot.
      */
     @Override
     public void run() {
+        BusdriverRole driver = new BusdriverRole();
         Bus bus = new Bus();
+        bus.setDriver(driver);
         
-        // Starting the movement. The internal logic of the domain classes 
-        // should handle the checkTerminalReached() logic.
-        bus.move(); 
+        List<Vehicle> vehicles = new ArrayList<>();
+        vehicles.add(bus);
+        
+        Game game = new Game(0, 10, vehicles, new ArrayList<>());
+        game.tick();
     }
 }
