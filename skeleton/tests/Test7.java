@@ -1,7 +1,6 @@
 package skeleton.tests;
 
 import skeleton.src.*;
-import java.util.Scanner;
 
 /**
  * 7. teszteset: Takarítás sörpő fejjel teszt
