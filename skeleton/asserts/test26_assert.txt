@@ -1,0 +1,22 @@
+[RUNNING] 26. Autó útvonalának újratervezése akadály esetén teszt
+>>>[Lane].setState(newState)
+  [STATE] Lane state changed to: DeepSnow
+<<<return
+>>>[Lane].setState(newState)
+  [STATE] Lane state changed to: Clear
+<<<return
+>>>[Car].move()
+  [STATE] A személyautó előrehalad az aktuális sávban.
+<<<return
+>>>[Lane].setState(newState)
+  [STATE] Lane state changed to: DeepSnow
+<<<return
+>>>[RoadNetwork].getShortestPath(from, dest)
+<<<return r
+>>>[Lane].isPassable()
+  Decision: A sáv járható? (1: Igen, 2: Nem)
+  >> 1
+1
+<<<return true
+[RESULT] Teszt sikeresen lefutott.
+[RESULT] The test completed successfully.
