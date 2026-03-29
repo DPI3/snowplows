@@ -1,13 +1,13 @@
 package skeleton;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 import skeleton.tests.*;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.io.IOException;
 
 /**
  * A SnowplowSkeletonTestProgram osztály a szkeleton rendszer
@@ -258,12 +258,12 @@ public class SnowplowSkeletonTestProgram {
             case 4: return new Test4();
             case 5: return new Test5();
             case 6: return new Test6();
-            case 7: return new Test7();
+            case 7: return new Test7();*/
             case 8: return new Test8();
             case 9: return new Test9();
-            case 10: return new Test10();*/
-            //case 11: return new Test11();
-            /*case 12: return new Test12();
+            case 10: return new Test10();
+            /*case 11: return new Test11();
+            case 12: return new Test12();
             case 13: return new Test13();
             case 14: return new Test14();
             case 15: return new Test15();
