@@ -29,8 +29,12 @@ public class CleanerRole extends Role {
      *
      * @param snowplow a vezérelni kívánt hókotró
      */
-    public void controlSnowplow(Snowplow snowplow) {
-       
+    public void controlSnowplow(Snowplow sp, Lane l) {
+        Skeleton.printCall("CleanerRole", "controlSnowplow(sp, l)");
+        
+        sp.clean(l); // Továbbhívás a hókotróra
+        
+        Skeleton.printReturn("");
     }
 
     /**
@@ -40,6 +44,12 @@ public class CleanerRole extends Role {
      */
     @Override
     public int getScore() {
-        return 0;
+        Skeleton.printCall("CleanerRole", "getScore()");
+        
+        // (A korábbi assert fájlod alapján ide be kell tenni a Scoreboard hívást a teszthez)
+        // scoreboard.getScore();
+        
+        Skeleton.printReturn("currentScore");
+        return money; // Vagy amiből a pontszám számítódik a valóságban
     }
 }

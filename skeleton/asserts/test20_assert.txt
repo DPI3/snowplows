@@ -1,12 +1,14 @@
-[RUNNING] 20. Busz útvonalhoz rendelés teszt
+[RUNNING] 20. Busz útvonalhoz rendelése teszt
 >>>[BusdriverRole].assignRoute(b, dest)
->>>[RoadNetwork].getShortestPath(from, dest)
-<<<return r
->>>[Bus].setCurrentRoute(r)
-<<<return
+  >>>[RoadNetwork].getShortestPath(from, dest)
+  <<<return r
+  >>>[Bus].setCurrentRoute(r)
+  <<<return
 <<<return
 >>>[Game].tick()
->>>[Bus].move()
-<<<return
+  >>>[Bus].tick()
+    >>>[Bus].move()
+    <<<return
+  <<<return
 <<<return
 [RESULT] The test completed successfully.

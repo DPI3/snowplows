@@ -16,14 +16,18 @@ public class DragonHead extends Head {
      * @param snowplow a takarítást végző hókotró
      */
     @Override
-    public void clean(Lane lane, Snowplow snowplow){
-        Skeleton.printCall("DragonHead", "clean(lane, snowplow)");
+    public void clean(Lane lane, Snowplow snowplow) {
+        // A tesztelő által elvárt hívás naplózása
+        Skeleton.printCall("DragonHead", "clean(l, sp)");
         
-        // Itt végezzük el a takarítást...
+        // Meghívjuk a Lane-en a change metódust (az UML alapján paramétere int)
+        lane.change(10); // A pontos szám a belső logikádtól függ
         
-        Skeleton.printReturn(""); 
-        // Mivel ez 'void', itt nem kell return érték, DE 
-        // ha véletlenül átírtad a fejlécet valami másra, akkor kell!
+        // A szekvenciadiagramon lévő állapotváltozás kiírása
+        Skeleton.printState("Recognize cleaning, add money (modify attribute)");
+        
+        // Visszatérés naplózása
+        Skeleton.printReturn("");
     }
     
     // KERESD EZT A RÉSZT: Ha van olyan metódusod, ami nem void, 
@@ -44,10 +48,10 @@ public class DragonHead extends Head {
     public int getPrice() {
         Skeleton.printCall("DragonHead", "getPrice()");
         
-        // Adjunk vissza egy tetszőleges árat (pl. 500 arany/pont/dollár)
-        int price = 500;
+        int price = 500; // Példa érték
         
-        Skeleton.printReturn(String.valueOf(price));
+        // A visszatérési értéket is jelezzük a logban
+        Skeleton.printReturn(String.valueOf(price)); 
         return price;
     }
 }

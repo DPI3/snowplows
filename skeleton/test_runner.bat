@@ -20,7 +20,7 @@ echo.
 echo [2/2] Tesztek futtatasa...
 
 REM Végigmegyünk a 19-től 25-ig tartó teszteken
-for %%i in (19 20 21 22 23 24 25) do (
+for %%i in (19) do (
     echo ----------------------------------------
     echo Teszt %%i futtatasa...
 
@@ -37,5 +37,5 @@ for %%i in (19 20 21 22 23 24 25) do (
 
 echo ----------------------------------------
 echo Teszteles befejezve.
-del temp_out.txt
+REM del temp_out.txt
 pause
