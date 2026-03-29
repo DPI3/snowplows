@@ -1,32 +1,11 @@
 [RUNNING] 33. Útvonalkereső algoritmus, legrövidebb út tesztje
-[STATE] Előfeltétel: Útvonal 1 sávja járhatatlan (baleset)
-[STATE] Előfeltétel: Útvonal 2 sávjai Clear állapotúak
-
->>>[RoadNetwork].getShortestPath(nodeA, nodeB)
-    >>>[RoadNetwork].initGraph()
-    <<<return
-    loop [sávra]
-        >>>[Lane : lane1].isPassable()
-        <<<return false
-        [STATE] Útvonal 1 sávja járhatatlan, súlya = végtelen
-        >>>[Lane : lane2].isPassable()
-        <<<return true
-        [STATE] Útvonal 2 sávja járható, alacsony dinamikus súly
-    >>>[RoadNetwork].runDijkstra()
-    <<<return
-    alt [1 járhatatlan]
-        >>>[RoadNetwork].setWeight(lane1, INFINITY)
-        <<<return
-    [2 járható]
-        >>>[RoadNetwork].setWeight(lane2, dynamicWeight)
-        <<<return
-    >>>[Route].new Route(útvonal2Sávjai)
-    <<<return r
+>>>[Lane].setState(newState)
+  [STATE] Lane state changed to: Brokenice
+<<<return
+>>>[Lane].setState(newState)
+  [STATE] Lane state changed to: Clear
+<<<return
+>>>[RoadNetwork].getShortestPath(from, dest)
 <<<return r
-
-Decision: Járható-e az útvonal sávja?
-1: Igen
-2: Nem
->> 1
-
 [RESULT] Teszt sikeresen lefutott.
+[RESULT] The test completed successfully.

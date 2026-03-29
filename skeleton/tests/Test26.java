@@ -61,7 +61,5 @@ public class Test26 implements TestCase {
         boolean passable = alternativeLane.isPassable();
         assert passable
                 : "FAIL: Alternative route lane should be passable";
-
-        System.out.println("[RESULT] Teszt sikeresen lefutott.");
     }
 }

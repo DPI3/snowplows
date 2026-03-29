@@ -51,7 +51,5 @@ public class Test30 implements TestCase {
                 : "FAIL: Bus A should have immobileTime > 0 after collision";
         assert busB.getImmobileTime() > 0
                 : "FAIL: Bus B should have immobileTime > 0 after collision";
-
-        System.out.println("[RESULT] Teszt sikeresen lefutott.");
     }
 }

@@ -55,7 +55,5 @@ public class Test33 implements TestCase {
             assert lane.isPassable()
                     : "FAIL: Route should not contain impassable lanes";
         }
-
-        System.out.println("[RESULT] Teszt sikeresen lefutott.");
     }
 }

@@ -55,7 +55,5 @@ public class Test31 implements TestCase {
         // Assert: busz már mozoghat
         assert bus.getImmobileTime() == 0
                 : "FAIL: Bus immobileTime should be 0 after third tick";
-
-        System.out.println("[RESULT] Teszt sikeresen lefutott.");
     }
 }

@@ -16,7 +16,5 @@
 >>>[Lane].isPassable()
   Decision: A sáv járható? (1: Igen, 2: Nem)
   >> 1
-1
 <<<return true
-[RESULT] Teszt sikeresen lefutott.
 [RESULT] The test completed successfully.
