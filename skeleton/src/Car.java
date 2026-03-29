@@ -1,5 +1,4 @@
 package skeleton.src;
-import java.util.Scanner;
 
 /**
  * A Car osztály egy személygépkocsit reprezentál a rendszerben.
@@ -15,18 +14,21 @@ public class Car extends Vehicle {
     /**
      * A jármű kiindulási pontja (lakóhely).
      */
-    private Node residence;
+    private Residence residence;
 
     /**
      * A jármű célállomása (munkahely).
      */
-    private Node workplace;
+    private Workplace workplace;
 
     /**
      * A jármű aktuális útvonala.
      */
     private Route currentRoute;
 
+    /**
+     * Üres konstruktor a skeleton célokra.
+     */
     public Car() {
         super();
     }
@@ -43,41 +45,22 @@ public class Car extends Vehicle {
      * @param currentRoute aktuális útvonal
      */
     public Car(String id, Lane currentLane, double positionOnLane, double speed,
-               Node residence, Node workplace, Route currentRoute) {
+               Residence residence, Workplace workplace, Route currentRoute) {
         super(id, currentLane, positionOnLane, speed);
         this.residence = residence;
         this.workplace = workplace;
         this.currentRoute = currentRoute;
     }
 
+    /**
+     * A személyautó mozgását hajtja végre.
+     *
+     * Skeleton implementációban csak a metódushívásokat és az állapotváltozásokat naplózza.
+     */
     @Override
-    public void move(Scanner scanner) {
-        // 1. Naplózzuk a belépést
+    public void move() {
         Skeleton.printCall("Car", "move()");
-
-        // 2. Szimuláljuk a sáv lekérését
-        Skeleton.printCall("Route", "getNextLane(cl)");
-        Skeleton.printReturn("nl");
-
-        // 3. Döntési pont: itt kéri be a program az "1"-est
-        int input = Skeleton.requestInput(scanner, "A sáv járható? (1: Igen, 2: Nem)");
-
-        if (input == 1) {
-            Skeleton.printCall("Lane", "isPassable()");
-            Skeleton.printReturn("true");
-
-            Skeleton.printCall("Car", "setCurrentLane(nl)");
-            Skeleton.printReturn("");
-
-            Skeleton.printCall("Car", "setPositionOnLane(newPosition)");
-            Skeleton.printReturn("");
-        } else {
-            // Itt kezelheted a 24-es tesztet (elakadás)
-            Skeleton.printCall("Lane", "isPassable()");
-            Skeleton.printReturn("false");
-        }
-
-        // 4. Naplózzuk a move() visszatérését
+        Skeleton.printState("A személyautó előrehalad az aktuális sávban.");
         Skeleton.printReturn("");
     }
 }

@@ -1,5 +1,4 @@
 package skeleton.src;
-import java.util.Scanner;
 /**
  * A Snowplow osztály egy hókotró járművet reprezentál.
  *
@@ -9,15 +8,7 @@ import java.util.Scanner;
  * A Snowplow a Vehicle osztályból származik,
  * és megvalósítja a Buyable interfészt.
  */
-public class Snowplow extends Vehicle implements Buyable {
-
-    /**
-     * Üres konstruktor a tesztelhetőség érdekében.
-     */
-    public Snowplow() {
-        super(); // A Vehicle üres konstruktorát hívja
-    }
-    
+public class Snowplow extends Vehicle {
 
     /**
      * Az aktuálisan felszerelt kotrófej.
@@ -35,9 +26,11 @@ public class Snowplow extends Vehicle implements Buyable {
     private int biokeroseneStock;
 
     /**
-     * A hókotró működési módja / szerepe.
+     * Üres konstruktor a tesztelhetőség érdekében.
      */
-    private CleanerRole cleanerRole;
+    public Snowplow() {
+        super();
+    }
 
     /**
      * Konstruktor a Snowplow objektum létrehozásához.
@@ -49,60 +42,55 @@ public class Snowplow extends Vehicle implements Buyable {
      * @param currentHead aktuális fej
      * @param saltStock só készlet
      * @param biokeroseneStock biokerozin készlet
-     * @param cleanerRole működési mód
      */
     public Snowplow(String id, Lane currentLane, double positionOnLane, double speed,
-                    Head currentHead, int saltStock, int biokeroseneStock,
-                    CleanerRole cleanerRole) {
+                    Head currentHead, int saltStock, int biokeroseneStock) {
         super(id, currentLane, positionOnLane, speed);
         this.currentHead = currentHead;
         this.saltStock = saltStock;
         this.biokeroseneStock = biokeroseneStock;
-        this.cleanerRole = cleanerRole;
     }
 
     /**
-     * A kotrófej cseréje.
+     * A fej cseréje.
      *
      * @param newHead az új fej
      */
     public void changeHead(Head newHead) {
-    }
+        Skeleton.printCall("Snowplow", "changeHead(newHead)");
 
-    /**
-     * Tisztítás végrehajtása egy adott sávon.
-     *
-     * @param lane a tisztítandó sáv
-     */
-    // A clean metódust már korábban jól megírtad a Skeleton hívásokkal
-    public void clean(Lane lane) {
-        Skeleton.printCall("Snowplow", "clean(lane)");
-        if (currentHead != null) {
-            currentHead.clean(lane, this); 
-        }
+        this.currentHead = newHead;
+        Skeleton.printState("A hókotró feje lecserélve.");
+
         Skeleton.printReturn("");
     }
 
     /**
-     * A hókotró ára.
+     * Tisztítást végez a megadott sávon.
      *
-     * @return az ár (szkeleton esetben 0)
+     * @param lane a tisztítandó sáv
      */
-    @Override
-    public int getPrice() {
-        Skeleton.printCall("Snowplow", "getPrice()");
-        Skeleton.printReturn("0");
-        return 0;
+    public void clean(Lane lane) {
+        Skeleton.printCall("Snowplow", "clean(lane)");
+
+        if (currentHead != null) {
+            currentHead.clean(lane, this);
+        } else {
+            Skeleton.printState("Nincs felszerelt fej, a tisztítás nem hajtható végre.");
+        }
+
+        Skeleton.printReturn("");
     }
 
+    /**
+     * A hókotró mozgását hajtja végre.
+     */
     @Override
-    public void move(Scanner scanner) {
-        // Hókotró haladása (sd 6 alapján) [cite: 2731, 2744]
+    public void move() {
         Skeleton.printCall("Snowplow", "move()");
-        
-        // Pozíció frissítése [cite: 2745]
-        Skeleton.printState("updatePosition()");
-        
+
+        Skeleton.printState("A hókotró előrehalad az aktuális sávban.");
+
         Skeleton.printReturn("");
     }
 

@@ -46,7 +46,7 @@ public class Test8 implements TestCase {
         // A logika a use-case alapján van felépítve:
 
         // 1. A takarító a hókotrót a megfelelő útszakaszra irányítja
-        cleanerRole.cleanRoad(snowplow);
+        cleanerRole.controlSnowplow(snowplow);
 
         // 2. A hókotró megpróbálja letakarítani az útszakaszt hányó fejjel
         snowplow.cleanWithThrowerHead();

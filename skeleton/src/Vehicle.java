@@ -28,6 +28,10 @@ public abstract class Vehicle {
      */
     protected double speed;
 
+    /**
+     * Üres konstruktor a jármű inicializálásához.
+     */
+    public Vehicle() {}
 
     /**
      * Konstruktor a jármű inicializálásához.
@@ -60,8 +64,12 @@ public abstract class Vehicle {
      * @return true, ha a sávváltás sikeres, különben false
      */
     public boolean changeLane(Lane targetLane) {
-        // Alapértelmezett viselkedés: mindig sikeres sávváltás
+        Skeleton.printCall("Vehicle", "changeLane(targetLane)");
+
         this.currentLane = targetLane;
+        Skeleton.printState("A jármű aktuális sávja megváltozott.");
+
+        Skeleton.printReturn("true");
         return true;
     }
 
@@ -71,7 +79,8 @@ public abstract class Vehicle {
      * A jármű minden időegységben ezt a metódust hívja meg.
      */
     public void tick() {
-        // Alapértelmezett viselkedés: mozgás végrehajtása
+        Skeleton.printCall("Vehicle", "tick()");
         move();
+        Skeleton.printReturn("");
     }
 }
