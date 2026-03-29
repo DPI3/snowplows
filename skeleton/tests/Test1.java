@@ -2,7 +2,6 @@ package skeleton.tests;
 
 import skeleton.src.*;
 
-import java.rmi.server.Skeleton;
 import java.util.Scanner;
 
 /**
@@ -10,8 +9,7 @@ import java.util.Scanner;
  * A teszteset ellenőrzi, hogy a játék indulásakor minden szükséges objektum helyesen jön létre:
  * buszok, buszvezetők, autók, hókotrók és takarítók.
  */
-public class Test1 extends TestCase{
-
+public class Test1 implements TestCase{
 
     /**
      * A tesztszekvencia futtatása.

@@ -10,10 +10,8 @@ import java.util.List;
 public abstract class Road {
     protected List<Lane> lanes = new ArrayList<>();
 
-    /**
-     * Alkalmazza az időjárási hatásokat az útra. 
-     * Megjegyzés: Az 'applyWeatherEffect' nevet használtam, hogy illeszkedjen az alosztályokhoz!
-     * * @param weather az alkalmazandó időjárás
-     */
-    public abstract void applyWeatherEffect(Weather weather);
+    public void applyWeatherEffects(Weather weather) {
+        Skeleton.printCall("RoadNetwork", "applyWeatherEffects()");
+        Skeleton.printReturn("");
+    }
 }

@@ -8,7 +8,7 @@ import java.util.Scanner;
  * A teszteset ellenőrzi, hogy a Weather osztály havazás eseménye 
  * hogyan rontja le egy adott sáv állapotát.
  */
-public class Test2 extends TestCase {
+public class Test2 implements TestCase {
 
     /**
      * A tesztszekvencia futtatása.
@@ -32,6 +32,6 @@ public class Test2 extends TestCase {
         
         
        // A havazási folyamat indítása a szekvenciadiagram alapján
-        weather.snowfallTick(roadNetwork);
+        weather.snowfallTick(road);
     }
 }

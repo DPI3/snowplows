@@ -13,7 +13,9 @@ public class Bridge extends Road{
      * @param weather az aktualis idojarasi allapot
      */
     @Override
-    public void applyWeatherEffect(Weather weather){
-        
+    public void applyWeatherEffects(Weather weather){
+        Skeleton.printCall("Bridge", "applyWeatherEffects(Weather)");
+        weather.snowfallTick(this);
+        Skeleton.printReturn("");
     }
 }
