@@ -1,17 +1,23 @@
 [RUNNING] 23. Autó haladása járható sávban teszt
+>>>[Bus].Bus()
+<<<return
+>>>[Vehicle].setCurrentLane(lane)
+<<<return
 >>>[Game].tick()
-  >>>[Car].tick()
-    >>>[Car].move()
-      >>>[Route].getNextLane(cl)
-      <<<return nl
+  [STATE] currentRound növelve: 1
+  >>>[Bus].tick()
+    >>>[Bus].move()
+      >>>[Route].getNextLane(currentLane)
+      <<<return nextLane
       Decision: A sáv járható? (1: Igen, 2: Nem)
       >> 1
       >>>[Lane].isPassable()
       <<<return true
-      >>>[Car].setCurrentLane(nl)
-      <<<return
-      >>>[Car].setPositionOnLane(newPosition)
-      <<<return
+      [STATE] update position
+      Decision: Baleset történt? (1: Igen, 2: Nem)
+      >> 2
+      >>>[Lane].hasAccident()
+      <<<return false
     <<<return
   <<<return
 <<<return

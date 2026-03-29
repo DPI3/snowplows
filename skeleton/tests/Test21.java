@@ -4,30 +4,24 @@ import java.util.Scanner;
 import skeleton.src.*;
 
 /**
- * Implementation of Test 21: Bus movement test.
- * Simulates a bus moving along its assigned route on a passable lane,
- * checking for accidents and updating its position.
+ * 21-es teszt implementációja
+ * Szimulálja a Busz haladását járható útvonalon,
+ * ellenőrzi a baleseteket és frissíti pozícióját.
  */
 public class Test21 implements TestCase {
 
     /**
-     * Runs the test sequence.
-     * Triggers the move action of the bus.
-     *
-     * @param scanner the scanner object to read user input
+     * Teszt szekvencia futtatása.
+     * Elindítja a Bus move függvényét.
      */
     @Override
     public void run() {
-        // 1. A szimuláció kezdete (Game szint)
         Skeleton.printCall("Game", "tick()");
         
-        // Itt létrehozol egy buszt
         Bus bus = new Bus();
         
-        // 2. A Game meghívja a Bus tick-jét
         bus.tick(); 
 
-        // 3. Lezárjuk a Game.tick() hívást
         Skeleton.printReturn(""); 
     }
 }
