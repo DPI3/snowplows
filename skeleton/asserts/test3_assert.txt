@@ -1,8 +1,6 @@
 [RUNNING] 3. Alagút időjárás-mentessége teszt
 >>>[Weather].snowfallTick(road)
-    >>>[Road].weatherEffects()
-        >>>[Tunnel].applyWeatherEffect(weather)
-        <<<return
-    <<<return
+  >>>[Tunnel].applyWeatherEffects(weather)
+  <<<return
 <<<return
 [RESULT] The test completed successfully.
