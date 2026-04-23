@@ -1,42 +1,25 @@
-package skeleton.src;
+package prototype.src;
 
 /**
- * Az IcebreakerHead a hókotró jégtörő fejének megvalósítása.
+ * Jég feltörésére szolgáló fej.
  */
 public class IcebreakerHead extends Head {
 
-    public IcebreakerHead() {
-        Skeleton.printCall("IcebreakerHead", "IcebreakerHead()");
-        Skeleton.printReturn("");
-    }
-
-    /**
-     * Megtisztítja a megadott sávot a jég feltörésével.
-     *
-     * @param lane a takarítandó sáv
-     * @param snowplow a takarítást végző hókotró
-     */
     @Override
     public void clean(Lane lane, Snowplow snowplow) {
-        Skeleton.printCall("IcebreakerHead", "clean(lane, snowplow)");
 
-        lane.setState(new Brokenice());
+        // ha jégpáncél van → feltört jég lesz
+        if (lane.getLaneState() instanceof IceSheet) {
+            lane.setState(new BrokenIce());
+            return;
+        }
 
-        Skeleton.printReturn("");
+        // egyébként kis mértékű változtatás
+        lane.change(1);
     }
 
-    /**
-     * Visszaadja a jégtörő fej árát.
-     *
-     * @return a fej ára
-     */
     @Override
     public int getPrice() {
-        Skeleton.printCall("IcebreakerHead", "getPrice()");
-
-        int price = 800;
-
-        Skeleton.printReturn(String.valueOf(price));
-        return price;
+        return 90;
     }
 }

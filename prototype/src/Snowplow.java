@@ -1,115 +1,52 @@
-package skeleton.src;
+package prototype.src;
 
 /**
- * A Snowplow osztály egy hókotró járművet reprezentál.
- *
- * A hókotró képes különböző típusú fejekkel tisztítani az utakat,
- * valamint nyersanyagokat (só, biokerozin) használ a működéshez.
- *
- * A Snowplow a Vehicle osztályból származik,
- * és megvalósítja a Buyable interfészt.
+ * A Snowplow osztály egy hókotrót reprezentál.
+ * Különböző fejekkel képes tisztítani az utakat.
  */
 public class Snowplow extends Vehicle {
 
-    /**
-     * Az aktuálisan felszerelt kotrófej.
-     */
+    /** Aktuális fej */
     private Head currentHead;
 
-    /**
-     * A rendelkezésre álló só mennyisége.
-     */
+    /** Készletek */
     private int saltStock;
-
-    /**
-     * A rendelkezésre álló biokerozin mennyisége.
-     */
     private int biokeroseneStock;
+    private int gravelStock;
 
-    /**
-     * Üres konstruktor a tesztelhetőség érdekében.
-     */
-    public Snowplow() {
-        super();
-        Skeleton.printCall("Snowplow", "Snowplow()");
-        ThrowerHead throwerHead= new ThrowerHead();
-        Skeleton.printReturn("");
+    public Snowplow(String id, Lane lane, double speed, Head head) {
+        super(id, lane, speed);
+        this.currentHead = head;
     }
 
     /**
-     * Konstruktor a Snowplow objektum létrehozásához.
-     *
-     * @param id azonosító
-     * @param currentLane aktuális sáv
-     * @param positionOnLane pozíció
-     * @param speed sebesség
-     * @param currentHead aktuális fej
-     * @param saltStock só készlet
-     * @param biokeroseneStock biokerozin készlet
-     */
-    public Snowplow(String id, Lane currentLane, double positionOnLane, double speed,
-                    Head currentHead, int saltStock, int biokeroseneStock) {
-        super(id, currentLane, positionOnLane, speed);
-        this.currentHead = currentHead;
-        this.saltStock = saltStock;
-        this.biokeroseneStock = biokeroseneStock;
-    }
-
-    /**
-     * A fej cseréje.
-     *
-     * @param newHead az új fej
+     * Fej cseréje
      */
     public void changeHead(Head newHead) {
-        Skeleton.printCall("Snowplow", "changeHead(newHead)");
-
         this.currentHead = newHead;
-        Skeleton.printState("A hókotró feje lecserélve.");
-
-        Skeleton.printReturn("");
     }
 
     /**
-     * Tisztítást végez a megadott sávon.
-     *
-     * @param lane a tisztítandó sáv
+     * Takarítás végrehajtása
      */
     public void clean(Lane lane) {
-        Skeleton.printCall("Snowplow", "clean(lane)");
+        if (currentHead == null || lane == null) return;
 
-        if (currentHead != null) {
-            currentHead.clean(lane, this);
-        } else {
-            Skeleton.printState("Nincs felszerelt fej, a tisztítás nem hajtható végre.");
-        }
-
-        Skeleton.printReturn("");
+        currentHead.clean(lane, this);
     }
 
-    public void addBiokerosene(int amount) {
-        Skeleton.printCall("Snowplow", "addBiokerosene(amount)");
-        biokeroseneStock += amount;
-        Skeleton.printState("biokeroseneStock értéke megnövelve.");
-        Skeleton.printReturn("");
-    }
+    /** Készletkezelés */
+    public void addSalt(int amount) { saltStock += amount; }
+    public void consumeSalt(int amount) { saltStock = Math.max(0, saltStock - amount); }
 
-    public int getBiokeroseneStock() {
-        Skeleton.printCall("Snowplow", "getBiokeroseneStock()");
-        Skeleton.printReturn(String.valueOf(biokeroseneStock));
-        return biokeroseneStock;
-    }
+    public void addBiokerosene(int amount) { biokeroseneStock += amount; }
+    public void consumeBiokerosene(int amount) { biokeroseneStock = Math.max(0, biokeroseneStock - amount); }
 
-    /**
-     * A hókotró mozgását hajtja végre.
-     */
-    @Override
-    public void move() {
-        Skeleton.printCall("Snowplow", "move()");
+    public void addGravel(int amount) { gravelStock += amount; }
+    public void consumeGravel(int amount) { gravelStock = Math.max(0, gravelStock - amount); }
 
-        Skeleton.printState("A hókotró előrehalad az aktuális sávban.");
-
-        Skeleton.printReturn("");
-    }
-
-    
+    /** Getterek */
+    public int getSaltStock() { return saltStock; }
+    public int getBiokeroseneStock() { return biokeroseneStock; }
+    public int getGravelStock() { return gravelStock; }
 }

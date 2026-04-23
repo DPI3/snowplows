@@ -1,16 +1,13 @@
-package skeleton.src;
+package prototype.src;
+
 /**
- * A Head absztrakt osztaly a hokotrok kulonbozo fejtipusainak kozos alapja.
- *
- * A leszarmozott osztalyok hatarozzak meg, hogy a fej hogyan tisztitja
- * az utat kulonbozo allapotok eseten.
+ * Absztrakt kotrófej.
+ * Minden fej egy adott tisztítási stratégiát valósít meg.
  */
-public abstract class Head implements Buyable{
+public abstract class Head implements Buyable {
+
     /**
-     * Vegrehajtja a sav tisztitasat a fej tipusanak megfelelo modon.
-     *
-     * @param lane a tisztitando sav
-     * @param snowplow a muveletet vegzo hokotro
+     * A sáv tisztítása
      */
     public abstract void clean(Lane lane, Snowplow snowplow);
 }
