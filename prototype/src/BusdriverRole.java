@@ -1,4 +1,6 @@
-package skeleton.src;
+package prototype.src;
+
+import skeleton.src.RoadNetwork;
 
 /**
  * A BusdriverRole a buszvezető szerepkört reprezentálja.
@@ -9,11 +11,11 @@ public class BusdriverRole extends Role {
 
     /** A buszvezető által teljesített fordulók száma. */
     private int completedRounds;
+    private Bus bus;
 
-    public BusdriverRole() {
-        Skeleton.printCall("BusdriverRole", "BusdriverRole()");
-        Bus bus= new Bus();
-        Skeleton.printReturn("");
+    public BusdriverRole(String name, Bus bus) {
+        completedRounds=0;
+        this.bus=bus;
     }
 
     /**
@@ -25,9 +27,16 @@ public class BusdriverRole extends Role {
      * @return a művelet eredménye
      */
     public int assignRoute(Bus bus, Node destination) {
-        Skeleton.printCall("BusdriverRole", "assignRoute(bus, destination)");
-
-        Skeleton.printReturn("");
+        Route newRoute = RoadNetwork.getShortestPath(bus.getTerminal_A(), destination);
+        if (newRoute == null) {
+            bus.setCurrentRoute(null);
+            return 0;
+        }
+        bus.setCurrentRoute(newRoute);
+        int sumWeight=0;
+        for(Lane lane: newRoute.getLanes()){
+            sumWeight+=lane.getDynamicWeight();
+        }
         return 0;
     }
 
@@ -35,9 +44,7 @@ public class BusdriverRole extends Role {
      * Növeli a teljesített fordulók számát.
      */
     public void incrementCompletedRounds() {
-        Skeleton.printCall("BusdriverRole", "incrementCompletedRounds()");
         this.completedRounds++;
-        Skeleton.printReturn("");
     }
 
     /**
@@ -47,8 +54,6 @@ public class BusdriverRole extends Role {
      */
     @Override
     public int getScore() {
-        Skeleton.printCall("BusdriverRole", "getScore()");
-        Skeleton.printReturn("busDriverScore");
-        return completedRounds*10; //ideiglenes
+        return completedRounds*50;
     }
 }
