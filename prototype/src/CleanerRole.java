@@ -1,4 +1,4 @@
-package skeleton.src;
+package prototype.src;
 
 /**
  * A CleanerRole a takarító szerepkört reprezentálja.
@@ -11,17 +11,15 @@ public class CleanerRole extends Role {
     /** A takarító jelenlegi pénzmennyisége. */
     private int money;
 
-    /** A takarító birtokolt feje. */
-    private Head currentHead;
-
     /** A takarítóhoz tartozó hókotró. */
     private Snowplow snowplow;
 
-    public CleanerRole() {
-        Skeleton.printCall("CleanerRole", "CleanerRole()");
-        this.money = 1000;
-        this.snowplow = new Snowplow();
-        Skeleton.printReturn("");
+    private String name;
+
+    public CleanerRole(String name, int money, Snowplow snowplow) {
+        this.name=name;
+        this.money = money;
+        this.snowplow=snowplow;
     }
 
     /**
@@ -32,10 +30,7 @@ public class CleanerRole extends Role {
      * @return true, ha a vásárlás sikeres volt
      */
     public boolean buy(Role role, Buyable item) {
-        Skeleton.printCall("CleanerRole", "buy(role, item)");
-
-        Skeleton.printReturn("");
-        return false;
+        return buy(Store, item);
     }
 
     /**
@@ -46,49 +41,40 @@ public class CleanerRole extends Role {
      * @return true, ha a vásárlás sikeres
      */
     public boolean buy(Store store, Buyable item) {
-        Skeleton.printCall("CleanerRole", "buy(item)");
         boolean result = store.buy(this, item);
-        Skeleton.printReturn(String.valueOf(result));
         return result;
     }
 
     public int getMoney() {
-        Skeleton.printCall("CleanerRole", "getMoney()");
-        Skeleton.printReturn("");
         return money;
     }
 
     public void changeMoney(int amount) {
-        Skeleton.printCall("CleanerRole", "changeMoney(amount)");
         money += amount;
-        Skeleton.printReturn("");
     }
 
     public void decreaseMoney(int price) {
-        Skeleton.printCall("CleanerRole", "decreaseMoney(price)");
         money -= price;
-        Skeleton.printReturn("");
+    }
+
+    public void addSalt(int amount) {
+        snowplow.addSalt(amount);
+    }
+
+    public void addGravel(int amount) {
+        snowplow.addGravel(amount);
     }
 
     public void addBiokerosene(int amount) {
-        Skeleton.printCall("CleanerRole", "addBiokerosene(amount)");
-        if (snowplow != null) {
-            snowplow.addBiokerosene(amount);
-        }
-        Skeleton.printReturn("");
+        snowplow.addBiokerosene(amount);
     }
 
     public Snowplow getSnowplow() {
-        Skeleton.printCall("CleanerRole", "getSnowplow()");
-        Skeleton.printReturn("");
         return snowplow;
     }
 
     public void addHead(Head newHead) {
-        Skeleton.printCall("CleanerRole", "addHead(newHead)");
-        currentHead = newHead;
-        Skeleton.printState("Új fej hozzáadva a felszereléshez.");
-        Skeleton.printReturn("");
+        snowplow.changeHead(newHead);
     }
 
     /**
@@ -97,22 +83,11 @@ public class CleanerRole extends Role {
      * @param sp a vezérelni kívánt hókotró
      */
     public void controlSnowplow(Snowplow sp) {
-        // 1. Az assert által elvárt pontos hívás naplózása, már csak 1 paraméterrel
-        Skeleton.printCall("CleanerRole", "controlSnowplow(snowplow)");
-
-        // 2. Lekérjük a hókotró aktuális sávját az ősosztály (Vehicle) segítségével
         Lane lane = sp.getCurrentLane();
-
-        // 3. Tesztkörnyezet védelem: mivel a 19-es tesztben nem építünk fel egy teljes úthálózatot,
-        // a currentLane null lesz. Ilyenkor a teszt futtatásához példányosítunk egyet.
         if (lane == null) {
             lane = new Lane();
         }
-
-        // 4. Kiadjuk a takarítási parancsot a sávra
         sp.clean(lane);
-
-        Skeleton.printReturn("");
     }
 
     /**
@@ -122,10 +97,6 @@ public class CleanerRole extends Role {
      */
     @Override
     public int getScore() {
-        Skeleton.printCall("CleanerRole", "getScore()");
-        
-        
-        Skeleton.printReturn("cleanerScore");
-        return money; // Ideiglenes
+        return money;
     }
 }
