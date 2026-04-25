@@ -30,7 +30,7 @@ public class CleanerRole extends Role {
      * @return true, ha a vásárlás sikeres volt
      */
     public boolean buy(Role role, Buyable item) {
-        return buy(Store, item);
+        return false;
     }
 
     /**
