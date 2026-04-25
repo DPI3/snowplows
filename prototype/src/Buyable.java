@@ -1,4 +1,4 @@
-package skeleton.src;
+package prototype.src;
 
 /**
  * A Buyable interfesz a megvasarolhato elemek kozos szerzodeset irja le.

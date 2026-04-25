@@ -1,4 +1,4 @@
-package skeleton.src;
+package prototype.src;
 /**
  * A Brokenice osztály a tört jég útállapotát reprezentálja.
  * 

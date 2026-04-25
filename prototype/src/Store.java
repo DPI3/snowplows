@@ -1,5 +1,4 @@
-package skeleton.src;
-import java.util.ArrayList;
+package prototype.src;
 import java.util.List;
 /**
  * A Store osztaly a jatek boltjat reprezentalja.
@@ -27,15 +26,30 @@ public class Store{
      * @param item a megvasarolni kivant elem
      * @return true, ha a vasarlas sikeres volt
      */
-    public boolean buy(CleanerRole cleanerRole, Buyable item){
+    public boolean buy(CleanerRole cleanerRole, Buyable item) {
         if (!inventory.contains(item)) {
             return false; 
         }
 
-        // Itt történne a vasarlas a cleanerRole-al
-        
-        // Eltávolítjuk a megvásárolt elemet a listából
-        inventory.remove(item);
-        return true;
+        int price = item.getPrice();
+
+        if (cleanerRole.getMoney() >= price) {
+            
+            cleanerRole.decreaseMoney(price);
+            
+            if (item instanceof Head) {
+                cleanerRole.addHead((Head) item);
+            } 
+            /* * Ide jöhet a nyersanyagok (só, zuzalék, biokerozin) átadási logikája is, 
+             * amennyiben azok különálló Buyable osztályként lettek implementálva a rendszerben:
+             * else if (item instanceof SaltItem) { cleanerRole.addSalt(10); } 
+             */
+
+            inventory.remove(item);
+            
+            return true; 
+        }
+
+        return false;
     }
 }

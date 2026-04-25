@@ -1,4 +1,4 @@
-package skeleton.src;
+package prototype.src;
 
 /**
  * A DeepSnow osztály a vastag hó útállapotát reprezentálja.
@@ -38,9 +38,13 @@ public class DeepSnow implements LaneState {
      */
     @Override
     public LaneState handleWeatherChange(int snowAmount) {
-        if (snowAmount < 0) {
-            return new Clear();
+        if (snowAmount <= 0) {
+            return new Clear(); 
+        } 
+        else if (snowAmount > 0 && snowAmount < 10) {
+            return new ThinSnow(); 
         }
+        
         return this;
     }
 }

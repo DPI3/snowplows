@@ -1,6 +1,4 @@
-package skeleton.src;
-
-import skeleton.src.LaneState;
+package prototype.src;
 
 /**
  * A Clear osztály a tiszta (hótól mentes) út állapotát reprezentálja.
@@ -39,11 +37,12 @@ public class Clear implements LaneState {
      */
     @Override
     public LaneState handleWeatherChange(int snowAmount) {
-        if (snowAmount > 10) { // Példa küszöbérték a mélyhóra
+       if (snowAmount >= 10) {
             return new DeepSnow();
         } else if (snowAmount > 0) {
-            return new ThinSnow();
+            return new ThinSnow(); 
         }
+                
         return this;
     }
 }

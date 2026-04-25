@@ -1,4 +1,4 @@
-package skeleton.src;
+package prototype.src;
 /**
  * A ThinSnow osztaly a vekony ho utallapotat reprezentalja.
  *
@@ -34,6 +34,13 @@ public class ThinSnow implements LaneState{
      */
     @Override
     public LaneState handleWeatherChange(int snowAmount) {
-    
+        if (snowAmount >= 10) {
+            return new DeepSnow(); 
+        } 
+        else if (snowAmount <= 0) {
+            return new Clear(); 
+        }
+        
+        return this;
     }
 }
