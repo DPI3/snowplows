@@ -17,10 +17,7 @@ public class DeepSnow implements LaneState {
      */
     @Override
     public boolean isPassable() {
-        Skeleton.printCall("DeepSnow", "isPassable()");
-        // A mély hóban elakadnak az autók, tehát ez false
-        Skeleton.printReturn("false");
-        return false; 
+        return false;
     }
 
     /**
@@ -30,9 +27,6 @@ public class DeepSnow implements LaneState {
      */
     @Override
     public double getDynamicWeight() {
-        Skeleton.printCall("DeepSnow", "getDynamicWeight()");
-        // Nagyon nehéz (vagy lehetetlen) haladás, magas súly
-        Skeleton.printReturn("10.0");
         return 10.0;
     }
 
@@ -44,9 +38,9 @@ public class DeepSnow implements LaneState {
      */
     @Override
     public LaneState handleWeatherChange(int snowAmount) {
-        Skeleton.printCall("DeepSnow", "handleWeatherChange(snowAmount)");
-        // Marad mély hó, vagy ha sokat esik, még mélyebb
-        Skeleton.printReturn("this");
+        if (snowAmount < 0) {
+            return new Clear();
+        }
         return this;
     }
 }
