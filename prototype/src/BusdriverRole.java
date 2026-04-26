@@ -11,8 +11,18 @@ public class BusdriverRole extends Role {
 
     /** A buszvezető által teljesített fordulók száma. */
     private int completedRounds;
+
+    /** A buszvezető által irányított busz. */
     private Bus bus;
 
+    /** A buszvezető neve. */
+    private String name;
+
+    /** A  BusdriverRole objektum konstruktora
+     * 
+     * @param name a buszvezető neve
+     * @param bus a buszvezető által mozgatandó busz
+    */
     public BusdriverRole(String name, Bus bus) {
         completedRounds=0;
         this.bus=bus;
@@ -37,7 +47,7 @@ public class BusdriverRole extends Role {
         for(Lane lane: newRoute.getLanes()){
             sumWeight+=lane.getDynamicWeight();
         }
-        return 0;
+        return sumWeight;
     }
 
     /**
