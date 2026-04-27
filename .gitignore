@@ -8,5 +8,4 @@ skeleton/bin
 snowplows.iml
 skeleton/temp.txt
 skeleton/temp_out.txt
-test_data/output/*
-!test_data/output/.gitkeep
+prototype/test_data/output/
