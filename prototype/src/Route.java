@@ -1,32 +1,49 @@
-package skeleton.src;
+package prototype.src;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Egy kiszámított útvonalat képvisel az úthálózaton keresztül.
- * Azon sávok rendezett listájából áll, amelyeken egy járműnek át kell haladnia.
  */
 public class Route {
+    
     private List<Lane> lanes = new ArrayList<>();
 
     /**
-     * Meghatározza az útvonal következő sávját a jármű jelenlegi sávja alapján.
-     * A szkeleton fázisban egy mock (ál) következő sávot ad vissza.
-     *
-     * @param current az a sáv, amelyen a jármű jelenleg tartózkodik
-     * @return a következő áthaladandó sáv
+     * Megkeresi a paraméterként kapott aktuális sávot az útvonalban, 
+     * és visszaadja a soron következő sáv objektumot.
      */
-    public Lane getNextLane(Lane current) {
-        Skeleton.printCall("Route", "getNextLane(currentLane)");
+    public Lane getNextLane(Lane curr) {
+        int idx = lanes.indexOf(curr);
         
-        Lane nextLane = new Lane();
+        // Ha nem található, vagy a legutolsó sávon van
+        if (idx == -1 || idx == lanes.size() - 1) {
+            return null;
+        }
         
-        Skeleton.printReturn("nextLane");
-        return nextLane;
+        return lanes.get(idx + 1);
     }
 
+    /**
+     * Visszaadja az útvonal teljes hosszát.
+     */
+    public double getLength() {
+        double sum = 0;
+        for (Lane lane : lanes) {
+            sum += lane.getLength();
+        }
+        return sum;
+    }
+
+    /**
+     * Visszaadja az útvonalon szereplő sávokat.
+     */
     public List<Lane> getLanes() {
         return lanes;
+    }
+    
+    public void addLane(Lane lane) {
+        this.lanes.add(lane);
     }
 }
