@@ -5,8 +5,9 @@ setlocal enabledelayedexpansion
 echo === Zuzmaravaros Tesztelo Rendszer (Prototipus) ===
 echo Java kodok forditasa...
 
-rem Letrehozzuk a bin mappat a leforditott class-oknak a prototype mappaban
+rem Letrehozzuk a bin es az output mappakat, ha meg nem leteznek
 if not exist bin mkdir bin
+if not exist test_data\output mkdir test_data\output
 
 rem Leforditjuk az osszes java fajlt a src es a tests mappakbol
 javac -d bin src\*.java tests\*.java
