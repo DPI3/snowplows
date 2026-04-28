@@ -1,0 +1,6 @@
+load test8_arrange.txt
+allapot_allit lane_next deepsnow
+mozgas car_1
+mozgas car_1
+save test8_out.txt
+exit
