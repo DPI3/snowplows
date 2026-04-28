@@ -13,6 +13,24 @@ public abstract class Road {
     protected Node source;
     protected Node destination;
 
+
+
+    protected int snowLevel = 0;
+
+    public void increaseSnowLevel() {
+        snowLevel++;
+    }
+
+    public void reduceSnowLevel() {
+        if (snowLevel > 0) {
+            snowLevel--;
+        }
+    }
+
+    public int getSnowLevel() {
+        return snowLevel;
+    }
+
     /**
      * Megkeresi és visszaadja a paraméterként kapott sáv melletti 
      * szomszédos sávot a megadott index (irány) alapján.
@@ -33,7 +51,10 @@ public abstract class Road {
      * Absztrakt metódus, amelyet a leszármazottak felüldefiniálnak.
      * Az időjárás hatását alkalmazza az útszakasz sávjaira.
      */
-    public abstract void applyWeatherEffects(Weather weather);
+    public void applyWeatherEffects(Weather weather) {
+        // csak reagál, nem irányít
+        increaseSnowLevel();
+    }
     
     /**
      * Hozzáadja a paraméterben átvett Lane objektumot a lanes listához.

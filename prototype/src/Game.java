@@ -15,6 +15,8 @@ public class Game {
     private List<Vehicle> vehicles;
     private List<Player> players;
 
+    private boolean finished;
+
     public Game() {
         this.currentRound = 0;
         this.maxRound = 10;

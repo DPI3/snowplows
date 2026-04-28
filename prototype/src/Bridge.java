@@ -11,8 +11,6 @@ public class Bridge extends Road {
 
     @Override
     public void applyWeatherEffects(Weather weather) {
-        if (weather != null) {
-            weather.snowfallTick(this);
-        }
+        increaseSnowLevel(); // erősebb hatás
     }
 }

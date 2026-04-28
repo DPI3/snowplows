@@ -10,7 +10,7 @@ public abstract class Vehicle {
     protected final String id;
 
     /** Az aktuális sáv, amelyen a jármű halad */
-    protected Lane currentLane;
+        protected Lane currentLane;
 
     /** A jármű aktuális útvonala */
     protected Route currentRoute;
@@ -20,6 +20,21 @@ public abstract class Vehicle {
 
     /** A jármű aktuális sebessége */
     protected double speed;
+
+    private Node currentNode;
+    private boolean arrived;
+
+    public void setCurrentNode(Node node) {
+        this.currentNode = node;
+    }
+
+    public void setCurrentLane(Lane lane) {
+        this.currentLane = lane;
+    }
+
+    public void setArrived(boolean arrived) {
+        this.arrived = arrived;
+    }
 
     /**
      * Konstruktor

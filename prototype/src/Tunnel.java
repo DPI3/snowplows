@@ -11,9 +11,6 @@ public class Tunnel extends Road {
 
     @Override
     public void applyWeatherEffects(Weather weather) {
-        // alagútban kisebb hatás
-        if (weather != null) {
-            this.reduceSnowLevel(); // pl. kevésbé gyűlik a hó
-        }
+        reduceSnowLevel(); // védett
     }
 }
