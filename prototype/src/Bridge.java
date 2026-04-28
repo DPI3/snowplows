@@ -1,21 +1,18 @@
-package skeleton.src;
-/**
- * A Bridge osztaly egy hid tipusu utszakaszt reprezental.
- *
- * A hidakra kulon idojarasi hatasok ervenyesulhetnek,
- * amelyek befolyasolhatjak a jarhatosagot es az allapotot.
- */
-public class Bridge extends Road{
+package prototype.src;
 
-    /**
-     * Alkalmazza az idojaras hatasat a hid utallapotara.
-     *
-     * @param weather az aktualis idojarasi allapot
-     */
+/**
+ * A Bridge osztály egy híd típusú útszakaszt reprezentál.
+ */
+public class Bridge extends Road {
+
+    public Bridge() {
+        super();
+    }
+
     @Override
-    public void applyWeatherEffects(Weather weather){
-        Skeleton.printCall("Bridge", "applyWeatherEffects(Weather)");
-        weather.snowfallTick(this);
-        Skeleton.printReturn("");
+    public void applyWeatherEffects(Weather weather) {
+        if (weather != null) {
+            weather.snowfallTick(this);
+        }
     }
 }
