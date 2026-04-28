@@ -136,4 +136,16 @@ public class Lane {
     public double getLength() {
         return 100.0; // Példa hossz
     }
+
+    public Node getSource() {
+        return source;
+    }
+
+    public void setSource(Node source) {
+        this.source = source;
+    }
+
+    public void setDestination(Node destination) {
+        this.destination = destination;
+    }
 }

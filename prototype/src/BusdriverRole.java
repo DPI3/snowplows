@@ -16,15 +16,19 @@ public class BusdriverRole extends Role {
     /** A buszvezető neve. */
     private String name;
 
+    private RoadNetwork roadNetwork;
+
     /** A  BusdriverRole objektum konstruktora
      * 
      * @param name a buszvezető neve
      * @param bus a buszvezető által mozgatandó busz
+     * @param roadNetwork a közlekedési hálózat
     */
-    public BusdriverRole(String name, Bus bus) {
+    public BusdriverRole(String name, Bus bus, RoadNetwork roadNetwork) {
         completedRounds=0;
         this.name = name;
         this.bus=bus;
+        this.roadNetwork = roadNetwork;
     }
 
     /**
@@ -40,7 +44,7 @@ public class BusdriverRole extends Role {
             return 0;
         }
 
-        Route newRoute = RoadNetwork.getShortestPath(bus.getTerminal_A(), destination);
+        Route newRoute = roadNetwork.getShortestPath(bus.getTerminal_A(), destination);
         
         if (newRoute == null) {
             bus.setCurrentRoute(null);

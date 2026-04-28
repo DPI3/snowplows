@@ -29,7 +29,7 @@ public class RoadNetwork {
             distance.put(n, Double.POSITIVE_INFINITY);
         }
         distance.put(from, 0.0);
-        Q.insert(new NodeDistance(from, 0.0)); // Q.insert(from, 0) [cite: 167]
+        Q.add(new NodeDistance(from, 0.0)); // Q.insert(from, 0) [cite: 167]
 
         while (!Q.isEmpty()) {
             Node current = Q.poll().node; // current = Q.extractMin() [cite: 169]
@@ -39,7 +39,7 @@ public class RoadNetwork {
             // Megkeressük az összes sávot, ami a jelenlegi csomópontból indul [cite: 171]
             for (Road r : roads) {
                 // Feltételezzük, hogy a Road ismeri a forrását (source)
-                if (r.source.equals(current)) {
+                if (r.getSource() != null && r.getSource().equals(current)) {
                     for (Lane l : r.getLanes()) {
                         // Ha a sáv nem járható (DeepSnow, IceSheet, Impassable), kihagyjuk [cite: 162, 172]
                         if (!l.isPassable()) continue;

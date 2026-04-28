@@ -13,7 +13,12 @@ public abstract class Road {
     protected Node source;
     protected Node destination;
 
+    public Road() {
+    }
 
+    public List<Lane> getLanes() {
+        return lanes;
+    }
 
     protected int snowLevel = 0;
 
@@ -60,7 +65,27 @@ public abstract class Road {
      * Hozzáadja a paraméterben átvett Lane objektumot a lanes listához.
      */
     public void addLane(Lane lane) {
-        lanes.add(lane);
-        lane.setParentRoad(this);
+        if (lane != null) {
+            lanes.add(lane);
+            lane.setParentRoad(this);
+            lane.setSource(source);
+            lane.setDestination(destination);
+        }
+    }
+
+    public Node getSource() {
+        return source;
+    }
+
+    public void setSource(Node source) {
+        this.source = source;
+    }
+
+    public Node getDestination() {
+        return destination;
+    }
+
+    public void setDestination(Node destination) {
+        this.destination = destination;
     }
 }
