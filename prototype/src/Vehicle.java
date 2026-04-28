@@ -101,7 +101,6 @@ public abstract class Vehicle {
     public Route getCurrentRoute() { return currentRoute; }
 
     /** Setterek */
-    public void setCurrentLane(Lane lane) { this.currentLane = lane; }
     public void setCurrentRoute(Route route) { this.currentRoute = route; }
     public void setSpeed(double speed) { this.speed = Math.max(0, speed); }
 }

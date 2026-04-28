@@ -25,6 +25,26 @@ public class Lane {
         this.currentState = new Clear();
     }
 
+    public Lane(Road road) {
+        this.parentRoad = road;
+    }
+
+    public Road getParentRoad() {
+        return parentRoad;
+    }
+
+    public void setParentRoad(Road road) {
+        this.parentRoad = road;
+    }
+
+    public void setGravelThickness(double thickness) {
+        this.gravelThickness = thickness;
+    }
+
+    public double getGravelThickness() {
+        return gravelThickness;
+    }
+
     /**
      * Megváltoztatja a sáv jelenlegi állapotát a paraméterben kapott új állapotra.
      */
@@ -90,15 +110,20 @@ public class Lane {
             if (snowThickness <= 0) {
                 setState(new Clear());
             }
-        } else if (currentState instanceof IceSheet || currentState instanceof BrokenIce) {
+        } else if (currentState instanceof IceSheet || currentState instanceof Brokenice) {
             iceThickness = Math.max(0, iceThickness - amount);
             if (iceThickness <= 0) {
                 setState(new Clear());
             }
         } else if (currentState instanceof Gravel) {
-            gravelThickness = Math.max(0, gravelThickness - amount);
-            if (gravelThickness <= 0) {
+            Gravel g = (Gravel) currentState;
+
+            double newThickness = Math.max(0, g.getThickness() - amount);
+
+            if (newThickness <= 0) {
                 setState(new IceSheet());
+            } else {
+                setState(new Gravel(newThickness));
             }
         }
     }

@@ -61,5 +61,6 @@ public abstract class Road {
      */
     public void addLane(Lane lane) {
         lanes.add(lane);
+        lane.setParentRoad(this);
     }
 }
