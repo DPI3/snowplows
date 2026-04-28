@@ -1,21 +1,19 @@
-package skeleton.src;
-/**
- * A Tunnel osztaly egy alagut tipusu utszakaszt reprezental.
- *
- * Az alagutak idojarasi hatasai elterhetnek a nyilt utszakaszoktol,
- * ezert kulon kezelesuk indokolt az allapotvaltozasok soran.
- */
-public class Tunnel extends Road{
+package prototype.src;
 
-    /**
-     * Alkalmazza az idojaras hatasat az alagut utallapotara.
-     *
-     * @param weather az aktualis idojarasi allapot
-     */
+/**
+ * A Tunnel osztály egy alagút típusú útszakaszt reprezentál.
+ */
+public class Tunnel extends Road {
+
+    public Tunnel() {
+        super();
+    }
+
     @Override
-    public void applyWeatherEffects(Weather weather){
-        Skeleton.printCall("Tunnel", "applyWeatherEffects(weather)");
-        
-        Skeleton.printReturn("");
+    public void applyWeatherEffects(Weather weather) {
+        // alagútban kisebb hatás
+        if (weather != null) {
+            this.reduceSnowLevel(); // pl. kevésbé gyűlik a hó
+        }
     }
 }

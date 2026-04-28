@@ -1,26 +1,20 @@
-package skeleton.src;
+package prototype.src;
 
 /**
  * Represents the weather conditions in the simulation.
  */
 public class Weather {
-    /**
-     * Simulation tick for weather changes.
-     */
+
     public void tick() {
-        Skeleton.printCall("Weather", "tick()");
-        Skeleton.printReturn("");
+        // később ide jöhet random időjárás változás
     }
 
     /**
-    * Simulation tick for snowfall events.
-    * Applies the effects of snowfall to the road network.
-    *
-    * @param roadNetwork the road network to apply the snowfall effects on
-    */
+     * Applies snowfall effect to a road.
+     */
     public void snowfallTick(Road road) {
-        Skeleton.printCall("Weather", "snowfallTick(road)");
-        road.applyWeatherEffects(this);
-        Skeleton.printReturn("");
+        if (road != null) {
+            road.increaseSnowLevel();
+        }
     }
 }
