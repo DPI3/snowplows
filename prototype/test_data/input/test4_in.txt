@@ -1,0 +1,5 @@
+load test4_arrange.txt
+bolt_nyit
+vasarol salt 3
+save test4_out.txt
+exit
