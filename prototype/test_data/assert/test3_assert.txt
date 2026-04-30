@@ -1,0 +1,4 @@
+[Teszt] Sáv létrehozva. Kezdeti állapot: ThinSnow
+[Teszt] Hókotró (plow_1) a sávon, SweeperHead felszerelve.
+[Teszt] Takarítás megkezdése...
+[Eredmény] Takarítás utáni állapot: Clear

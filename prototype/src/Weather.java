@@ -1,10 +1,10 @@
 package prototype.src;
 
-import skeleton.src.Bridge;
-import skeleton.src.Lane;
-import skeleton.src.Road;
-import skeleton.src.RoadNetwork;
-import skeleton.src.Tunnel;
+import prototype.src.Bridge;
+import prototype.src.Lane;
+import prototype.src.Road;
+import prototype.src.RoadNetwork;
+import prototype.src.Tunnel;
 
 /**
  * Represents the weather conditions in the simulation.
