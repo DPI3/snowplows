@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A Residence osztály egy lakóhely típusú csomópontot reprezentál.

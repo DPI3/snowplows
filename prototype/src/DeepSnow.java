@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A DeepSnow osztály a vastag hó útállapotát reprezentálja.

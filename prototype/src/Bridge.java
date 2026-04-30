@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A Bridge osztály egy híd típusú útszakaszt reprezentál.

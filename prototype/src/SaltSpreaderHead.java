@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * Só szórásával csökkenti a jegesedést.

@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A Bus osztály egy városi buszt reprezentál.

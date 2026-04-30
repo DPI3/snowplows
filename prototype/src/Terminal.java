@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A Terminal osztály egy végállomás típusú csomópontot reprezentál.

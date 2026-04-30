@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A Clear osztály a tiszta (hótól mentes) út állapotát reprezentálja.

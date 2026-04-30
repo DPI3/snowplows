@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A CleanerRole a takarító szerepkört reprezentálja.

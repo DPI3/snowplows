@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * Zúzalékot szór a jégre, így járhatóvá teszi az utat.

@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 /**
  * A LaneState interfesz egy sav aktualis allapotat irja le.
  *

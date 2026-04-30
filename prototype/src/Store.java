@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 import java.util.List;
 /**
  * A Store osztaly a jatek boltjat reprezentalja.

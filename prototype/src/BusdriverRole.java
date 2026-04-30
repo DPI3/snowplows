@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A BusdriverRole a buszvezető szerepkört reprezentálja.

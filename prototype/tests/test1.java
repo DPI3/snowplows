@@ -11,7 +11,6 @@ public class test1 implements TestCase {
 
     @Override
     public void run() {
-        System.out.println("=== Teszteset 1: Havazás hatása egy tiszta sávra ===");
 
         // 1. Sáv inicializálása
         Lane lane = new Lane();

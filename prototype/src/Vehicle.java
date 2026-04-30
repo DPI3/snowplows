@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A Vehicle absztrakt osztály a rendszerben szereplő összes jármű közös ősosztálya.

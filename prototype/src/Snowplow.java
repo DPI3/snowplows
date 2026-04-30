@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A Snowplow osztály egy hókotrót reprezentál.

@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 /**
  * A ThinSnow osztaly a vekony ho utallapotat reprezentalja.
  *

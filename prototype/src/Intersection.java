@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * Az Intersection osztály egy kereszteződést reprezentál.

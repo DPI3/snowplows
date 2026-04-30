@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * Jég feltörésére szolgáló fej.

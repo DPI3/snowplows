@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A NormalRoad osztály egy normál típusú útszakaszt reprezentál.

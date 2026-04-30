@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A Car osztály egy személyautót reprezentál.

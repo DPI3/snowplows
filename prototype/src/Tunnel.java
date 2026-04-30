@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A Tunnel osztály egy alagút típusú útszakaszt reprezentál.

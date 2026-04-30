@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 /**
  * Az IceSheet osztaly a jegkereg utallapotat reprezentalja.
  *

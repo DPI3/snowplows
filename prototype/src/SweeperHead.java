@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A SweeperHead vékony hó eltávolítására szolgál.

@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A Workplace osztály egy munkahely csomópontot reprezentál.

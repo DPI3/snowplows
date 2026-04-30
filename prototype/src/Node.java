@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * Absztrakt alaposztály az úthálózat összes csatlakozási pontjához.

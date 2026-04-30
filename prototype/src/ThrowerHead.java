@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * Vastag hó eltávolítására alkalmas fej.

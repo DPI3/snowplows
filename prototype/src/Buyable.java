@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A Buyable interfesz a megvasarolhato elemek kozos szerzodeset irja le.

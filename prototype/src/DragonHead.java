@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A DragonHead bio-kerozinnal égeti le a havat/jéget.

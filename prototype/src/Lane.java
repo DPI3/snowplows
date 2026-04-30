@@ -1,4 +1,4 @@
-package prototype.src;
+package src;
 
 /**
  * A Lane osztály az úthálózat gráfjának egy irányított élét reprezentálja.
