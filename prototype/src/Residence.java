@@ -1,28 +1,22 @@
-package skeleton.src;
+package prototype.src;
+
 /**
- * A Residence osztaly egy lakohely csomopontot reprezental a halozatban.
- *
- * A lakohely a szemelygepkocsik egyik kiindulasi pontja,
- * ahol a jarmuvekhez kapcsolodo erkezesi esemenyek kezelhetok.
+ * A Residence osztály egy lakóhely típusú csomópontot reprezentál.
  */
-public class Residence extends Node{
-    
-    /**
-     * Residence peldany letrehozasa.
-     *
-     * @param id a csomopont egyedi azonositoja
-     */
-    public Residence(String id){
+public class Residence extends Node {
+
+    public Residence(String id) {
         super(id);
     }
 
-    /**
-     * Kezeli a jarmu lakohely csomopontba erkezesenek esemenyet.
-     *
-     * @param vehicle az erkezo jarmu
-     */
-    @Override
-    public void onVehicleEnter(Vehicle vehicle){
+    public Residence() {
+        super("default_residence");
+    }
 
+    @Override
+    public void onVehicleEnter(Vehicle vehicle) {
+        if (vehicle != null) {
+            vehicle.setCurrentNode(this);
+        }
     }
 }

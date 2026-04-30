@@ -76,20 +76,20 @@ public class Game {
     }
 
     public Game() {
-    Skeleton.printCall("Game", "Game()");
+        Skeleton.printCall("Game", "Game()");
 
-    this.currentRound = 0;
-    this.maxRound = 10; // tetszőleges default
-    this.vehicles = new java.util.ArrayList<>();
-    this.players = new java.util.ArrayList<>();
+        this.currentRound = 0;
+        this.maxRound = 10; // tetszőleges default
+        this.vehicles = new java.util.ArrayList<>();
+        this.players = new java.util.ArrayList<>();
 
-    BusdriverRole busdriverRole= new BusdriverRole();
-    CleanerRole cleanerRole = new CleanerRole();
+        BusdriverRole busdriverRole= new BusdriverRole();
+        CleanerRole cleanerRole = new CleanerRole();
 
-    Car car1= new Car();
-    Car car2= new Car();
-    
-    Skeleton.printReturn("");
+        Car car1= new Car();
+        Car car2= new Car();
+        
+        Skeleton.printReturn("");
     }
 
     public void end() {

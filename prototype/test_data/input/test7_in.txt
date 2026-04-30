@@ -1,0 +1,6 @@
+load test7_arrange.txt
+tick
+tick
+tick
+save test7_out.txt
+exit

@@ -1,0 +1,6 @@
+[plow_1] [currentHead]: SweeperHead -> GravelSpreaderHead
+[plow_1] [currentLane]: lane_start -> lane_ice2
+[plow_1] [gravelStock ]: 10 -> 9
+[lane_ice2] [currentState]: IceSheet -> Gravel
+[lane_ice2] [gravelThickness]: 0.0 -> 1.0
+[cleaner_1] [money]: 100 -> 150

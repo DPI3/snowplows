@@ -1,7 +1,5 @@
 package prototype.src;
 
-import skeleton.src.RoadNetwork;
-
 /**
  * A BusdriverRole a buszvezető szerepkört reprezentálja.
  * Felelős a buszok mozgatásáért, útvonalak megtervezéséért
@@ -18,14 +16,19 @@ public class BusdriverRole extends Role {
     /** A buszvezető neve. */
     private String name;
 
+    private RoadNetwork roadNetwork;
+
     /** A  BusdriverRole objektum konstruktora
      * 
      * @param name a buszvezető neve
      * @param bus a buszvezető által mozgatandó busz
+     * @param roadNetwork a közlekedési hálózat
     */
-    public BusdriverRole(String name, Bus bus) {
+    public BusdriverRole(String name, Bus bus, RoadNetwork roadNetwork) {
         completedRounds=0;
+        this.name = name;
         this.bus=bus;
+        this.roadNetwork = roadNetwork;
     }
 
     /**
@@ -37,7 +40,12 @@ public class BusdriverRole extends Role {
      * @return a művelet eredménye
      */
     public int assignRoute(Bus bus, Node destination) {
-        Route newRoute = RoadNetwork.getShortestPath(bus.getTerminal_A(), destination);
+        if (bus == null || destination == null) {
+            return 0;
+        }
+
+        Route newRoute = roadNetwork.getShortestPath(bus.getTerminal_A(), destination);
+        
         if (newRoute == null) {
             bus.setCurrentRoute(null);
             return 0;

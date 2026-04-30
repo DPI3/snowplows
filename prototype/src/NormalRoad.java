@@ -1,27 +1,29 @@
-package skeleton.src;
+package prototype.src;
+
 /**
- * A NormalRoad osztaly egy normal tipusú utszakaszt reprezental.
- *
- * Ez az alap utszakasz, amelyre az idojaras hatasa
- * az altalanos szabalyok szerint alkalmazhato.
+ * A NormalRoad osztály egy normál típusú útszakaszt reprezentál.
  */
-public class NormalRoad extends Road{
+public class NormalRoad extends Road {
+
+    public NormalRoad() {
+        super();
+    }
 
     /**
-     * Alkalmazza az idojaras hatasat a normal utszakaszra.
-     *
-     * @param weather az aktualis idojarasi allapot
+     * Az időjárás hatásának alkalmazása.
      */
     @Override
-    public void applyWeatherEffects(Weather weather){
-        Skeleton.printCall("Road", "applyWeatherEffects()");
-                // Döntési pont bekérése a Skeleton segítségével
-        int snowamount = Skeleton.requestInput("Mennyi hó esett? (1: Kevés, 2: Sok)");
-
-        for(int i=0; i<lanes.size(); i++){
-            lanes.get(i).applyWeather(snowamount);
+    public void applyWeatherEffects(Weather weather) {
+        if (weather == null) {
+            return;
         }
-        
-        Skeleton.printReturn("");
+
+        // minden sávra alkalmazzuk a hatást
+        for (Lane lane : lanes) {
+            if (lane != null) {
+                weather.snowfallTick(this); // növeli a hó szintet az úton
+                lane.applyWeather(snowLevel); // a sáv reagál az aktuális állapotra
+            }
+        }
     }
 }

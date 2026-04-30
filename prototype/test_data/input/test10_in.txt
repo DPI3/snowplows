@@ -1,0 +1,11 @@
+load test10_arrange.txt
+allapot_allit lane_snow_car deepsnow
+allapot_allit lane_snow_bus deepsnow
+mozgas car_1 lane_snow_car
+mozgas bus_1 lane_snow_bus
+takarit plow_1 lane_snow_car
+takarit plow_1 lane_snow_bus
+mozgas car_1
+mozgas bus_1
+save test10_out.txt
+exit

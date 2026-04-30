@@ -25,17 +25,16 @@ public class Weather {
      * Simulation tick for weather changes.
      */
     public void tick() {
-        Skeleton.printCall("Weather", "tick()");
-        Skeleton.printReturn("");
+        // később ide jöhet random időjárás változás
     }
 
     /**
-    * Simulation tick for snowfall events.
-    * Applies the effects of snowfall to the road network.
-    *
-    * @param roadNetwork the road network to apply the snowfall effects on
-    */
+     * Applies snowfall effect to a road.
+     */
     public void snowfallTick(Road road) {
+        if (road != null) {
+            road.increaseSnowLevel();
+        }
         int appliedSnow = snowIntensity;
 
         // Determine the actual intensity of snowfall/icing based on the road type

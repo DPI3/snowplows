@@ -1,89 +1,151 @@
-package skeleton.src;
-
-import java.util.Scanner;
+package prototype.src;
 
 /**
- * Egyetlen sávot képvisel egy útszakaszon.
- * Saját állapottal rendelkezik a hóvastagság, a jég és a balesetek tekintetében.
+ * A Lane osztály az úthálózat gráfjának egy irányított élét reprezentálja.
+ * Ez az osztály a "gazdája" az útszakasz fizikai állapotának (hó, jég, baleset).
  */
 public class Lane {
 
-    private LaneState state = new Clear();
+    private Node source;
+    private Node destination;
+    private Road parentRoad;
+
+    private int snowValue;
+    private double snowThickness;
+    private double iceThickness;
+    private double gravelThickness;
+    
+    private boolean hasAccident;
+    private int waitTimer;
+    
+    private LaneState currentState;
+
+    public Lane() {
+        // Alapértelmezett állapot a tiszta út
+        this.currentState = new Clear();
+    }
+
+    public Lane(Road road) {
+        this.parentRoad = road;
+    }
+
+    public Road getParentRoad() {
+        return parentRoad;
+    }
+
+    public void setParentRoad(Road road) {
+        this.parentRoad = road;
+    }
+
+    public void setGravelThickness(double thickness) {
+        this.gravelThickness = thickness;
+    }
+
+    public double getGravelThickness() {
+        return gravelThickness;
+    }
 
     /**
-     * Megváltoztatja a sáv jelenlegi állapotát (pl. havazáskor vagy takarításkor).
-     * @param newState az alkalmazandó új állapot
+     * Megváltoztatja a sáv jelenlegi állapotát a paraméterben kapott új állapotra.
      */
     public void setState(LaneState newState) {
-        Skeleton.printCall("Lane", "setState(newState)");
-        this.state = newState;
-        Skeleton.printState("Lane state changed to: " + newState.getClass().getSimpleName());
-        Skeleton.printReturn("");
-    }    
+        this.currentState = newState;
+    }
 
     /**
-     * Ellenőrzi, hogy a sáv jelenleg járható-e egy jármű számára.
-     * A szkeleton fázisban bekéri a sáv állapotát a tesztelőtől.
-     *
-     * @param scanner a tesztelő bemenetének olvasásához használt scanner
-     * @return true, ha járható, false, ha blokkolva van (pl. mély hó miatt)
+     * Kiértékeli a sáv aktuális állapotát, és visszaadja, hogy járható-e.
      */
     public boolean isPassable() {
-        Skeleton.printCall("Lane", "isPassable()");
-        
-        // Döntés bekérése a Skeleton segédosztályon keresztül
-        int answer = Skeleton.requestInput("A sáv járható? (1: Igen, 2: Nem)");
-        boolean result = (answer == 1);
-        
-        Skeleton.printReturn(String.valueOf(result));
-        return result;
+        if (currentState != null) {
+            return currentState.isPassable();
+        }
+        return false;
     }
 
     /**
-     * Ellenőrzi, hogy van-e aktív baleset ezen a sávon.
-     *
-     * @param scanner a tesztelő bemenetének olvasásához használt scanner
-     * @return true, ha van baleset, egyébként false
+     * Kiszámítja a sáv súlyozását az útvonalkereséshez.
      */
-    public boolean hasAccident(Scanner scanner) {
-        Skeleton.printCall("Lane", "hasAccident()");
-        
-        int answer = Skeleton.requestInput("Does the lane have an accident? (1: Yes, 2: No)");
-        boolean result = (answer == 1);
-        
-        Skeleton.printReturn(String.valueOf(result));
-        return result;
-    }
-
-    public void change(int amount) {
-        // A teszt kimenetébe direkt az "amount" szót írjuk be, hogy passzoljon az asserthez
-        Skeleton.printCall("Lane", "change(amount)");
-        
-        // Itt jönne a valós logika, pl. snowThickness csökkentése
-        
-        Skeleton.printReturn("");
-    }
-
-    public void applyWeather(int snowamount) {
-        Skeleton.printCall("Lane", "applyWeather(snowAmount)");
-
-         if (snowamount == 1) {
-            // Logoljuk, hogy az állapotkezelő mit fog visszaadni (szimulált return)
-            Skeleton.printCall("LaneState", "handleWeatherChange(snowAmount)");
-            Skeleton.printReturn("ThinSnow");
-            //Skeleton.printState("Lane.state = ThinSnow.");
-            
-            // Tényleges állapotváltás
-            this.setState(new ThinSnow());
-        } else {
-            // Itt kezelhető a "Sok hó" ág
-            Skeleton.printCall("LaneState", "handleWeatherChange(snowAmount)");
-            Skeleton.printReturn("DeepSnow");
-
-            //Skeleton.printState("Lane.state = ThinSnow.");
-            this.setState(new DeepSnow());
+    public double getDynamicWeight() {
+        if (currentState != null) {
+            return currentState.getDynamicWeight();
         }
+        return 1.0;
+    }
 
-        Skeleton.printReturn("");
+    /**
+     * Visszaadja a sáv leírására szolgáló állapot-objektumot.
+     */
+    public LaneState getLaneState() {
+        return currentState;
+    }
+
+    /**
+     * Módosítja a sáv állapotát az időjárási viszonyok hatásának megfelelően.
+     */
+    public void applyWeather(int snowamount) {
+        if (currentState != null) {
+            this.currentState = currentState.handleWeatherChange(snowamount);
+        }
+    }
+
+    /**
+     * Visszaadja, hogy a sávon van-e baleset.
+     */
+    public boolean hasAccident() {
+        return hasAccident;
+    }
+    
+    public void setHasAccident(boolean hasAccident) {
+        this.hasAccident = hasAccident;
+    }
+
+    /**
+     * Módosítja a hó, jég vagy zúzalék mennyiségét a sávon havazás vagy hókotrás hatására.
+     * A PDF specifikációja alapján leprogramozva.
+     */
+    public void change(int amount) {
+        if (currentState instanceof DeepSnow || currentState instanceof ThinSnow) {
+            snowThickness = Math.max(0, snowThickness - amount);
+            snowValue = Math.max(0, snowValue - amount);
+            if (snowThickness <= 0) {
+                setState(new Clear());
+            }
+        } else if (currentState instanceof IceSheet || currentState instanceof Brokenice) {
+            iceThickness = Math.max(0, iceThickness - amount);
+            if (iceThickness <= 0) {
+                setState(new Clear());
+            }
+        } else if (currentState instanceof Gravel) {
+            Gravel g = (Gravel) currentState;
+
+            double newThickness = Math.max(0, g.getThickness() - amount);
+
+            if (newThickness <= 0) {
+                setState(new IceSheet());
+            } else {
+                setState(new Gravel(newThickness));
+            }
+        }
+    }
+    
+    // Szükséges getterek a működéshez
+    public Node getDestination() {
+        return destination;
+    }
+    
+    public double getLength() {
+        return 100.0; // Példa hossz
+    }
+
+    public Node getSource() {
+        return source;
+    }
+
+    public void setSource(Node source) {
+        this.source = source;
+    }
+
+    public void setDestination(Node destination) {
+        this.destination = destination;
     }
 }

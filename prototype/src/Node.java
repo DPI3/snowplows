@@ -1,32 +1,28 @@
-package skeleton.src;
+package prototype.src;
 
 /**
- * Alaposztály az úthálózat összes csatlakozási pontjához.
+ * Absztrakt alaposztály az úthálózat összes csatlakozási pontjához.
  */
-public class Node {
+public abstract class Node {
+    
     protected String id;
-
-    public Node() {
-        Skeleton.printCall("Node", "Node()");
-        Skeleton.printReturn("");
-    }
 
     public Node(String id) {
         this.id = id;
     }
 
+    /**
+     * Visszaadja a csomópont egyedi azonosítóját.
+     */
     public String getId() {
-        Skeleton.printCall("Node", "getId()");
-        Skeleton.printReturn(this.id);
         return this.id;
     }
 
     /**
      * Kezeli azt az eseményt, amikor egy jármű belép ebbe a csomópontba.
+     * Az alaposztályban üres; a leszármazottak (Intersection, Terminal, stb.) felüldefiniálják.
      */
     public void onVehicleEnter(Vehicle vehicle) {
-        // Az UML szerint a paraméter neve "vehicle"
-        Skeleton.printCall("Node", "onVehicleEnter(vehicle)");
-        Skeleton.printReturn("");
+        // Alapértelmezetten üres
     }
 }

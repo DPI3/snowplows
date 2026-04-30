@@ -1,18 +1,11 @@
-package skeleton.src;
+package prototype.src;
+
 /**
- * Az Intersection osztaly egy keresztezodes csomopontot reprezental.
- *
- * A keresztezodes olyan forgalmi pont, ahol tobb utszakasz talalkozik,
- * es a jarmuvek athaladasa esemenykezelessel kovetheto.
+ * Az Intersection osztály egy kereszteződést reprezentál.
  */
-public class Intersection extends Node{
-    
-    /**
-     * Intersection peldany letrehozasa.
-     *
-     * @param id a csomopont egyedi azonositoja
-     */
-    public Intersection(String id){
+public class Intersection extends Node {
+
+    public Intersection(String id) {
         super(id);
     }
 
@@ -20,15 +13,11 @@ public class Intersection extends Node{
         super("default_intersection");
     }
 
-    /**
-     * Kezeli a jarmu keresztezodesbe erkezesenek esemenyet.
-     *
-     * @param vehicle az erkezo jarmu
-     */
     @Override
     public void onVehicleEnter(Vehicle vehicle) {
-        Skeleton.printCall("Intersection", "onVehicleEnter(vehicle)");
-        vehicle.setCurrentLane(new Lane()); //Ideiglenes, a logika még nincsen kész
-        Skeleton.printReturn("");
+        if (vehicle != null) {
+            Lane nextLane = new Lane();
+            vehicle.setCurrentLane(nextLane);
+        }
     }
 }

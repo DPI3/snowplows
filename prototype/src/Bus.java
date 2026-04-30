@@ -7,8 +7,16 @@ package prototype.src;
 public class Bus extends Vehicle {
 
     /** Végállomások */
-    private final Terminal terminalA;
-    private final Terminal terminalB;
+    private Terminal terminalA;
+    private Terminal terminalB;
+
+    public Terminal getTerminal_A() {
+        return terminalA;
+    }
+
+    public Terminal getTerminal_B() {
+        return terminalB;
+    }
 
     /** Mennyi ideje nem tud haladni */
     private int immobileTime;
