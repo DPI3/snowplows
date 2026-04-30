@@ -1,4 +1,4 @@
-package skeleton.src;
+package prototype.src;
 
 import java.util.List;
 import java.util.Scanner;
@@ -83,7 +83,7 @@ public class Game {
     this.vehicles = new java.util.ArrayList<>();
     this.players = new java.util.ArrayList<>();
 
-     BusdriverRole busdriverRole= new BusdriverRole();
+    BusdriverRole busdriverRole= new BusdriverRole();
     CleanerRole cleanerRole = new CleanerRole();
 
     Car car1= new Car();
