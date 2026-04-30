@@ -1,29 +1,60 @@
 package tests;
 
+import src.*;
+import java.util.*;
+import java.io.*;
+import java.nio.file.*;
+
+/**
+ * Teszteset 7: Autó automatikus útvonal-haladása (tick).
+ * Valódi domain logikával: Car auto-route, tick, munkahely-megérkezés.
+ */
 public class test7 implements TestCase {
 
     @Override
     public void run() {
-        System.out.println("=== Teszteset 7: Autók automatikus közlekedése lakhely és munkahely között ===");
+        TestContext ctx = new TestContext();
 
-        // Bemenet szimulálása
-        System.out.println("load test7_arrange.txt");
-        System.out.println("tick");
-        System.out.println("tick");
-        System.out.println("tick");
-        System.out.println("save test7_out.txt");
-        System.out.println("exit");
+        // === Sávok ===
+        Lane lane_home = new Lane("lane_home", null, null);
+        Lane lane_mid  = new Lane("lane_mid",  null, null);
+        Lane lane_work = new Lane("lane_work", null, null);
+        ctx.lanes.put("lane_home", lane_home);
+        ctx.lanes.put("lane_mid",  lane_mid);
+        ctx.lanes.put("lane_work", lane_work);
 
-        System.out.println();
-        System.out.println("--- Elvárt kimenet ---");
+        // === Csomópontok ===
+        Residence home_1 = new Residence("home_1");
+        Workplace work_1 = new Workplace("work_1");
 
-        // Elvárt kimenet generálása a dokumentum alapján
-        System.out.println("[car_1] [residence]: home_1");
-        System.out.println("[car_1] [workplace]: work_1");
-        System.out.println("[car_1] [currentRoute]: null -> route_car_1");
-        System.out.println("[car_1] [currentLane]: lane_home -> lane_mid");
-        System.out.println("[car_1] [currentLane]: lane_mid -> lane_work");
-        System.out.println("[car_1] [location]: úton -> work_1");
-        System.out.println("[log] car_1 megérkezett a munkahelyre");
+        // === Autó ===
+        Car car_1 = new Car("car_1", lane_home, 50.0, home_1, work_1);
+        ctx.cars.put("car_1", car_1);
+        ctx.setVehicleLane("car_1", "lane_home");
+        ctx.defaultSpeed.put("car_1", 50.0);
+        ctx.vehicleRoute.put("car_1", null);   // nincs útvonal → tick rendel hozzá
+
+        // === Auto-útvonal konfiguráció ===
+        ctx.carAutoRoute.put("car_1", "route_car_1");
+        ctx.carResidence.put("car_1", "home_1");
+        ctx.carWorkplace.put("car_1", "work_1");
+
+        // Útvonal: lane_home → lane_mid → lane_work
+        ctx.routeLanes.put("route_car_1",
+                Arrays.asList("lane_home", "lane_mid", "lane_work"));
+
+        // Megérkezési sáv
+        ctx.carArrivalLane.put("lane_work", "work_1");
+
+        // === Parancsok futtatása ===
+        try {
+            List<String> lines = Files.readAllLines(
+                    Paths.get("test_data/input/test7_in.txt"));
+            for (String line : lines) {
+                TestSupport.dispatch(line, ctx);
+            }
+        } catch (IOException e) {
+            System.err.println("[IO hiba] " + e.getMessage());
+        }
     }
 }

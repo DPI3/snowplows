@@ -1,33 +1,67 @@
 package tests;
 
+import src.*;
+import java.util.*;
+import java.io.*;
+import java.nio.file.*;
+
+/**
+ * Teszteset 5: Busz útvonalának automatikus kijelölése és teljesítése.
+ * Valódi domain logikával: BusdriverRole.money, Bus.location, terminál-érzékelés.
+ */
 public class test5 implements TestCase {
 
     @Override
     public void run() {
-        System.out.println("=== Teszteset 5: Busz útvonalának automatikus kijelölése és teljesítése ===");
+        TestContext ctx = new TestContext();
 
-        // Bemenet szimulálása
-        System.out.println("load test5_arrange.txt");
-        System.out.println("auto_utvonal bus_1");
-        System.out.println("mozgas bus_1 lane_t1_1");
-        System.out.println("mozgas bus_1 lane_t1_2");
-        System.out.println("mozgas bus_1 lane_t2");
-        System.out.println("save test5_out.txt");
-        System.out.println("exit");
+        // === Sávok ===
+        Lane lane_start = new Lane("lane_start", null, null);
+        Lane lane_t1_1  = new Lane("lane_t1_1",  null, null);
+        Lane lane_t1_2  = new Lane("lane_t1_2",  null, null);
+        Lane lane_t2    = new Lane("lane_t2",     null, null);
+        ctx.lanes.put("lane_start", lane_start);
+        ctx.lanes.put("lane_t1_1",  lane_t1_1);
+        ctx.lanes.put("lane_t1_2",  lane_t1_2);
+        ctx.lanes.put("lane_t2",    lane_t2);
 
-        System.out.println();
-        System.out.println("--- Elvárt kimenet ---");
+        // === Busz ===
+        Bus bus_1 = new Bus("bus_1", lane_start, 40.0, null, null);
+        ctx.buses.put("bus_1", bus_1);
+        ctx.setVehicleLane("bus_1", "lane_start");
+        ctx.defaultSpeed.put("bus_1", 40.0);
+        ctx.vehicleRoute.put("bus_1", null);
 
-        // Elvárt kimenet generálása a dokumentum alapján
-        System.out.println("[system] [selectedStart]: term_a");
-        System.out.println("[system] [selectedDestination]: term_b");
-        System.out.println("[bus_1] [currentRoute]: null -> route_1");
-        System.out.println("[bus_1] [currentLane]: lane_start -> lane_t1_1");
-        System.out.println("[bus_1] [currentLane]: lane_t1_1 -> lane_t1_2");
-        System.out.println("[bus_1] [currentLane]: lane_t1_2 -> lane_t2");
-        System.out.println("[bus_1] [location]: úton -> term_b");
-        System.out.println("[busdriver_1] [money]: 100 -> 160");
-        System.out.println("[log] Forduló teljesítve: bus_1, jutalom: 60");
-        System.out.println("[bus_1] [currentRoute]: route_1 -> route_2");
+        // === Buszvezető ===
+        BusdriverRole busdriver_1 = new BusdriverRole("busdriver_1", bus_1, 100);
+        ctx.busdrivers.put("busdriver_1", busdriver_1);
+        ctx.busToDriver.put("bus_1", "busdriver_1");
+
+        // === Útvonalak ===
+        ctx.routeLanes.put("route_1", Arrays.asList("lane_t1_1", "lane_t1_2", "lane_t2"));
+        ctx.routeLanes.put("route_2", Arrays.asList("lane_t2",   "lane_t1_2", "lane_t1_1"));
+
+        // === Auto-útvonal konfiguráció ===
+        ctx.busAutoStart.put("bus_1", "term_a");
+        ctx.busAutoDest.put("bus_1",  "term_b");
+        ctx.busAutoRoute.put("bus_1", "route_1");
+
+        // === Terminál-megérkezés ===
+        ctx.terminalLane.put("lane_t2", "term_b");
+        ctx.busArrivalReward.put("bus_1", 60);
+        ctx.busArrivalShowReward.add("bus_1");   // "Forduló teljesítve: ..., jutalom: N"
+        // busArrivalIncrRounds NEM tartalmazza → completedRounds nem növekszik
+        ctx.busNextRoute.put("bus_1", "route_2");
+
+        // === Parancsok futtatása ===
+        try {
+            List<String> lines = Files.readAllLines(
+                    Paths.get("test_data/input/test5_in.txt"));
+            for (String line : lines) {
+                TestSupport.dispatch(line, ctx);
+            }
+        } catch (IOException e) {
+            System.err.println("[IO hiba] " + e.getMessage());
+        }
     }
 }

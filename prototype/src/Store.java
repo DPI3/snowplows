@@ -10,6 +10,17 @@ public class Store{
     /** A bolt aktualis keszlete. */
     private List<Buyable> inventory;
 
+    /** Nyitva van-e a bolt. */
+    private boolean open = false;
+
+    /** Aktuálisan kiválasztott termék neve. */
+    private String selectedItem = null;
+
+    public void openStore()              { this.open = true; }
+    public boolean isOpen()              { return open; }
+    public String getSelectedItem()      { return selectedItem; }
+    public void setSelectedItem(String s){ this.selectedItem = s; }
+
     /**
      * Store peldany letrehozasa megadott keszlettel.
      *

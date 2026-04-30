@@ -7,7 +7,6 @@ import src.*;
 public class test12 implements TestCase {
     @Override
     public void run() {
-        System.out.println("=== Teszteset 12: Játék kiértékelése ===");
         List<Vehicle> vehicles=new ArrayList<>();
         Snowplow snowplow1 = new Snowplow("plow_1", null, 0, null);
         Snowplow snowplow2 = new Snowplow("plow_2", null, 0, null);

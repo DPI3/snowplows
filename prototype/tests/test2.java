@@ -13,8 +13,6 @@ public class test2 implements TestCase {
 
     @Override
     public void run() {
-        System.out.println("=== Teszteset 2: Sávváltás és Járhatóság ===");
-
         // 1. Környezet inicializálása
         Lane startLane = new Lane(); // Alapértelmezett: Clear (járható)
         Lane clearLane = new Lane(); // Szintén Clear állapotú

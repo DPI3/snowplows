@@ -3,8 +3,6 @@ import src.*;
 public class test13  implements TestCase {
      @Override
     public void run() {
-        System.out.println("=== Teszteset 13: Sáv állapotának lekérdezése ===");
-        
         Lane lane_1 = new Lane("L5", null, null);
         lane_1.applyWeather(3);
         

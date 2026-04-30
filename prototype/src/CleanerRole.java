@@ -56,6 +56,13 @@ public class CleanerRole extends Role {
     }
 
     /**
+     * A takarító neve.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
      * A metódus növeli a takarító pénzét.
      *
      * @param amount a növelés mennyisége
@@ -126,10 +133,16 @@ public class CleanerRole extends Role {
      */
     public void controlSnowplow(Snowplow sp) {
         Lane lane = sp.getCurrentLane();
-        if (lane == null) {
-            lane = new Lane();
-        }
+        if (lane == null) return;
+
+        LaneState before = lane.getLaneState();
         sp.clean(lane);
+        LaneState after = lane.getLaneState();
+
+        // A takarító csak akkor kap fizetést, ha a sávot ténylegesen tisztára takarította
+        if (after instanceof Clear && !(before instanceof Clear)) {
+            money += 50;
+        }
     }
 
     /**

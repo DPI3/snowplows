@@ -6,6 +6,7 @@ package src;
  */
 public class Lane {
 
+    private String name;
     private Node source;
     private Node destination;
     private Road parentRoad;
@@ -14,10 +15,10 @@ public class Lane {
     private double snowThickness;
     private double iceThickness;
     private double gravelThickness;
-    
+
     private boolean hasAccident;
     private int waitTimer;
-    
+
     private LaneState currentState;
 
     public Lane() {
@@ -27,6 +28,37 @@ public class Lane {
 
     public Lane(Road road) {
         this.parentRoad = road;
+    }
+
+    public Lane(String name, Node source, Node destination) {
+        this.name = name;
+        this.source = source;
+        this.destination = destination;
+        this.currentState = new Clear();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getSnowThickness() {
+        return snowThickness;
+    }
+
+    public void setSnowThickness(double snowThickness) {
+        this.snowThickness = snowThickness;
+    }
+
+    public double getIceThickness() {
+        return iceThickness;
+    }
+
+    public void setIceThickness(double iceThickness) {
+        this.iceThickness = iceThickness;
     }
 
     public Road getParentRoad() {
@@ -110,7 +142,7 @@ public class Lane {
             if (snowThickness <= 0) {
                 setState(new Clear());
             }
-        } else if (currentState instanceof IceSheet || currentState instanceof Brokenice) {
+        } else if (currentState instanceof IceSheet || currentState instanceof BrokenIce) {
             iceThickness = Math.max(0, iceThickness - amount);
             if (iceThickness <= 0) {
                 setState(new Clear());

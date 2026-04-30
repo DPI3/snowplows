@@ -2,24 +2,13 @@ package src;
 
 /**
  * A Bus osztály egy városi buszt reprezentál.
- * Két végállomás között közlekedik egy útvonal mentén.
  */
 public class Bus extends Vehicle {
 
-    /** Végállomások */
     private Terminal terminalA;
     private Terminal terminalB;
-
-    public Terminal getTerminal_A() {
-        return terminalA;
-    }
-
-    public Terminal getTerminal_B() {
-        return terminalB;
-    }
-
-    /** Mennyi ideje nem tud haladni */
     private int immobileTime;
+    private String location = "úton";
 
     public Bus(String id, Lane lane, double speed, Terminal a, Terminal b) {
         super(id, lane, speed);
@@ -27,25 +16,20 @@ public class Bus extends Vehicle {
         this.terminalB = b;
     }
 
-    /**
-     * Tick során:
-     * - ha járható az út → halad
-     * - ha nem → várakozik
-     */
+    public Terminal getTerminal_A() { return terminalA; }
+    public Terminal getTerminal_B() { return terminalB; }
+    public int getImmobileTime()    { return immobileTime; }
+    public String getLocation()     { return location; }
+    public void setLocation(String location) { this.location = location; }
+
     @Override
     public void tick() {
         if (currentLane == null || currentRoute == null) return;
-
         if (currentLane.isPassable()) {
             immobileTime = 0;
             move();
         } else {
             immobileTime++;
         }
-    }
-
-    /** Mennyi ideje áll */
-    public int getImmobileTime() {
-        return immobileTime;
     }
 }

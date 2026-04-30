@@ -10,7 +10,7 @@ public class IcebreakerHead extends Head {
 
         // ha jégpáncél van → feltört jég lesz
         if (lane.getLaneState() instanceof IceSheet) {
-            lane.setState(new Brokenice());
+            lane.setState(new BrokenIce());
             return;
         }
 

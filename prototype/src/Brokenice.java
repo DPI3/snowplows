@@ -1,12 +1,11 @@
 package src;
 /**
- * A Brokenice osztály a tört jég útállapotát reprezentálja.
- * 
- * A tört jég egy kritikus állapot, ahol az út nem járható járművek számára.
- * Ez az állapot a legveszélyesebb útállapot, amely azonnali beavatkozást igényel.
- * A tört jégnek speciális jégtörő hókotrók szükségesek a helyreállításához.
+ * A BrokenIce osztály a tört jég útállapotát reprezentálja.
+ *
+ * A tört jég kritikus, de járható útállapot, jellemzően jégtörő munkájának eredménye.
+ * Tovább kezelhető (pl. sószórással), hogy újra Clear állapotba kerüljön.
  */
-public class Brokenice implements LaneState{
+public class BrokenIce implements LaneState {
         
     /**
      * Meghatározza, hogy a tört jéggel borított sáv járható-e járművek számára.

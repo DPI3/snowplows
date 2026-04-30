@@ -96,6 +96,7 @@ public abstract class Vehicle {
     }
 
     /** Getterek */
+    public String getId() { return id; }
     public Lane getCurrentLane() { return currentLane; }
     public double getSpeed() { return speed; }
     public Route getCurrentRoute() { return currentRoute; }

@@ -1,4 +1,0 @@
-[Teszt] Sáv létrehozva. Kezdeti állapot: Clear
-[Teszt] Havazás szimulálása (3 egységnyi hó)...
-[Eredmény] Új állapot: ThinSnow
-[Eredmény] A sáv járható: true

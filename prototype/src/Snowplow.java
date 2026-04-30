@@ -46,7 +46,13 @@ public class Snowplow extends Vehicle {
     public void consumeGravel(int amount) { gravelStock = Math.max(0, gravelStock - amount); }
 
     /** Getterek */
+    public Head getCurrentHead() { return currentHead; }
     public int getSaltStock() { return saltStock; }
     public int getBiokeroseneStock() { return biokeroseneStock; }
     public int getGravelStock() { return gravelStock; }
+
+    /** Készlet közvetlen beállítása (teszteléshez). */
+    public void setSaltStock(int stock) { this.saltStock = stock; }
+    public void setBiokeroseneStock(int stock) { this.biokeroseneStock = stock; }
+    public void setGravelStock(int stock) { this.gravelStock = stock; }
 }

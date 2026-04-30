@@ -14,8 +14,6 @@ public class test3 implements TestCase {
 
     @Override
     public void run() {
-        System.out.println("=== Teszteset 3: Hókotró takarítás (SweeperHead) ===");
-
         // 1. Környezet inicializálása: létrehozunk egy sávot, amit havassá teszünk
         Lane lane = new Lane();
         lane.setState(new ThinSnow()); 

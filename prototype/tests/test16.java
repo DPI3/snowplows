@@ -1,27 +1,46 @@
 package tests;
 
+import src.*;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Teszteset 16: Vastag hóréteg eltakarítása ThrowerHead-del.
+ * A teszt a {@code test_data/input/test16_in.txt} parancsfájlból olvassa
+ * a műveleteket, valódi domain-objektumokon hajtja végre őket, és csak
+ * az állapot-átmeneteket írja ki — formátuma az assert fájllal egyezik.
+ */
 public class test16 implements TestCase {
 
     @Override
     public void run() {
-        System.out.println("=== Teszteset 16: Vastag hóréteg eltakarítása ThrowerHead-del ===");
+        // 1. Kezdeti szcenárió felépítése (a "load paja_config.txt" hatása)
+        Lane lane_1 = new Lane("lane_1", null, null);
+        Snowplow plow_1 = new Snowplow("plow_1", lane_1, 0, new SweeperHead());
 
-        // Bemenet szimulálása
-        System.out.println("load paja_config.txt");
-        System.out.println("fej_csere plow_1 thrower");
-        System.out.println("mozgas plow_1 lane_5");
-        System.out.println("takarit plow_1");
-        System.out.println("save kimenet_16.txt");
-        System.out.println("exit");
-        
-        System.out.println();
-        System.out.println("--- Elvárt kimenet ---");
+        Lane lane_5 = new Lane("lane_5", null, null);
+        lane_5.setState(new DeepSnow());
+        lane_5.setSnowThickness(5.0);
 
-        // Elvárt kimenet generálása a dokumentum alapján
-        System.out.println("[plow_1] [currentHead]: SweeperHead -> ThrowerHead");
-        System.out.println("[plow_1] [currentLane]: lane_1 -> lane_5");
-        System.out.println("[lane_5] [currentState]: DeepSnow -> Clear");
-        System.out.println("[lane_5] [snowThickness]: 5.0 -> 0.0");
-        System.out.println("[cleaner_1] [money]: 100 -> 150");
+        CleanerRole cleaner_1 = new CleanerRole("cleaner_1", 100, plow_1);
+
+        Map<String, Lane> lanes = new HashMap<>();
+        lanes.put("lane_1", lane_1);
+        lanes.put("lane_5", lane_5);
+
+        // 2. Bemenet beolvasása és a parancsok feldolgozása
+        try {
+            List<String> commands = Files.readAllLines(Paths.get("test_data/input/test16_in.txt"));
+            for (String raw : commands) {
+                TestSupport.dispatch(raw, plow_1, cleaner_1, lanes);
+            }
+        } catch (IOException e) {
+            System.err.println("Hiba a bemeneti fajl olvasasakor: " + e.getMessage());
+        }
     }
 }

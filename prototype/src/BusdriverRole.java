@@ -2,76 +2,92 @@ package src;
 
 /**
  * A BusdriverRole a buszvezető szerepkört reprezentálja.
- * Felelős a buszok mozgatásáért, útvonalak megtervezéséért
- * és a fordulók teljesítéséért két végállomás között.
  */
 public class BusdriverRole extends Role {
 
-    /** A buszvezető által teljesített fordulók száma. */
     private int completedRounds;
-
-    /** A buszvezető által irányított busz. */
     private Bus bus;
-
-    /** A buszvezető neve. */
     private String name;
-
     private RoadNetwork roadNetwork;
+    private int money;
+    private int score;
 
-    /** A  BusdriverRole objektum konstruktora
-     * 
-     * @param name a buszvezető neve
-     * @param bus a buszvezető által mozgatandó busz
-     * @param roadNetwork a közlekedési hálózat
-    */
     public BusdriverRole(String name, Bus bus, RoadNetwork roadNetwork) {
-        completedRounds=0;
+        completedRounds = 0;
         this.name = name;
-        this.bus=bus;
+        this.bus = bus;
         this.roadNetwork = roadNetwork;
+        this.money = 0;
+        this.score = 0;
     }
 
-    /**
-     * A busz aktuális helyzetéből meghatározza a cél csomópontba vezető
-     * legrövidebb útvonalat, és hozzárendeli azt a buszhoz.
-     *
-     * @param bus a mozgatandó busz
-     * @param destination a célcsomópont
-     * @return a művelet eredménye
-     */
-    public int assignRoute(Bus bus, Node destination) {
-        if (bus == null || destination == null) {
-            return 0;
-        }
+    public BusdriverRole(String name, Bus bus) {
+        this(name, bus, null);
+    }
 
+    /** Tesztkörnyezethez: pénzzel inicializált konstruktor. */
+    public BusdriverRole(String name, Bus bus, int money) {
+        this(name, bus, null);
+        this.money = money;
+    }
+
+    /** Tesztkörnyezethez: pénzzel és pontszámmal inicializált konstruktor. */
+    public BusdriverRole(String name, Bus bus, int money, int score) {
+        this(name, bus, null);
+        this.money = money;
+        this.score = score;
+    }
+
+    public int assignRoute(Bus bus, Node destination) {
+        if (bus == null || destination == null) return 0;
+        if (roadNetwork == null) return 0;
         Route newRoute = roadNetwork.getShortestPath(bus.getTerminal_A(), destination);
-        
         if (newRoute == null) {
             bus.setCurrentRoute(null);
             return 0;
         }
         bus.setCurrentRoute(newRoute);
-        int sumWeight=0;
-        for(Lane lane: newRoute.getLanes()){
-            sumWeight+=lane.getDynamicWeight();
+        int sumWeight = 0;
+        for (Lane lane : newRoute.getLanes()) {
+            sumWeight += lane.getDynamicWeight();
         }
         return sumWeight;
     }
 
-    /**
-     * Növeli a teljesített fordulók számát.
-     */
     public void incrementCompletedRounds() {
         this.completedRounds++;
     }
 
-    /**
-     * A buszvezető szerepkör pontszámát adja vissza, ami a teljesített fordulók számán alapul.
-     *
-     * @return a szerepkör pontszáma
-     */
+    public int getCompletedRounds() {
+        return completedRounds;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void increaseMoney(int amount) {
+        this.money += amount;
+    }
+
+    public void decreaseMoney(int amount) {
+        this.money -= amount;
+    }
+
     @Override
     public int getScore() {
-        return completedRounds*50;
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void decreaseScore(int amount) {
+        this.score = Math.max(0, this.score - amount);
     }
 }
