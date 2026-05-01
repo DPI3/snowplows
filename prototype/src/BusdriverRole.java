@@ -56,6 +56,7 @@ public class BusdriverRole extends Role {
 
     public void incrementCompletedRounds() {
         this.completedRounds++;
+        this.score+=50;
     }
 
     public int getCompletedRounds() {

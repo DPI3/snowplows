@@ -1,3 +1,4 @@
 load test12_arrange.txt
+
 save test12_out.txt
 exit

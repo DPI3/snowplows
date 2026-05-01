@@ -1,25 +1,35 @@
 package tests;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import src.*;
 
 
 public class test15 implements TestCase{
      @Override
     public void run() {
-        Snowplow plow_1= new Snowplow("plow_1", new Lane("lane_1", null, null), 0, new ThrowerHead());
+        Lane lane_1= new Lane("lane_1", null, null);
+        Snowplow plow_1= new Snowplow("plow_1", lane_1, 0, new ThrowerHead());
         Lane lane_5=new Lane("lane_5", null, null);
-        lane_5.applyWeather(3);
+        lane_5.setSnowThickness(3.0);
         lane_5.setState(new ThinSnow());
-        
-        plow_1.changeHead(new SweeperHead());
-        System.out.println("[plow_1] [currentHead]: ThrowerHead -> SweeperHead");
-        
-        plow_1.changeLane(lane_5);
-        System.out.println("[plow_1] [currentLane]: lane_1 -> lane_5");
+        CleanerRole cleaner_1 = new CleanerRole("cleaner_1", 100, plow_1);
+        Map<String, Lane> lanes = new HashMap<>();
+        lanes.put("lane_1", lane_1);
+        lanes.put("lane_5", lane_5);
 
-        plow_1.clean(plow_1.getCurrentLane());
-        System.out.println("[lane_5] [currentState]: ThinSnow -> Clear");
-        System.out.println("[lane_5] [snowThickness]: 3.0 -> 0.0");
-        System.out.println("[cleaner_1] [money]: 100 -> 150");
-
+        // 2. Bemenet beolvasása és a parancsok feldolgozása
+        try {
+            List<String> commands = Files.readAllLines(Paths.get("test_data/input/test15_in.txt"));
+            for (String raw : commands) {
+                TestSupport.dispatch(raw, plow_1, cleaner_1, lanes);
+            }
+        } catch (IOException e) {
+            System.err.println("Hiba a bemeneti fajl olvasasakor: " + e.getMessage());
+        }
     }
 }

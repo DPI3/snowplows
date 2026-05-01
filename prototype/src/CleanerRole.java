@@ -139,8 +139,8 @@ public class CleanerRole extends Role {
         sp.clean(lane);
         LaneState after = lane.getLaneState();
 
-        // A takarító csak akkor kap fizetést, ha a sávot ténylegesen tisztára takarította
-        if (after instanceof Clear && !(before instanceof Clear)) {
+        // A takarító csak akkor kap fizetést, ha a sávot játhatóra takarította
+        if ((after instanceof Clear || after instanceof Gravel) && !(before instanceof Clear || before instanceof Gravel)) {
             money += 50;
         }
     }

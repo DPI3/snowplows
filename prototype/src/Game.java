@@ -67,4 +67,20 @@ public class Game {
     public void end() {
         // Ide kerülhet a játék végét kezelő logika
     }
+
+    /**
+     * Az aktuális kör számát adja vissza, teszteléshez szükséges.
+     * @return
+     */
+    public int getCurrentRound(){
+        return currentRound;
+    }
+
+    /**
+     * A játékosok listáját adja vissza, teszteléshez szükséges.
+     * @return
+     */
+    public List<Player> getPlayers(){
+        return players;
+    }
 }

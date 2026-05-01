@@ -2,6 +2,8 @@ package tests;
 
 import src.*;
 import java.util.Map;
+
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -82,7 +84,6 @@ public final class TestSupport {
     // =========================================================================
     // PRIVÁT PARANCS-IMPLEMENTÁCIÓK
     // =========================================================================
-
     // --- Fejcsere ---
     private static void doChangeHead(Snowplow plow, String headType) {
         Head old = plow.getCurrentHead();
@@ -107,6 +108,7 @@ public final class TestSupport {
         LaneState bState  = lane.getLaneState();
         double    bSnow   = lane.getSnowThickness();
         double    bIce    = lane.getIceThickness();
+        double    bGravel = lane.getGravelThickness();
         int       bSalt   = plow.getSaltStock();
         int       bBio    = plow.getBiokeroseneStock();
         int       bGrav   = plow.getGravelStock();
@@ -124,6 +126,7 @@ public final class TestSupport {
 
         if (lane.getSnowThickness() != bSnow) printChange(lane.getName(), "snowThickness", bSnow, lane.getSnowThickness());
         if (lane.getIceThickness()  != bIce)  printChange(lane.getName(), "iceThickness",  bIce,  lane.getIceThickness());
+        if (lane.getGravelThickness()  != bGravel)  printChange(lane.getName(), "gravelThickness",  bGravel,  lane.getGravelThickness());
 
         if (cleaner.getMoney() != bMoney) printChange(cleaner.getName(), "money", bMoney, cleaner.getMoney());
     }
@@ -158,6 +161,7 @@ public final class TestSupport {
         LaneState bState = lane.getLaneState();
         double bSnow = lane.getSnowThickness();
         double bIce  = lane.getIceThickness();
+        double bGravel= lane.getGravelThickness();
         int bSalt    = plow.getSaltStock();
         int bBio     = plow.getBiokeroseneStock();
         int bGrav    = plow.getGravelStock();
@@ -174,6 +178,8 @@ public final class TestSupport {
 
         if (lane.getSnowThickness() != bSnow) printChange(lane.getName(), "snowThickness", bSnow, lane.getSnowThickness());
         if (lane.getIceThickness()  != bIce)  printChange(lane.getName(), "iceThickness",  bIce,  lane.getIceThickness());
+        if (lane.getGravelThickness()  != bGravel)  printChange(lane.getName(), "gravelThickness",  bGravel,  lane.getGravelThickness());
+
 
         // Típus-specifikus sikeres-üzenet
         if (isSalt && aState instanceof Clear && !(bState instanceof Clear))
@@ -661,4 +667,45 @@ public final class TestSupport {
             checkCarArrival(carId, nextLaneName, ctx);
         }
     }
+
+
+    // =========================================================================
+    // 4) SPECIÁLIS dispatch — test12
+    // =========================================================================
+
+    public static void dispatch(String rawLine,
+                                Game game) {
+        String line = rawLine.trim();
+        if (line.isEmpty()){
+            doWait(game);
+            return;
+        }
+        String[] parts = line.split("\\s+");
+
+        switch (parts[0]) {
+            case "load": case "save": case "exit": default:                 break;
+        }
+    }
+
+    private static void doWait(Game game){
+        int oldRound=game.getCurrentRound();
+        game.tick();
+        if(oldRound!=game.getCurrentRound())
+            printChange("game", "currentRound", oldRound, game.getCurrentRound());
+        if(game.isOver()){
+            String message="Játék vége! Pontszámok: ";
+            for (Player p : game.getPlayers()) {
+                message+=p.getName()+": "+p.getSumPoints()+ " pont";
+                if(p!=game.getPlayers().getLast()){
+                    message+=", ";
+                }
+                else
+                    message+=".";
+            }
+            printConsole("\""+message+"\"");
+        }
+        
+    }
+
+
 }
