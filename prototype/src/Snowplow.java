@@ -5,6 +5,10 @@ package src;
  * Különböző fejekkel képes tisztítani az utakat.
  */
 public class Snowplow extends Vehicle {
+    // Enum az állapotgéphez
+    public enum PlowState {
+        AT_TERMINAL, READY_TO_CLEAN, OUT_OF_FUEL
+    }
 
     /** Aktuális fej */
     private Head currentHead;
@@ -13,10 +17,35 @@ public class Snowplow extends Vehicle {
     private int saltStock;
     private int biokeroseneStock;
     private int gravelStock;
+    private int fuel;
+    private PlowState state;
+
+    /**
+     * Fuel getter
+     */
+    public int getFuel() { return fuel; }
+    public void consumeFuel(int amount) { 
+        this.fuel = Math.max(0, this.fuel - amount); 
+    }
+
+    public PlowState getState() { return state; }
+    public void setState(PlowState state) { this.state = state; }
 
     public Snowplow(String id, Lane lane, double speed, Head head) {
         super(id, lane, speed);
         this.currentHead = head;
+
+        this.fuel = 100; 
+        this.state = PlowState.AT_TERMINAL;
+    }
+
+    @Override
+    public void setCurrentLane(Lane lane) {
+        super.setCurrentLane(lane);
+        // Ha a sáv már nem Terminál, akkor készen áll a takarításra
+        if (lane != null && !lane.getName().startsWith("Terminal")) {
+            this.state = PlowState.READY_TO_CLEAN;
+        }
     }
 
     /**

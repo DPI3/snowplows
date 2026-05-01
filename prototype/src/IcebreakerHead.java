@@ -13,9 +13,12 @@ public class IcebreakerHead extends Head {
             lane.setState(new BrokenIce());
             return;
         }
-
-        // egyébként kis mértékű változtatás
-        lane.change(1);
+        //ha elfogy az üzemanyag csak siman nem takaritja tovabb
+        if (snowplow.getFuel() >= 5) {
+            snowplow.consumeFuel(5); // Üzemanyag levonása
+            // egyébként kis mértékű változtatás
+            lane.change(1);
+        }
     }
 
     @Override
