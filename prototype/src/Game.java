@@ -83,4 +83,18 @@ public class Game {
     public List<Player> getPlayers(){
         return players;
     }
+
+    /**
+     * Visszaadja a maximális körök számát.
+     */
+    public int getMaxRound() {
+        return maxRound;
+    }
+
+    /**
+     * Visszaadja a szimulációban résztvevő járművek listáját.
+     */
+    public List<Vehicle> getVehicles() {
+        return vehicles;
+    }
 }

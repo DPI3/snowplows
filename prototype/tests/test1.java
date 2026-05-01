@@ -10,8 +10,7 @@ import java.util.List;
  * megfelelően felépíteni a játékteret és inicializálni a résztvevőket.
  */
 public class test1 implements TestCase {
-
-    @Override
+@Override
     public void run() {
         // 1. "load basic_map.txt" fázis szimulálása: 
         // Objektumok és a játéktér felépítése a memóriában
@@ -33,12 +32,12 @@ public class test1 implements TestCase {
         }
 
         // Járművek (Vehicles) létrehozása és pozicionálása (4 db)
-        List<Vehicle> vehicles = new ArrayList<>();
         Car car1 = new Car("Car_1", lanes.get(0), 50.0, res1, null);
         Bus bus1 = new Bus("Bus_1", lanes.get(1), 40.0, termA, null);
         Snowplow plow1 = new Snowplow("Snowplow_1", lanes.get(2), 30.0, new SweeperHead());
-        Car car2 = new Car("Car_2", lanes.get(3), 50.0, null, null); // Negyedik jármű
+        Car car2 = new Car("Car_2", lanes.get(3), 50.0, null, null); 
         
+        List<Vehicle> vehicles = new ArrayList<>();
         vehicles.add(car1);
         vehicles.add(bus1);
         vehicles.add(plow1);
@@ -61,21 +60,28 @@ public class test1 implements TestCase {
 
         for (String cmd : inputCommands) {
             if (cmd.equals("state")) {
-                // Elvárt kimenet generálása a belső állapot alapján
+                // Elvárt kimenet generálása a memóriában lévő objektumok lekérdezésével
                 System.out.println("[RoadNetwork] [Status]: Initialized");
                 System.out.println("[Nodes] [Count]: " + nodes.size());
                 System.out.println("[Lanes] [Count]: " + lanes.size());
-                System.out.println("[Vehicles] [Count]: " + vehicles.size());
-                System.out.println("[Players] [Count]: " + players.size());
+                
+                // AZ ÚJ GAME OSZTÁLY METÓDUSAINAK HASZNÁLATA:
+                System.out.println("[Vehicles] [Count]: " + game.getVehicles().size());
+                System.out.println("[Players] [Count]: " + game.getPlayers().size());
                 System.out.println();
                 
-                System.out.println("[" + car1.getId() + "] [Position]: " + res1.getId());
-                System.out.println("[" + bus1.getId() + "] [Position]: " + termA.getId());
+                // Járművek pozícióinak lekérdezése (ahol a prototípus engedi, az objektumokból)
+                System.out.println("[" + car1.getId() + "] [Position]: " + car1.getResidence().getId());
+                System.out.println("[" + bus1.getId() + "] [Position]: " + bus1.getTerminal_A().getId());
+                // Mivel a hókotrónak a meglévő kódban nincs dedikált getter-e a kezdőpontra,
+                // explicit kiírjuk a hozzárendelt Terminal azonosítóját a specifikáció szerint:
                 System.out.println("[" + plow1.getId() + "] [Position]: " + termA.getId());
                 System.out.println();
                 
                 System.out.println("[Weather] [CurrentSnowIntensity]: " + (double) weather.getSnowIntensity());
-                System.out.println("[Game] [CurrentRound]: 1");
+                
+                // AZ ÚJ GAME OSZTÁLY KÖR-LEKÉRDEZÉSÉNEK HASZNÁLATA:
+                System.out.println("[Game] [CurrentRound]: " + game.getCurrentRound());
                 
             } else if (cmd.equals("exit")) {
                 break;
