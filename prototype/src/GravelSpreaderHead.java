@@ -9,6 +9,7 @@ public class GravelSpreaderHead extends Head {
     public void clean(Lane lane, Snowplow snowplow) {
         if (snowplow.getGravelStock() <= 0) return;
 
+        snowplow.consumeGravel(1);
         //ha elfogy az üzemanyag csak siman nem takaritja tovabb
         if (snowplow.getFuel() >= 5) {
             snowplow.consumeFuel(5); // Üzemanyag levonása
