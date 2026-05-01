@@ -1,5 +1,9 @@
-[Teszt] Autó a kezdő sávon. Jelenlegi sáv járható: true
-[Teszt] Sávváltás megkísérlése egy tiszta sávra...
-[Eredmény] Sávváltás sikeres: true
-[Teszt] Sávváltás megkísérlése a vastag hóval borított sávra...
-[Eredmény] Sávváltás sikeres: false
+[snowplow_1] [currentLane]: Terminal_A -> lane_12
+[snowplow_1] [state]: AT_TERMINAL -> READY_TO_CLEAN
+[snowplow_1] [fuel]: 100 -> 95
+
+[lane_12] [snowThickness]: 5.0 -> 0.0
+[lane_12] [currentState]: Snowy -> Clear
+[lane_12] [isPassable]: false -> true
+
+[player_cleaner] [points]: 100 -> 150
