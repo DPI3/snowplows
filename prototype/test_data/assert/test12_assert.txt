@@ -1,2 +1,2 @@
 [game] [currentRound]: 9 -> 10
-[Console]: "Játék vége! Pontszámok:  Játékos1: 120 pont, Játékos2: 85 pont."
+[Console]: "Játék vége! Pontszámok: Játékos1: 120 pont, Játékos2: 85 pont."
