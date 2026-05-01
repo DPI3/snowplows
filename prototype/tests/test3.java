@@ -1,9 +1,6 @@
 package tests;
 
-import src.Lane;
-import src.Snowplow;
-import src.SweeperHead;
-import src.ThinSnow;
+import src.*;
 
 /**
  * Teszteset 3: Hókotró tisztítási funkciójának tesztelése.
@@ -11,26 +8,26 @@ import src.ThinSnow;
  * képes-e letakarítani a vékony havat, és visszaállítani a sávot Clear állapotba.
  */
 public class test3 implements TestCase {
-
-    @Override
+@Override
     public void run() {
-        // 1. Környezet inicializálása: létrehozunk egy sávot, amit havassá teszünk
-        Lane lane = new Lane();
-        lane.setState(new ThinSnow()); 
-        System.out.println("[Teszt] Sáv létrehozva. Kezdeti állapot: " + lane.getLaneState().getClass().getSimpleName());
+        // 1. "load test_map.txt" fázis szimulálása
+        Lane dummyLane = new Lane("lane_1", null, null);
+        
+        // Hókotró inicializálása alapértelmezetten SweeperHead-del
+        Head initialHead = new SweeperHead();
+        Snowplow plow1 = new Snowplow("snowplow_1", dummyLane, 30.0, initialHead);
+        
+        // --- Állapot kimentése a csere előtt ---
+        String beforeHead = plow1.getCurrentHead().getClass().getSimpleName();
 
-        // 2. Hókotró és a megfelelő fej létrehozása
-        SweeperHead sweeper = new SweeperHead();
-        // A hókotró paraméterei: azonosító, kezdő sáv, sebesség, felszerelt fej[cite: 1]
-        Snowplow plow = new Snowplow("plow_1", lane, 30.0, sweeper); 
-        System.out.println("[Teszt] Hókotró (plow_1) a sávon, SweeperHead felszerelve.");
+        // 2. Parancs végrehajtása: "fej_csere snowplow_1 icebreaker"[cite: 2]
+        Head newHead = new IcebreakerHead();
+        plow1.changeHead(newHead);
+        
+        // --- Állapot kimentése a csere után ---
+        String afterHead = plow1.getCurrentHead().getClass().getSimpleName();
 
-        // 3. Tisztítási folyamat elindítása
-        System.out.println("[Teszt] Takarítás megkezdése...");
-        plow.clean(lane); // A hókotró megtisztítja azt a sávot, amit átadunk neki[cite: 1]
-
-        // 4. Eredmények kiértékelése
-        // A SweeperHead a "lane.change(3)" belső hívással csökkenti a havat, aminek Clear állapotot kell eredményeznie[cite: 1]
-        System.out.println("[Eredmény] Takarítás utáni állapot: " + lane.getLaneState().getClass().getSimpleName());
+        // 3. "state" parancs kiértékelése és az elvárt kimenet generálása
+        System.out.println("[" + plow1.getId() + "] [currentHead]: " + beforeHead + " -> " + afterHead);
     }
 }
