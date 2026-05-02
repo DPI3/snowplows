@@ -696,7 +696,7 @@ public final class TestSupport {
             String message="Játék vége! Pontszámok: ";
             for (Player p : game.getPlayers()) {
                 message+=p.getName()+": "+p.getSumPoints()+ " pont";
-                if(p!=game.getPlayers().getLast()){
+                if(p != game.getPlayers().get(game.getPlayers().size() - 1)){
                     message+=", ";
                 }
                 else
