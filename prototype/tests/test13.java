@@ -5,8 +5,14 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import src.*;
+
+/**
+ * Teszteset 13: Sáv állapotának lekérdezése.
+ * A szimuláció célja a  kiválasztott Lane objektum attribútumainak pontos lekérdezése.
+ * A sáv áthaladhatóságának (isPassable()) és dinamikus súlyának (getDynamicWeight()) helyes 
+ * kiszámítása az aktuális állapot alapján.
+ */
 public class test13  implements TestCase {
      @Override
     public void run() {

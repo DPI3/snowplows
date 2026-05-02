@@ -8,7 +8,11 @@ import java.util.Map;
 
 import src.*;
 
-
+/**
+ * Teszteset 14: Jeges út érdesítése zúzalékkal.
+ * A hókotró a zuzalékot szóró (GravelSpreaderHead) fejjel zuzalékot juttat a jégpáncélra,
+ * aminek hatására az úton járni lehet és a sáv Gravel állapotba kerül.
+ */
 public class test14 implements TestCase{
      @Override
     public void run() {

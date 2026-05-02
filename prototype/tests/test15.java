@@ -8,7 +8,11 @@ import java.util.Map;
 
 import src.*;
 
-
+/**
+ * Teszteset 15: Jeges út érdesítése zúzalékkal.
+ * A hókotró a söprő (SweeperHead) fejjel eltávolítja a vékony hóréteget (ThinSnow) a sávról.
+ * A takarítás eredményeként a sáv állapota Clear típusúra változik, az út ismét járható lesz.
+ */
 public class test15 implements TestCase{
      @Override
     public void run() {
