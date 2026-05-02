@@ -56,6 +56,8 @@ public class Game {
 
     /**
      * Megvizsgálja, hogy a szimuláció elérte-e a maximális kört, vagy véget ért-e.
+     * 
+     * @return true, ha a játék véget ért; false, ha a játék nem ért véget
      */
     public boolean isOver() {
         return currentRound >= maxRound; 
@@ -70,7 +72,8 @@ public class Game {
 
     /**
      * Az aktuális kör számát adja vissza, teszteléshez szükséges.
-     * @return
+     * 
+     * @return aktuális kör száma
      */
     public int getCurrentRound(){
         return currentRound;
@@ -78,7 +81,8 @@ public class Game {
 
     /**
      * A játékosok listáját adja vissza, teszteléshez szükséges.
-     * @return
+     * 
+     * @return játékosok listája
      */
     public List<Player> getPlayers(){
         return players;
@@ -86,6 +90,8 @@ public class Game {
 
     /**
      * Visszaadja a maximális körök számát.
+     * 
+     * @return a maximális körök száma
      */
     public int getMaxRound() {
         return maxRound;
@@ -93,6 +99,8 @@ public class Game {
 
     /**
      * Visszaadja a szimulációban résztvevő járművek listáját.
+     * 
+     * @return a szimulációban résztvevő járművek listája
      */
     public List<Vehicle> getVehicles() {
         return vehicles;

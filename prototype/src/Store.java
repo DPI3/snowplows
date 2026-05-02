@@ -16,9 +16,30 @@ public class Store{
     /** Aktuálisan kiválasztott termék neve. */
     private String selectedItem = null;
 
+    /**
+     * A bolt kinyitására szolgáló metódus.
+     */
     public void openStore()              { this.open = true; }
+
+    /**
+     * Megadja, hogy a bolt nyitva van-e.
+     * 
+     * @return true, ha a bolt nyitva van; false ha a bolt zárva van
+     */
     public boolean isOpen()              { return open; }
+
+    /**
+     * Visszaadja a kiválasztott elemet.
+     * 
+     * @return a kiválasztott elem
+     */
     public String getSelectedItem()      { return selectedItem; }
+
+    /**
+     * Új kiválasztott elem beállítása
+     * 
+     * @param s az új kiválasztott elem
+     */
     public void setSelectedItem(String s){ this.selectedItem = s; }
 
     /**

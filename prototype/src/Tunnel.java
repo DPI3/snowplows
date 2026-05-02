@@ -9,6 +9,9 @@ public class Tunnel extends Road {
         super();
     }
 
+    /**
+     * Az időjárás hatásának alkalmazása.
+     */
     @Override
     public void applyWeatherEffects(Weather weather) {
         reduceSnowLevel(); // védett
