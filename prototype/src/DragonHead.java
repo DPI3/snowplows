@@ -1,10 +1,18 @@
 package src;
 
 /**
- * A DragonHead bio-kerozinnal égeti le a havat/jéget.
+ * A DragonHead egy speciális tisztítófej,
+ * amely bio-kerozin felhasználásával magas hőmérséklettel olvasztja el a havat vagy jeget.
  */
 public class DragonHead extends Head {
 
+    /**
+     * Bio-kerozint használva megtisztítja a sávot. Ha van elegendő készlet, a hó- vagy jégréteget megszünteti
+     * vagy jelentősen csökkenti.
+     * 
+     * @param lane a tisztítandó szakasz
+     * @param snowplow a tisztítást végző hókotró
+     */
     @Override
     public void clean(Lane lane, Snowplow snowplow) {
         if (snowplow.getBiokeroseneStock() <= 0) return;
@@ -20,6 +28,11 @@ public class DragonHead extends Head {
         lane.change(9999);
     }
 
+    /**
+     * Visszaadja a DragonHead árát.
+     * 
+     * @return az ár
+     */
     @Override
     public int getPrice() {
         return 120;

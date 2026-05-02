@@ -3,7 +3,7 @@ package src;
  * A BrokenIce osztály a tört jég útállapotát reprezentálja.
  *
  * A tört jég kritikus, de járható útállapot, jellemzően jégtörő munkájának eredménye.
- * Tovább kezelhető (pl. sószórással), hogy újra Clear állapotba kerüljön.
+ * Tovább kezelhető (pl. eltakarítással), hogy újra Clear állapotba kerüljön.
  */
 public class BrokenIce implements LaneState {
         

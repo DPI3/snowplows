@@ -8,6 +8,9 @@ public abstract class Head implements Buyable {
 
     /**
      * A sáv tisztítása
+     * 
+     * @param lane a tisztítandó szakasz
+     * @param snowplow a tisztítást végző hókotró
      */
     public abstract void clean(Lane lane, Snowplow snowplow);
 }

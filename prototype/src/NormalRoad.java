@@ -1,7 +1,8 @@
 package src;
 
 /**
- * A NormalRoad osztály egy normál típusú útszakaszt reprezentál.
+ * A NormalRoad egy hagyományos útszakaszt modellez. Az időjárási hatások közvetlenül érvényesülnek rajta, így a
+ * sávok állapota a hó vagy jég mennyiségének megfelelően változhat.
  */
 public class NormalRoad extends Road {
 

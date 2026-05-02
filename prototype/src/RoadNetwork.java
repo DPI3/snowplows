@@ -8,13 +8,19 @@ import java.util.*;
  * valamint kiszámítja a járművek számára az aktuálisan járható legrövidebb utat[cite: 139].
  */
 public class RoadNetwork {
+    /** Az úthálózatot felépítő összes csomópont listája[cite: 152]. */
     private List<Node> nodes = new ArrayList<>();
+
+    /** Az úthálózatot felépítő összes útszakasz listája[cite: 152]. */
     private List<Road> roads = new ArrayList<>();
 
     /**
      * Meghatározza a két megadott csomópont közötti legrövidebb, akadálymentes útvonalat[cite: 159].
      * A számítás során a lane.getDynamicWeight() értéket használja súlyként[cite: 160].
      * A Dijkstra-algoritmust alkalmazza a dinamikus súlyok felhasználásával[cite: 163].
+     * 
+     * @param from a kiinduló csomópont
+     * @param to a cél csomópont
      */
     public Route getShortestPath(Node from, Node to) {
         Map<Node, Double> distance = new HashMap<>();
@@ -72,6 +78,9 @@ public class RoadNetwork {
 
     /**
      * Visszaadja a paraméterként megadott koordinátákhoz vagy azonosítóhoz tartozó konkrét sáv objektumot[cite: 180].
+     * 
+     * @param coord az azonosító
+     * @return a hozzá tartozó sáv
      */
     public Lane getLane(Lane coord) {
         for (Road r : roads) {
