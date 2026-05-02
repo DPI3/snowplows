@@ -57,7 +57,6 @@ public abstract class Road {
      * Az időjárás hatását alkalmazza az útszakasz sávjaira.
      */
     public void applyWeatherEffects(Weather weather) {
-        // csak reagál, nem irányít
         increaseSnowLevel();
     }
     

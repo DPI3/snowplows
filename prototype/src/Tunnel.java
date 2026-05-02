@@ -11,6 +11,6 @@ public class Tunnel extends Road {
 
     @Override
     public void applyWeatherEffects(Weather weather) {
-        reduceSnowLevel(); // védett
+        reduceSnowLevel();
     }
 }

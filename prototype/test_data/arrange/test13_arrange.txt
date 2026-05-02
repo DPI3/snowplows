@@ -1,0 +1,4 @@
+# Teszt 13 — Sáv állapotának lekérdezése
+add_lane -n "lane_1" -state thinsnow -snow 3
+add_plow -n "plow_1" -pos "lane_1"
+add_cleaner -n "cleaner_1" -money 100 -plow "plow_1"

@@ -9,17 +9,14 @@ public class DragonHead extends Head {
     public void clean(Lane lane, Snowplow snowplow) {
         if (snowplow.getBiokeroseneStock() <= 0) return;
 
-        // nem működik kavicsos úton
         if (lane.getLaneState() instanceof Gravel) return;
 
         snowplow.consumeBiokerosene(1);
-        //ha elfogy az üzemanyag csak siman nem takaritja tovabb
         if (snowplow.getFuel() >= 5) {
-            snowplow.consumeFuel(5); // Üzemanyag levonása
-            lane.change(1);          // Hó csökkentése
+            snowplow.consumeFuel(5);
+            lane.change(1);
         }
 
-        // nagy mértékű tisztítás
         lane.change(9999);
     }
 

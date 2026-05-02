@@ -25,7 +25,6 @@ public class Weather {
      * Simulation tick for weather changes.
      */
     public void tick() {
-        // később ide jöhet random időjárás változás
     }
 
     /**
@@ -37,16 +36,12 @@ public class Weather {
         }
         int appliedSnow = snowIntensity;
 
-        // Determine the actual intensity of snowfall/icing based on the road type
         if (road instanceof Bridge) {
-            // Increased icing occurs on bridges (based on documentation 8.1.2)
-            appliedSnow += 2; 
+            appliedSnow += 2;
         } else if (road instanceof Tunnel) {
-            // Tunnels are protected by a cover, the effect of weather is limited
             appliedSnow = 0;
         }
 
-        // If there is snowfall, apply it to all lanes of the road
         if (appliedSnow > 0) {
             for (Lane lane : road.getLanes()) {
                 lane.applyWeather(appliedSnow);

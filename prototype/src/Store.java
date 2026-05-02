@@ -50,11 +50,7 @@ public class Store{
             
             if (item instanceof Head) {
                 cleanerRole.addHead((Head) item);
-            } 
-            /* * Ide jöhet a nyersanyagok (só, zuzalék, biokerozin) átadási logikája is, 
-             * amennyiben azok különálló Buyable osztályként lettek implementálva a rendszerben:
-             * else if (item instanceof SaltItem) { cleanerRole.addSalt(10); } 
-             */
+            }
 
             inventory.remove(item);
             

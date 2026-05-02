@@ -22,7 +22,6 @@ public class Lane {
     private LaneState currentState;
 
     public Lane() {
-        // Alapértelmezett állapot a tiszta út
         this.currentState = new Clear();
     }
 
@@ -159,14 +158,13 @@ public class Lane {
             }
         }
     }
-    
-    // Szükséges getterek a működéshez
+
     public Node getDestination() {
         return destination;
     }
-    
+
     public double getLength() {
-        return 100.0; // Példa hossz
+        return 100.0;
     }
 
     public Node getSource() {

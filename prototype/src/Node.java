@@ -23,6 +23,5 @@ public abstract class Node {
      * Az alaposztályban üres; a leszármazottak (Intersection, Terminal, stb.) felüldefiniálják.
      */
     public void onVehicleEnter(Vehicle vehicle) {
-        // Alapértelmezetten üres
     }
 }

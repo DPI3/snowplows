@@ -19,7 +19,6 @@ public class test16 implements TestCase {
 
     @Override
     public void run() {
-        // 1. Kezdeti szcenárió felépítése (a "load paja_config.txt" hatása)
         Lane lane_1 = new Lane("lane_1", null, null);
         Snowplow plow_1 = new Snowplow("plow_1", lane_1, 0, new SweeperHead());
 
@@ -33,7 +32,6 @@ public class test16 implements TestCase {
         lanes.put("lane_1", lane_1);
         lanes.put("lane_5", lane_5);
 
-        // 2. Bemenet beolvasása és a parancsok feldolgozása
         try {
             List<String> commands = Files.readAllLines(Paths.get("test_data/input/test16_in.txt"));
             for (String raw : commands) {

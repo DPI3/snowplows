@@ -9,7 +9,7 @@ import src.*;
 
 /**
  * Teszteset 12: Játék kiértékelése.
- * A játék végi állapot detektálásának ellenőrzése (a körlimit elérésekor). 
+ * A játék végi állapot detektálásának ellenőrzése (a körlimit elérésekor).
  * A pontszámítási logika helyességének tesztelése mind a buszsofőr, mind a takarító szerepkörök esetén.
  */
 public class test12 implements TestCase {
@@ -26,7 +26,7 @@ public class test12 implements TestCase {
         Car car1=new Car("car_1", null, 0, null, null);
         Car car2=new Car("car_2", null, 0, null, null);
 
-        vehicles.add(snowplow1); 
+        vehicles.add(snowplow1);
         vehicles.add(snowplow2);
         vehicles.add(bus1);
         vehicles.add(bus2);
@@ -48,7 +48,7 @@ public class test12 implements TestCase {
         List <Player> pList= new ArrayList<>();
         pList.add(p1);
         pList.add(p2);
-        
+
         Game game= new Game(9, 10, vehicles, pList);
         try {
             List<String> commands = Files.readAllLines(Paths.get("test_data/input/test12_in.txt"));

@@ -20,14 +20,10 @@ public class test11 implements TestCase {
 
     @Override
     public void run() {
-        // Kezdőállapot ("load test11_arrange.txt" hatása)
         Lane lane_ice_1       = new Lane("lane_ice_1", null, null);
         lane_ice_1.setState(new IceSheet());
-        // iceThickness szándékosan 0 marad → change(5) elvégzi a Clear-re váltást
-        // anélkül, hogy iceThickness változást kelljen kiírni
 
         Snowplow plow_1       = new Snowplow("plow_1", lane_ice_1, 0, new SaltSpreaderHead());
-        // saltStock = 0 (alapértelmezett) → első takarit sikertelen
 
         CleanerRole cleaner_1 = new CleanerRole("cleaner_1", 200, plow_1);
         Store store           = new Store(new ArrayList<>());

@@ -35,10 +35,13 @@ for T in $TEST_NAMES; do
     echo "Fut: $T..."
 
     # 1. Kimenet atiranyitasa fajlba
-    java -cp bin tests.MainRunner "$T" > "test_data/output/${T}_out.txt"
+    java -Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -cp bin tests.MainRunner "$T" > "test_data/output/${T}_out.txt"
 
-    # 2. Osszehasonlitas diff-fel
-    if diff -q "test_data/assert/${T}_assert.txt" "test_data/output/${T}_out.txt" > /dev/null 2>&1; then
+    # 2. Osszehasonlitas: CRLF / trailing newline normalizalasa, majd tartalmi egyezes
+    # (a Windows-os fc-vel ekvivalens toleráns viselkedés)
+    EXPECTED=$(tr -d '\r' < "test_data/assert/${T}_assert.txt")
+    ACTUAL=$(tr -d '\r' < "test_data/output/${T}_out.txt")
+    if [ "$EXPECTED" = "$ACTUAL" ]; then
         echo "  [ OK ] $T sikeres! Egyezes talalva az assert fajllal."
         SIKERES=$((SIKERES + 1))
     else
@@ -49,9 +52,8 @@ for T in $TEST_NAMES; do
         echo "  -- Tenyleges kimenet (output): --"
         cat "test_data/output/${T}_out.txt"
         echo ""
-        # Reszletes diff megjelenites
-        echo "  -- Diff (< elvart  > tenyleges): --"
-        diff "test_data/assert/${T}_assert.txt" "test_data/output/${T}_out.txt"
+        echo "  -- Diff (< elvart  > tenyleges, CRLF normalizalva): --"
+        diff <(echo "$EXPECTED") <(echo "$ACTUAL")
         echo ""
         HIBAS=$((HIBAS + 1))
     fi

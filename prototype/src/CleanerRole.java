@@ -29,7 +29,6 @@ public class CleanerRole extends Role {
         this.snowplow=snowplow;
     }
 
-    //elavult függvény, nem használatos
     public boolean buy(Role role, Buyable item) {
         return false;
     }
@@ -139,7 +138,6 @@ public class CleanerRole extends Role {
         sp.clean(lane);
         LaneState after = lane.getLaneState();
 
-        // A takarító csak akkor kap fizetést, ha a sávot játhatóra takarította
         if ((after instanceof Clear || after instanceof Gravel) && !(before instanceof Clear || before instanceof Gravel)) {
             money += 50;
         }

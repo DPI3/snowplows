@@ -34,9 +34,6 @@ public final class TestSupport {
 
     private TestSupport() {}
 
-    // =========================================================================
-    // 1) EREDETI dispatch — test14–19 (takarit = controlSnowplow + pénz)
-    // =========================================================================
 
     public static void dispatch(String rawLine,
                                 Snowplow plow,
@@ -56,9 +53,6 @@ public final class TestSupport {
         }
     }
 
-    // =========================================================================
-    // 2) BŐVÍTETT dispatch — test4, test11 (takarit = közvetlen clean, bolt)
-    // =========================================================================
 
     public static void dispatch(String rawLine,
                                 Snowplow plow,
@@ -81,17 +75,12 @@ public final class TestSupport {
         }
     }
 
-    // =========================================================================
-    // PRIVÁT PARANCS-IMPLEMENTÁCIÓK
-    // =========================================================================
-    // --- Fejcsere ---
     private static void doChangeHead(Snowplow plow, String headType) {
         Head old = plow.getCurrentHead();
         plow.changeHead(createHead(headType));
         printChange(plow.getId(), "currentHead", simpleName(old), simpleName(plow.getCurrentHead()));
     }
 
-    // --- Hókotró mozgás ---
     private static void doMovePlow(Snowplow plow, Lane target) {
         if (target == null) return;
         Lane old = plow.getCurrentLane();
@@ -100,7 +89,6 @@ public final class TestSupport {
                 old != null ? old.getName() : "null", target.getName());
     }
 
-    // --- Takarítás (controlSnowplow – pénzjutalom is kinyomtatódik) ---
     private static void doCleanWithMoney(Snowplow plow, CleanerRole cleaner) {
         Lane lane = plow.getCurrentLane();
         if (lane == null) return;
@@ -131,7 +119,6 @@ public final class TestSupport {
         if (cleaner.getMoney() != bMoney) printChange(cleaner.getName(), "money", bMoney, cleaner.getMoney());
     }
 
-    // --- Takarítás (közvetlen plow.clean – pénzjutalom NÉLKÜL) ---
     private static void doCleanDirect(Snowplow plow) {
         Lane lane = plow.getCurrentLane();
         if (lane == null) return;
@@ -141,7 +128,6 @@ public final class TestSupport {
         boolean isGrav  = head instanceof GravelSpreaderHead;
         boolean isDrag  = head instanceof DragonHead;
 
-        // Üres készlet – figyelmeztetés
         if (isSalt && plow.getSaltStock() <= 0) {
             System.out.println("[Console]: Figyelmeztetés: A takarítás sikertelen. A sószóró fej készlete kimerült!");
             printChange(lane.getName(), "currentState", simpleName(lane.getLaneState()), simpleName(lane.getLaneState()));
@@ -166,7 +152,7 @@ public final class TestSupport {
         int bBio     = plow.getBiokeroseneStock();
         int bGrav    = plow.getGravelStock();
 
-        plow.clean(lane);   // közvetlen hívás, nincs pénzjutalom
+        plow.clean(lane);
 
         if (plow.getSaltStock()        != bSalt)  printChange(plow.getId(), "saltStock",        bSalt,  plow.getSaltStock());
         if (plow.getBiokeroseneStock() != bBio)   printChange(plow.getId(), "biokeroseneStock", bBio,   plow.getBiokeroseneStock());
@@ -181,12 +167,10 @@ public final class TestSupport {
         if (lane.getGravelThickness()  != bGravel)  printChange(lane.getName(), "gravelThickness",  bGravel,  lane.getGravelThickness());
 
 
-        // Típus-specifikus sikeres-üzenet
         if (isSalt && aState instanceof Clear && !(bState instanceof Clear))
             System.out.println("[Console]: A sáv felsózva, a jég elolvadt, az út tiszta.");
     }
 
-    // --- Állapot állítás ---
     private static void doAllapotAllit(String laneName, String stateType, Map<String, Lane> lanes) {
         Lane lane = lanes.get(laneName);
         if (lane == null) return;
@@ -196,7 +180,6 @@ public final class TestSupport {
         printChange(laneName, "currentState", simpleName(before), simpleName(after));
     }
 
-    // --- Sáv inspect ---
     private static void doInspect(Lane lane) {
         if (lane == null) return;
         System.out.printf("[Console]: \"Sáv: %s; snowThickness=%s; iceThickness=%s; gravelThickness=%s; isPassable=%s; DynamicWeight=%s\"%n",
@@ -208,7 +191,6 @@ public final class TestSupport {
                 fmt(lane.getDynamicWeight()));
     }
 
-    // --- Bolt nyit ---
     private static void doBoltNyit(Store store) {
         if (store == null) return;
         boolean before = store.isOpen();
@@ -216,16 +198,13 @@ public final class TestSupport {
         printChange("store", "open", before, store.isOpen());
     }
 
-    // --- Vásárlás ---
     private static void doVasarol(String[] parts, Store store, CleanerRole cleaner, Snowplow plow) {
         if (store == null || parts.length < 3) return;
         boolean thirdIsNumber = parts[2].matches("\\d+");
 
         if (thirdIsNumber) {
-            // "vasarol salt 3"  →  darabos vásárlás (10 Ft/db)
             doBuyByUnit(parts[1], Integer.parseInt(parts[2]), store, cleaner, plow);
         } else {
-            // "vasarol cleaner_1 salt"  →  készlet-csomag (50 Ft → 10 db)
             doBuyPack(parts[2], store, cleaner, plow);
         }
     }
@@ -280,9 +259,6 @@ public final class TestSupport {
         }
     }
 
-    // =========================================================================
-    // NYILVÁNOS SEGÉDEK  (bármely tesztből hívhatók)
-    // =========================================================================
 
     /** [entity] [field]: before -> after */
     public static void printChange(String entity, String field, Object before, Object after) {
@@ -330,16 +306,12 @@ public final class TestSupport {
         }
     }
 
-    // double kiírás: egész ha kerek, tizedes ha nem
     private static String fmt(double d) {
         return (d == Math.floor(d) && !Double.isInfinite(d))
                ? String.valueOf((long) d)
                : String.valueOf(d);
     }
 
-    // =========================================================================
-    // 3) ÁLTALÁNOS dispatch — test5–10 (TestContext alapú)
-    // =========================================================================
 
     public static void dispatch(String rawLine, TestContext ctx) {
         String line = rawLine.trim();
@@ -357,14 +329,12 @@ public final class TestSupport {
         }
     }
 
-    // --- kijelol ---
     private static void doKijelol(String vehicleId, TestContext ctx) {
         String before = ctx.selectedVehicle == null ? "null" : ctx.selectedVehicle;
         ctx.selectedVehicle = vehicleId;
         System.out.println("[selectedVehicle] " + before + " -> " + vehicleId);
     }
 
-    // --- auto_utvonal ---
     private static void doAutoUtvonal(String busId, TestContext ctx) {
         String start = ctx.busAutoStart.get(busId);
         String dest  = ctx.busAutoDest.get(busId);
@@ -376,7 +346,6 @@ public final class TestSupport {
         System.out.println("[" + busId + "] [currentRoute]: " + (oldRoute == null ? "null" : oldRoute) + " -> " + route);
     }
 
-    // --- mozgas (dispatcher) ---
     private static void doMozgas(String[] parts, TestContext ctx) {
         String vehicleId = parts[1];
         if (parts.length >= 3) {
@@ -386,22 +355,19 @@ public final class TestSupport {
         }
     }
 
-    // --- mozgas vehicle_id target_lane ---
     private static void doMozgasToLane(String vehicleId, String targetLaneName, TestContext ctx) {
         String currentLaneName = ctx.vehicleLane.get(vehicleId);
-        if (targetLaneName.equals(currentLaneName)) return;  // már ott van
+        if (targetLaneName.equals(currentLaneName)) return;
 
         Lane targetLane = ctx.lanes.get(targetLaneName);
         if (targetLane == null) return;
 
-        // Ütközés ellenőrzés
         List<String> others = ctx.getOtherOccupants(targetLaneName, vehicleId);
         if (!others.isEmpty()) {
             doCollision(vehicleId, others, targetLaneName, ctx);
             return;
         }
 
-        // Elakadás vizsgálat (járhatatlan sáv)
         if (!targetLane.isPassable()) {
             ctx.setVehicleLane(vehicleId, targetLaneName);
             Vehicle v = ctx.getVehicle(vehicleId);
@@ -422,7 +388,6 @@ public final class TestSupport {
             return;
         }
 
-        // Normál mozgás
         if (currentLaneName != null) {
             printChange(vehicleId, "currentLane", currentLaneName, targetLaneName);
         }
@@ -430,15 +395,12 @@ public final class TestSupport {
         Vehicle v = ctx.getVehicle(vehicleId);
         if (v != null) v.setCurrentLane(targetLane);
 
-        // Terminál-érzékelés (csak buszoknak)
         if (ctx.buses.containsKey(vehicleId)) {
             checkBusTerminalArrival(vehicleId, targetLaneName, ctx);
         }
     }
 
-    // --- mozgas vehicle_id (automatikus haladás) ---
     private static void doMozgasAuto(String vehicleId, TestContext ctx) {
-        // Elakadt jármű felszabadítása
         if (ctx.stuckVehicles.contains(vehicleId)) {
             String curLane = ctx.vehicleLane.get(vehicleId);
             Lane lane = curLane != null ? ctx.lanes.get(curLane) : null;
@@ -459,7 +421,6 @@ public final class TestSupport {
                     v.setSpeed(defSpd);
                 }
 
-                // Haladás a következő sávra
                 String routeName = ctx.vehicleRoute.get(vehicleId);
                 String nextLane  = routeName != null ? ctx.getNextLaneName(routeName, curLane) : null;
                 if (nextLane != null) {
@@ -471,7 +432,6 @@ public final class TestSupport {
             return;
         }
 
-        // Normál haladás: következő sáv (ha járható)
         String curLane   = ctx.vehicleLane.get(vehicleId);
         String routeName = ctx.vehicleRoute.get(vehicleId);
         if (routeName == null || curLane == null) return;
@@ -481,7 +441,6 @@ public final class TestSupport {
 
         Lane nextLane = ctx.lanes.get(nextLaneName);
 
-        // Járhatatlan → átirányítás
         if (nextLane != null && !nextLane.isPassable()) {
             Map<String, String> reroutes = ctx.carReroute.get(vehicleId);
             String newRoute = reroutes != null ? reroutes.get(routeName) : null;
@@ -502,7 +461,6 @@ public final class TestSupport {
             return;
         }
 
-        // Normál haladás
         if (nextLane != null) {
             Vehicle v = ctx.getVehicle(vehicleId);
             printChange(vehicleId, "currentLane", curLane, nextLaneName);
@@ -512,7 +470,6 @@ public final class TestSupport {
         }
     }
 
-    // --- Ütközés kezelése ---
     private static void doCollision(String vehicleId, List<String> others,
                                     String laneName, TestContext ctx) {
         Lane lane = ctx.lanes.get(laneName);
@@ -559,7 +516,6 @@ public final class TestSupport {
         }
     }
 
-    // --- Terminál-megérkezés buszoknak ---
     private static void checkBusTerminalArrival(String busId, String laneName, TestContext ctx) {
         String terminalName = ctx.terminalLane.get(laneName);
         if (terminalName == null) return;
@@ -568,19 +524,16 @@ public final class TestSupport {
         String driverId = ctx.busToDriver.get(busId);
         BusdriverRole driver = driverId != null ? ctx.busdrivers.get(driverId) : null;
 
-        // 1. Helyszín változás
         String oldLoc = bus.getLocation();
         bus.setLocation(terminalName);
         printChange(busId, "location", oldLoc, terminalName);
 
-        // 2. Fordulók növelése (ha be van kapcsolva)
         if (ctx.busArrivalIncrRounds.contains(busId) && driver != null) {
             int old = driver.getCompletedRounds();
             driver.incrementCompletedRounds();
             printChange(driverId, "completedRounds", old, driver.getCompletedRounds());
         }
 
-        // 3. Pénzjutalom
         int reward = ctx.busArrivalReward.getOrDefault(busId, 0);
         if (driver != null && reward > 0) {
             int old = driver.getMoney();
@@ -588,14 +541,12 @@ public final class TestSupport {
             printChange(driverId, "money", old, driver.getMoney());
         }
 
-        // 4. Log üzenet
         if (ctx.busArrivalShowReward.contains(busId) && reward > 0) {
             System.out.println("[log] Forduló teljesítve: " + busId + ", jutalom: " + reward);
         } else {
             System.out.println("[log] Forduló befejezve: " + busId);
         }
 
-        // 5. Következő útvonal hozzárendelése
         String nextRoute = ctx.busNextRoute.get(busId);
         if (nextRoute != null) {
             String old = ctx.vehicleRoute.get(busId);
@@ -604,7 +555,6 @@ public final class TestSupport {
         }
     }
 
-    // --- Megérkezés autóknak ---
     private static void checkCarArrival(String carId, String laneName, TestContext ctx) {
         String arrivalLoc = ctx.carArrivalLane.get(laneName);
         if (arrivalLoc == null) return;
@@ -616,7 +566,6 @@ public final class TestSupport {
         System.out.println("[log] " + carId + " megérkezett a munkahely");
     }
 
-    // --- takarit plow_id lane_id (TestContext változat) ---
     private static void doTakaritCtx(String[] parts, TestContext ctx) {
         if (parts.length < 3) return;
         String plowId  = parts[1];
@@ -635,14 +584,12 @@ public final class TestSupport {
         }
     }
 
-    // --- tick (autók automatikus haladása) ---
     private static void doTick(TestContext ctx) {
         for (String carId : ctx.cars.keySet()) {
             Car car = ctx.cars.get(carId);
             String routeName = ctx.vehicleRoute.get(carId);
             String curLane   = ctx.vehicleLane.get(carId);
 
-            // Útvonal automatikus hozzárendelése
             if (routeName == null) {
                 String autoRoute = ctx.carAutoRoute.get(carId);
                 if (autoRoute == null) continue;
@@ -655,7 +602,6 @@ public final class TestSupport {
                 routeName = autoRoute;
             }
 
-            // Haladás a következő sávra
             String nextLaneName = ctx.getNextLaneName(routeName, curLane);
             if (nextLaneName == null) continue;
 
@@ -669,9 +615,6 @@ public final class TestSupport {
     }
 
 
-    // =========================================================================
-    // 4) SPECIÁLIS dispatch — test12
-    // =========================================================================
 
     public static void dispatch(String rawLine,
                                 Game game) {
@@ -704,7 +647,7 @@ public final class TestSupport {
             }
             printConsole("\""+message+"\"");
         }
-        
+
     }
 
 

@@ -1,0 +1,15 @@
+# Teszt 5 — Busz auto-útvonal kijelölése és teljesítése
+add_lane -n "lane_start"
+add_lane -n "lane_t1_1"
+add_lane -n "lane_t1_2"
+add_lane -n "lane_t2"
+
+add_bus -n "bus_1" -pos "lane_start" -speed 40
+add_busdriver -n "busdriver_1" -bus "bus_1" -money 100
+
+add_route -n "route_1" -lanes "lane_t1_1,lane_t1_2,lane_t2"
+add_route -n "route_2" -lanes "lane_t2,lane_t1_2,lane_t1_1"
+
+set_bus_auto -bus "bus_1" -start "term_a" -dest "term_b" -route "route_1"
+set_terminal_lane -lane "lane_t2" -terminal "term_b"
+set_bus_arrival -bus "bus_1" -reward 60 -show_reward -next_route "route_2"

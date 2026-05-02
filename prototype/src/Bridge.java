@@ -11,6 +11,6 @@ public class Bridge extends Road {
 
     @Override
     public void applyWeatherEffects(Weather weather) {
-        increaseSnowLevel(); // erősebb hatás
+        increaseSnowLevel();
     }
 }
