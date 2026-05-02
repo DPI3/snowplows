@@ -39,7 +39,7 @@ public class Game {
      */
     public Game() {
         this.currentRound = 0;
-        this.maxRound = 10; // Tetszőleges alapértelmezett érték
+        this.maxRound = 10;
         this.vehicles = new ArrayList<>();
         this.players = new ArrayList<>();
     }
@@ -67,7 +67,6 @@ public class Game {
      * Lezárja a játékot.
      */
     public void end() {
-        // Ide kerülhet a játék végét kezelő logika
     }
 
     /**

@@ -23,49 +23,41 @@ public class RoadNetwork {
      * @param to a cél csomópont
      */
     public Route getShortestPath(Node from, Node to) {
-        // Távolságok és elődök (sávok) tárolása a Dijkstra-hoz [cite: 163]
         Map<Node, Double> distance = new HashMap<>();
         Map<Node, Lane> elod = new HashMap<>();
-        
-        // Min-priority queue a csomópontok és aktuális távolságuk tárolására [cite: 163]
+
         PriorityQueue<NodeDistance> Q = new PriorityQueue<>(Comparator.comparingDouble(nd -> nd.dist));
 
-        // Inicializálás: minden csomópont végtelen távolságra, kivéve a kezdőpontot [cite: 164-167]
         for (Node n : nodes) {
             distance.put(n, Double.POSITIVE_INFINITY);
         }
         distance.put(from, 0.0);
-        Q.add(new NodeDistance(from, 0.0)); // Q.insert(from, 0) [cite: 167]
+        Q.add(new NodeDistance(from, 0.0));
 
         while (!Q.isEmpty()) {
-            Node current = Q.poll().node; // current = Q.extractMin() [cite: 169]
+            Node current = Q.poll().node;
 
-            if (current.equals(to)) break; // if current = to: break [cite: 170]
+            if (current.equals(to)) break;
 
-            // Megkeressük az összes sávot, ami a jelenlegi csomópontból indul [cite: 171]
             for (Road r : roads) {
-                // Feltételezzük, hogy a Road ismeri a forrását (source)
                 if (r.getSource() != null && r.getSource().equals(current)) {
                     for (Lane l : r.getLanes()) {
-                        // Ha a sáv nem járható (DeepSnow, IceSheet, Impassable), kihagyjuk [cite: 162, 172]
                         if (!l.isPassable()) continue;
 
-                        double w = l.getDynamicWeight(); // w = l.getDynamicWeight() [cite: 173]
-                        Node neighbor = l.getDestination(); // neighbor = lane célcsomópontja [cite: 174]
+                        double w = l.getDynamicWeight();
+                        Node neighbor = l.getDestination();
 
-                        // Relaxáció [cite: 175]
                         double newDist = distance.get(current) + w;
                         if (newDist < distance.get(neighbor)) {
                             distance.put(neighbor, newDist);
-                            elod.put(neighbor, l); // előd[neighbor] = l [cite: 177]
-                            Q.add(new NodeDistance(neighbor, newDist)); // Q.insert(neighbor, dist) [cite: 178]
+                            elod.put(neighbor, l);
+                            Q.add(new NodeDistance(neighbor, newDist));
                         }
                     }
                 }
             }
         }
 
-        // Útvonal felépítése az elődök alapján (buildRoute) [cite: 179]
         return buildRoute(elod, to);
     }
 
@@ -75,14 +67,11 @@ public class RoadNetwork {
     private Route buildRoute(Map<Node, Lane> elod, Node to) {
         Route route = new Route();
         Node current = to;
-        
-        // Visszafelé haladunk a célállomástól a forrásig a sávok mentén
+
         while (elod.containsKey(current)) {
             Lane l = elod.get(current);
-            route.getLanes().add(0, l); // Mindig az elejére szúrjuk be a helyes sorrendhez
-            // A sáv forrása lesz a következő vizsgált csomópont
-            // (Feltételezzük, hogy a Lane osztályban tárolva van a sourceNode)
-            current = l.getSource(); 
+            route.getLanes().add(0, l);
+            current = l.getSource();
         }
         return route;
     }
@@ -94,18 +83,16 @@ public class RoadNetwork {
      * @return a hozzá tartozó sáv
      */
     public Lane getLane(Lane coord) {
-        for (Road r : roads) { // for each road r in roads [cite: 182]
-            for (Lane l : r.getLanes()) { // for each lane l in r.lanes [cite: 183]
-                // Megkeressük az egyező sávot [cite: 184]
+        for (Road r : roads) {
+            for (Lane l : r.getLanes()) {
                 if (l.equals(coord)) {
                     return l;
                 }
             }
         }
-        return null; // return null [cite: 185]
+        return null;
     }
 
-    // Segédosztály a PriorityQueue-hoz
     private static class NodeDistance {
         Node node;
         double dist;

@@ -18,7 +18,6 @@ public class test4 implements TestCase {
 
     @Override
     public void run() {
-        // Kezdőállapot ("load test4_arrange.txt" hatása)
         Lane lane_1           = new Lane("lane_1", null, null);
         Snowplow plow_1       = new Snowplow("plow_1", lane_1, 0, new SaltSpreaderHead());
         CleanerRole cleaner_1 = new CleanerRole("cleaner_1", 100, plow_1);

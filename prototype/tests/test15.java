@@ -9,7 +9,7 @@ import java.util.Map;
 import src.*;
 
 /**
- * Teszteset 15: Jeges út érdesítése zúzalékkal.
+ * Teszteset 15: Vékony hóréteg eltakarítása SweeperHead-del.
  * A hókotró a söprő (SweeperHead) fejjel eltávolítja a vékony hóréteget (ThinSnow) a sávról.
  * A takarítás eredményeként a sáv állapota Clear típusúra változik, az út ismét járható lesz.
  */
@@ -26,7 +26,6 @@ public class test15 implements TestCase{
         lanes.put("lane_1", lane_1);
         lanes.put("lane_5", lane_5);
 
-        // 2. Bemenet beolvasása és a parancsok feldolgozása
         try {
             List<String> commands = Files.readAllLines(Paths.get("test_data/input/test15_in.txt"));
             for (String raw : commands) {

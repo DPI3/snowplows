@@ -5,7 +5,6 @@ package src;
  * Különböző fejekkel képes tisztítani az utakat.
  */
 public class Snowplow extends Vehicle {
-    // Enum az állapotgéphez
     public enum PlowState {
         AT_TERMINAL, READY_TO_CLEAN, OUT_OF_FUEL
     }
@@ -42,7 +41,6 @@ public class Snowplow extends Vehicle {
     @Override
     public void setCurrentLane(Lane lane) {
         super.setCurrentLane(lane);
-        // Ha a sáv már nem Terminál, akkor készen áll a takarításra
         if (lane != null && !lane.getName().startsWith("Terminal")) {
             this.state = PlowState.READY_TO_CLEAN;
         }

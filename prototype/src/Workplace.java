@@ -32,7 +32,6 @@ public class Workplace extends Node {
         if (vehicle != null) {
             vehicle.setCurrentNode(this);
 
-            // opcionális: cél elérése
             vehicle.setArrived(true);
         }
     }

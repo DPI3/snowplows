@@ -33,6 +33,5 @@ public abstract class Node {
      * @param vehicle a belépő jármű
      */
     public void onVehicleEnter(Vehicle vehicle) {
-        // Alapértelmezetten üres
     }
 }

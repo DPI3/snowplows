@@ -9,8 +9,8 @@ import src.*;
 
 /**
  * Teszteset 13: Sáv állapotának lekérdezése.
- * A szimuláció célja a  kiválasztott Lane objektum attribútumainak pontos lekérdezése.
- * A sáv áthaladhatóságának (isPassable()) és dinamikus súlyának (getDynamicWeight()) helyes 
+ * A szimuláció célja a kiválasztott Lane objektum attribútumainak pontos lekérdezése.
+ * A sáv áthaladhatóságának (isPassable()) és dinamikus súlyának (getDynamicWeight()) helyes
  * kiszámítása az aktuális állapot alapján.
  */
 public class test13  implements TestCase {
@@ -28,7 +28,6 @@ public class test13  implements TestCase {
         Map<String, Lane> lanes = new HashMap<>();
         lanes.put("lane_1", lane_1);
 
-         // 2. Bemenet beolvasása és a parancsok feldolgozása
         try {
             List<String> commands = Files.readAllLines(Paths.get("test_data/input/test13_in.txt"));
             for (String raw : commands) {

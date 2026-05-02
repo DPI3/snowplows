@@ -1,0 +1,14 @@
+# Teszt 7 — Autó automatikus mozgása lakhely → munkahely
+add_lane -n "lane_home"
+add_lane -n "lane_mid"
+add_lane -n "lane_work"
+
+add_residence -n "home_1"
+add_workplace -n "work_1"
+
+add_car -n "car_1" -pos "lane_home" -speed 50 -residence "home_1" -workplace "work_1"
+
+add_route -n "route_car_1" -lanes "lane_home,lane_mid,lane_work"
+
+set_car_auto -car "car_1" -route "route_car_1" -residence "home_1" -workplace "work_1"
+set_car_arrival -lane "lane_work" -location "work_1"

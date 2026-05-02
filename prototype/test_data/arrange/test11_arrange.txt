@@ -1,0 +1,5 @@
+# Teszt 11 — Fej hatástalan üres készlettel
+add_lane -n "lane_ice_1" -state icesheet
+add_plow -n "plow_1" -pos "lane_ice_1" -head saltspreader
+add_cleaner -n "cleaner_1" -money 200 -plow "plow_1"
+add_store

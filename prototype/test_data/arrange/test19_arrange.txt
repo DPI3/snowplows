@@ -1,0 +1,5 @@
+# Teszt 19 — Hó és jég sárkányfejjel
+add_lane -n "lane_start"
+add_lane -n "lane_mixed" -state deepsnow -snow 8
+add_plow -n "plow_1" -pos "lane_start" -head sweeper -bio 5
+add_cleaner -n "cleaner_1" -money 150 -plow "plow_1"

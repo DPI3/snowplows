@@ -1,9 +1,16 @@
 package tests;
 
+/**
+ * A batch tesztelő belépési pontja: a parancssoron megkapott teszt-azonosító
+ * (pl. "test14") alapján reflexióval példányosítja a megfelelő
+ * {@link TestCase} osztályt és lefuttatja annak {@code run()} metódusát.
+ *
+ * A {@code run_tests.bat}/{@code run_tests.sh} ezt hívja minden tesztre,
+ * a kimenetet fájlba irányítja és összehasonlítja a megfelelő assert fájllal.
+ */
 public class MainRunner {
 
     public static void main(String[] args) {
-        // 1. Ellenőrizzük, hogy kaptunk-e paramétert (pl. "test16")
         if (args.length == 0) {
             System.err.println("Hiba: Nem adtál meg teszt nevet! Használat: java tests.MainRunner <teszt_neve>");
             return;

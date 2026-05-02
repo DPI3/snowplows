@@ -1,0 +1,12 @@
+# Teszt 8 — Útvonal újratervezése akadály miatt
+add_lane -n "lane_current"
+add_lane -n "lane_next"
+add_lane -n "lane_bypass_1"
+
+add_car -n "car_1" -pos "lane_current" -speed 50
+
+add_route -n "route_original" -lanes "lane_current,lane_next"
+add_route -n "route_recalculated" -lanes "lane_bypass_1"
+
+set_vehicle_route -vehicle "car_1" -route "route_original"
+set_car_reroute -car "car_1" -from "route_original" -to "route_recalculated"

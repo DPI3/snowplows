@@ -15,7 +15,6 @@ public class test7 implements TestCase {
     public void run() {
         TestContext ctx = new TestContext();
 
-        // === Sávok ===
         Lane lane_home = new Lane("lane_home", null, null);
         Lane lane_mid  = new Lane("lane_mid",  null, null);
         Lane lane_work = new Lane("lane_work", null, null);
@@ -23,30 +22,24 @@ public class test7 implements TestCase {
         ctx.lanes.put("lane_mid",  lane_mid);
         ctx.lanes.put("lane_work", lane_work);
 
-        // === Csomópontok ===
         Residence home_1 = new Residence("home_1");
         Workplace work_1 = new Workplace("work_1");
 
-        // === Autó ===
         Car car_1 = new Car("car_1", lane_home, 50.0, home_1, work_1);
         ctx.cars.put("car_1", car_1);
         ctx.setVehicleLane("car_1", "lane_home");
         ctx.defaultSpeed.put("car_1", 50.0);
-        ctx.vehicleRoute.put("car_1", null);   // nincs útvonal → tick rendel hozzá
+        ctx.vehicleRoute.put("car_1", null);
 
-        // === Auto-útvonal konfiguráció ===
         ctx.carAutoRoute.put("car_1", "route_car_1");
         ctx.carResidence.put("car_1", "home_1");
         ctx.carWorkplace.put("car_1", "work_1");
 
-        // Útvonal: lane_home → lane_mid → lane_work
         ctx.routeLanes.put("route_car_1",
                 Arrays.asList("lane_home", "lane_mid", "lane_work"));
 
-        // Megérkezési sáv
         ctx.carArrivalLane.put("lane_work", "work_1");
 
-        // === Parancsok futtatása ===
         try {
             List<String> lines = Files.readAllLines(
                     Paths.get("test_data/input/test7_in.txt"));
