@@ -20,6 +20,8 @@ add_car -n "Car_1" -pos "Lane_0" -speed 50.0 -residence "Residence_1"
 add_bus -n "Bus_1" -pos "Lane_1" -speed 40.0 -termA "Terminal_A"
 add_plow -n "Snowplow_1" -pos "Lane_2" -head "sweeper"
 add_car -n "Car_2" -pos "Lane_3" -speed 50.0
-add_player -id 1 -n "Player_1" -roles ""
-add_player -id 2 -n "Player_2" -roles ""
+add_role -type cleaner -n "cleaner_1" -money 70 -plow "Snowplow_1"
+add_player -id 1 -n "Player_1" -roles "cleaner_1"
+add_role -type busdriver -n "busdriver_1" -bus "Bus_1" -rounds 1
+add_player -id 2 -n "Player_2" -roles "busdriver_1"
 init_game -current 1 -max 10
