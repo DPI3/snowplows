@@ -39,6 +39,9 @@ public final class ArrangeContext {
     private final List<Vehicle> gameVehicles = new ArrayList<>();
     private final List<Player> gamePlayers = new ArrayList<>();
 
+    private Weather weather;
+    private final Map<String, String> snowplowHome = new LinkedHashMap<>();
+
     private boolean usesCtx = false;
 
 
@@ -63,6 +66,8 @@ public final class ArrangeContext {
             case "add_residence":     doAddResidence(f);     break;
             case "add_workplace":     doAddWorkplace(f);     break;
             case "add_terminal":      doAddTerminal(f);      break;
+            case "add_intersection":  doAddIntersection(f);  break;
+            case "add_weather":       doAddWeather(f);       break;
             case "add_plow":          doAddPlow(f);          break;
             case "add_car":           doAddCar(f);           break;
             case "add_bus":           doAddBus(f);           break;
@@ -96,7 +101,22 @@ public final class ArrangeContext {
     public Consumer<String> dispatcher() {
         if (gameInit) {
             Game game = new Game(gameCurrent, gameMax, gameVehicles, gamePlayers);
-            return line -> TestSupport.dispatch(line, game);
+            Map<String, String> positions = new LinkedHashMap<>();
+            for (Vehicle v : gameVehicles) {
+                if (v instanceof Car) {
+                    Residence r = ((Car) v).getResidence();
+                    if (r != null) positions.put(v.getId(), r.getId());
+                } else if (v instanceof Bus) {
+                    Terminal t = ((Bus) v).getTerminal_A();
+                    if (t != null) positions.put(v.getId(), t.getId());
+                } else if (v instanceof Snowplow) {
+                    String home = snowplowHome.get(v.getId());
+                    if (home != null) positions.put(v.getId(), home);
+                }
+            }
+            TestSupport.GameSnapshot snap = new TestSupport.GameSnapshot(
+                    nodes.size(), ctx.lanes.size(), weather, positions);
+            return line -> TestSupport.dispatch(line, game, snap);
         }
         if (usesCtx) {
             final TestContext c = ctx;
@@ -148,6 +168,17 @@ public final class ArrangeContext {
         usesCtx = true;
     }
 
+    private void doAddIntersection(Map<String, String> f) {
+        String name = require(f, "n", "add_intersection");
+        nodes.put(name, new Intersection(name));
+    }
+
+    private void doAddWeather(Map<String, String> f) {
+        Weather w = new Weather();
+        if (f.containsKey("intensity")) w.setSnowIntensity(parseInt(f.get("intensity")));
+        this.weather = w;
+    }
+
 
     private void doAddPlow(Map<String, String> f) {
         String name = require(f, "n", "add_plow");
@@ -158,6 +189,7 @@ public final class ArrangeContext {
         if (f.containsKey("salt"))   p.setSaltStock(parseInt(f.get("salt")));
         if (f.containsKey("bio"))    p.setBiokeroseneStock(parseInt(f.get("bio")));
         if (f.containsKey("gravel")) p.setGravelStock(parseInt(f.get("gravel")));
+        if (f.containsKey("home"))   snowplowHome.put(name, f.get("home"));
         this.plow = p;
         ctx.plows.put(name, p);
         gameVehicles.add(p);

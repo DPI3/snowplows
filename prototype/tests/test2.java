@@ -4,12 +4,12 @@ import src.*;
 
 /**
  * Teszteset 2: Jármű sávváltásának és az út járhatóságának tesztelése.
- * Ellenőrzi, hogy a jármű át tud-e menni egy tiszta sávra, 
+ * Ellenőrzi, hogy a jármű át tud-e menni egy tiszta sávra,
  * illetve megakadályozza-e a rendszer, hogy járhatatlan (DeepSnow) sávra lépjen.
  */
 public class test2 implements TestCase {
 
-   @Override
+    @Override
     public void run() {
 
         Terminal termA = new Terminal("Terminal_A");
@@ -22,38 +22,22 @@ public class test2 implements TestCase {
         Snowplow plow1 = new Snowplow("snowplow_1", laneTermA, 30.0, new ThrowerHead());
         CleanerRole cleaner = new CleanerRole("player_cleaner", 100, plow1);
 
-        String beforeLane = plow1.getCurrentLane().getName();
-        String beforeState = plow1.getState().name();
-        int beforeFuel = plow1.getFuel();
-
-        double beforeSnow = lane12.getSnowThickness();
-        boolean beforePassable = lane12.isPassable();
+        String beforeLane      = plow1.getCurrentLane().getName();
         String beforeLaneState = lane12.getLaneState().getClass().getSimpleName();
-        int beforePoints = cleaner.getScore();
+        double beforeSnow      = lane12.getSnowThickness();
+        int    beforeMoney     = cleaner.getMoney();
 
         plow1.setCurrentLane(lane12);
-
         cleaner.controlSnowplow(plow1);
 
-        String afterLane = plow1.getCurrentLane().getName();
-        String afterState = plow1.getState().name();
-        int afterFuel = plow1.getFuel();
-
-        double afterSnow = lane12.getSnowThickness();
-        boolean afterPassable = lane12.isPassable();
+        String afterLane      = plow1.getCurrentLane().getName();
         String afterLaneState = lane12.getLaneState().getClass().getSimpleName();
-        int afterPoints = cleaner.getScore();
+        double afterSnow      = lane12.getSnowThickness();
+        int    afterMoney     = cleaner.getMoney();
 
         System.out.println("[" + plow1.getId() + "] [currentLane]: " + beforeLane + " -> " + afterLane);
-        System.out.println("[" + plow1.getId() + "] [state]: " + beforeState + " -> " + afterState); 
-        System.out.println("[" + plow1.getId() + "] [fuel]: " + beforeFuel + " -> " + afterFuel); 
-        System.out.println();
-        
-        System.out.println("[" + lane12.getName() + "] [snowThickness]: " + beforeSnow + " -> " + afterSnow);
         System.out.println("[" + lane12.getName() + "] [currentState]: " + beforeLaneState + " -> " + afterLaneState);
-        System.out.println("[" + lane12.getName() + "] [isPassable]: " + beforePassable + " -> " + afterPassable);
-        System.out.println();
-        
-        System.out.println("[" + cleaner.getName() + "] [points]: " + beforePoints + " -> " + afterPoints);
+        System.out.println("[" + lane12.getName() + "] [snowThickness]: " + beforeSnow + " -> " + afterSnow);
+        System.out.println("[" + cleaner.getName() + "] [money]: " + beforeMoney + " -> " + afterMoney);
     }
 }

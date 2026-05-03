@@ -618,6 +618,12 @@ public final class TestSupport {
 
     public static void dispatch(String rawLine,
                                 Game game) {
+        dispatch(rawLine, game, null);
+    }
+
+    public static void dispatch(String rawLine,
+                                Game game,
+                                GameSnapshot snap) {
         String line = rawLine.trim();
         if (line.isEmpty()){
             doWait(game);
@@ -626,7 +632,42 @@ public final class TestSupport {
         String[] parts = line.split("\\s+");
 
         switch (parts[0]) {
+            case "state": doState(game, snap);                              break;
             case "load": case "save": case "exit": default:                 break;
+        }
+    }
+
+    private static void doState(Game game, GameSnapshot snap) {
+        if (snap == null) return;
+        System.out.println("[RoadNetwork] [Status]: Initialized");
+        System.out.println("[Nodes] [Count]: " + snap.nodesCount);
+        System.out.println("[Lanes] [Count]: " + snap.lanesCount);
+        System.out.println("[Vehicles] [Count]: " + game.getVehicles().size());
+        System.out.println("[Players] [Count]: " + game.getPlayers().size());
+        for (Vehicle v : game.getVehicles()) {
+            String pos = snap.vehiclePositions.get(v.getId());
+            if (pos != null) {
+                System.out.println("[" + v.getId() + "] [Position]: " + pos);
+            }
+        }
+        int intensity = snap.weather != null ? snap.weather.getSnowIntensity() : 0;
+        System.out.println("[Weather] [CurrentSnowIntensity]: " + (double) intensity);
+        System.out.println("[Game] [CurrentRound]: " + game.getCurrentRound());
+    }
+
+    /** Az 1-es teszt {@code state} parancsához szükséges snapshot-kontextus. */
+    public static final class GameSnapshot {
+        public final int nodesCount;
+        public final int lanesCount;
+        public final Weather weather;
+        public final Map<String, String> vehiclePositions;
+
+        public GameSnapshot(int nodesCount, int lanesCount,
+                            Weather weather, Map<String, String> vehiclePositions) {
+            this.nodesCount = nodesCount;
+            this.lanesCount = lanesCount;
+            this.weather = weather;
+            this.vehiclePositions = vehiclePositions;
         }
     }
 

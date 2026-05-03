@@ -57,12 +57,10 @@ public class test1 implements TestCase {
 
                 System.out.println("[Vehicles] [Count]: " + game.getVehicles().size());
                 System.out.println("[Players] [Count]: " + game.getPlayers().size());
-                System.out.println();
 
                 System.out.println("[" + car1.getId() + "] [Position]: " + car1.getResidence().getId());
                 System.out.println("[" + bus1.getId() + "] [Position]: " + bus1.getTerminal_A().getId());
                 System.out.println("[" + plow1.getId() + "] [Position]: " + termA.getId());
-                System.out.println();
 
                 System.out.println("[Weather] [CurrentSnowIntensity]: " + (double) weather.getSnowIntensity());
 
