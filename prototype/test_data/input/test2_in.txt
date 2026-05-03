@@ -1,5 +1,4 @@
 load test2_arrange.txt
 mozgas snowplow_1 lane_12
-clean_lane snowplow_1
-save test2_out.txt
+takarit snowplow_1
 exit

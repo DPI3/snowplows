@@ -1,9 +1,4 @@
 [snowplow_1] [currentLane]: Terminal_A -> lane_12
-[snowplow_1] [state]: AT_TERMINAL -> READY_TO_CLEAN
-[snowplow_1] [fuel]: 100 -> 95
-
-[lane_12] [snowThickness]: 5.0 -> 0.0
 [lane_12] [currentState]: DeepSnow -> Clear
-[lane_12] [isPassable]: false -> true
-
-[player_cleaner] [points]: 100 -> 150
+[lane_12] [snowThickness]: 5.0 -> 0.0
+[player_cleaner] [money]: 100 -> 150

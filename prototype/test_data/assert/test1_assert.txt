@@ -1,12 +1,1 @@
-[RoadNetwork] [Status]: Initialized
-[Nodes] [Count]: 10
-[Lanes] [Count]: 15
-[Vehicles] [Count]: 4
-[Players] [Count]: 2
-
-[Car_1] [Position]: Residence_1
-[Bus_1] [Position]: Terminal_A
-[Snowplow_1] [Position]: Terminal_A
-
-[Weather] [CurrentSnowIntensity]: 0.0
-[Game] [CurrentRound]: 1
+[game] [currentRound]: 1 -> 2

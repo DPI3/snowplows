@@ -1,4 +1,3 @@
 load test3_arrange.txt
-change_head snowplow_1 IcebreakerHead
-save test3_out.txt
+fej_csere snowplow_1 icebreaker
 exit
