@@ -45,15 +45,15 @@ public class test2 implements TestCase {
         int afterPoints = cleaner.getScore();
 
         System.out.println("[" + plow1.getId() + "] [currentLane]: " + beforeLane + " -> " + afterLane);
-        //System.out.println("[" + plow1.getId() + "] [state]: " + beforeState + " -> " + afterState); 
-        //System.out.println("[" + plow1.getId() + "] [fuel]: " + beforeFuel + " -> " + afterFuel); 
-        //System.out.println();
+        System.out.println("[" + plow1.getId() + "] [state]: " + beforeState + " -> " + afterState); 
+        System.out.println("[" + plow1.getId() + "] [fuel]: " + beforeFuel + " -> " + afterFuel); 
+        System.out.println();
         
-        
-        System.out.println("[" + lane12.getName() + "] [currentState]: " + beforeLaneState + " -> " + afterLaneState);
-        //System.out.println("[" + lane12.getName() + "] [isPassable]: " + beforePassable + " -> " + afterPassable);
-        //System.out.println();
         System.out.println("[" + lane12.getName() + "] [snowThickness]: " + beforeSnow + " -> " + afterSnow);
-        System.out.println("[" + cleaner.getName() + "] [money]: " + beforePoints + " -> " + afterPoints);
+        System.out.println("[" + lane12.getName() + "] [currentState]: " + beforeLaneState + " -> " + afterLaneState);
+        System.out.println("[" + lane12.getName() + "] [isPassable]: " + beforePassable + " -> " + afterPassable);
+        System.out.println();
+        
+        System.out.println("[" + cleaner.getName() + "] [points]: " + beforePoints + " -> " + afterPoints);
     }
 }
