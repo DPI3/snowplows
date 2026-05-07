@@ -1,0 +1,6 @@
+[plow_1] [currentHead]: SweeperHead -> DragonHead
+[plow_1] [currentLane]: lane_start -> lane_mixed
+[plow_1] [biokeroseneStock]: 5 -> 4
+[lane_mixed] [currentState]: DeepSnow -> Clear
+[lane_mixed] [snowThickness]: 8.0 -> 0.0
+[cleaner_1] [money]: 150 -> 200

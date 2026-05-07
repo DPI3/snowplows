@@ -1,0 +1,3 @@
+load test3_arrange.txt
+fej_csere snowplow_1 icebreaker
+exit

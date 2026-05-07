@@ -1,0 +1,10 @@
+[system] [selectedStart]: term_a
+[system] [selectedDestination]: term_b
+[bus_1] [currentRoute]: null -> route_1
+[bus_1] [currentLane]: lane_start -> lane_t1_1
+[bus_1] [currentLane]: lane_t1_1 -> lane_t1_2
+[bus_1] [currentLane]: lane_t1_2 -> lane_t2
+[bus_1] [location]: úton -> term_b
+[busdriver_1] [money]: 100 -> 160
+[log] Forduló teljesítve: bus_1, jutalom: 60
+[bus_1] [currentRoute]: route_1 -> route_2

@@ -1,0 +1,8 @@
+[selectedVehicle] null -> bus_1
+[bus_1] [currentLane]: lane_start -> lane_21
+[bus_1] [currentLane]: lane_21 -> lane_22
+[bus_1] [currentLane]: lane_22 -> lane_term
+[bus_1] [location]: úton -> terminal_2
+[busdriver_1] [completedRounds]: 0 -> 1
+[busdriver_1] [money]: 80 -> 130
+[log] Forduló befejezve: bus_1

@@ -1,0 +1,8 @@
+[lane_conflict_1] [hasAccident]: false -> true
+[Console]: "Ütközés történt két automatikus jármű között (car_1, car_2). Az útszakasz blokkolva."
+[car_1] [speed]: 50.0 -> 0.0
+[car_2] [speed]: 50.0 -> 0.0
+[lane_conflict_2] [hasAccident]: false -> true
+[Console]: "Baleset: A játékos által vezetett bus_1 ütközött. Büntetés kiszabva."
+[bus_1] [speed]: 40.0 -> 0.0
+[busdriver_1] [score]: 100 -> 50

@@ -1,0 +1,4 @@
+[snowplow_1] [currentLane]: Terminal_A -> lane_12
+[lane_12] [currentState]: DeepSnow -> Clear
+[lane_12] [snowThickness]: 5.0 -> 0.0
+[player_cleaner] [money]: 100 -> 150

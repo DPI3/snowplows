@@ -1,0 +1,7 @@
+[Console]: Figyelmeztetés: A takarítás sikertelen. A sószóró fej készlete kimerült!
+[lane_ice_1] [currentState]: IceSheet -> IceSheet
+[cleaner_1] [money]: 200 -> 150
+[plow_1] [saltStock]: 0 -> 10
+[plow_1] [saltStock]: 10 -> 9
+[lane_ice_1] [currentState]: IceSheet -> Clear
+[Console]: A sáv felsózva, a jég elolvadt, az út tiszta.

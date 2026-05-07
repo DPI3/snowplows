@@ -1,0 +1,3 @@
+[plow_1] [currentHead]: SweeperHead -> IcebreakerHead
+[plow_1] [currentLane]: lane_start -> lane_ice
+[lane_ice] [currentState]: IceSheet -> BrokenIce

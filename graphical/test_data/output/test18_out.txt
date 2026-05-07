@@ -1,0 +1,6 @@
+[plow_1] [currentHead]: SweeperHead -> SaltSpreaderHead
+[plow_1] [currentLane]: lane_start -> lane_ice2
+[plow_1] [saltStock]: 10 -> 9
+[lane_ice2] [currentState]: IceSheet -> Clear
+[lane_ice2] [iceThickness]: 5.0 -> 0.0
+[cleaner_1] [money]: 100 -> 150

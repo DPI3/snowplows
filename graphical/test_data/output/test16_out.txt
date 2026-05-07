@@ -1,0 +1,5 @@
+[plow_1] [currentHead]: SweeperHead -> ThrowerHead
+[plow_1] [currentLane]: lane_1 -> lane_5
+[lane_5] [currentState]: DeepSnow -> Clear
+[lane_5] [snowThickness]: 5.0 -> 0.0
+[cleaner_1] [money]: 100 -> 150
