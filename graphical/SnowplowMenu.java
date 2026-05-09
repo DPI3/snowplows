@@ -20,7 +20,8 @@ public class SnowplowMenu extends JFrame {
         setLocationRelativeTo(null); // Ablak középre igazítása
 
         // 1. Háttér panel (kép betöltése vagy sötétszürke háttér)
-        BackgroundPanel backgroundPanel = new BackgroundPanel("pixel_art_large-3.png"); // Ide ird a képed nevét!
+        BackgroundPanel backgroundPanel = new BackgroundPanel("graphical/pixel_art_large-3.png"); // Ide ird a képed nevét!
+        System.out.println("Itt keresek: " + System.getProperty("user.dir"));
         backgroundPanel.setLayout(new GridBagLayout()); // A középre igazításhoz
 
         // 2. Középső áttetsző, lekerekített kékes-szürke panel
@@ -64,7 +65,7 @@ public class SnowplowMenu extends JFrame {
     private void loadCustomFont() {
         try {
             // Fájlnévnek egyeznie kell a letöltött .ttf fájllal!
-            File fontFile = new File("Silkscreen-Regular.ttf");
+            File fontFile = new File("graphical/Silkscreen-Regular.ttf");
             Font customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);

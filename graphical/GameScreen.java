@@ -30,7 +30,7 @@ public class GameScreen extends JFrame {
         Image moneyIcon = null;
         try {
             // Cseréld ki a saját elérési útvonaladra, ha szükséges!
-            moneyIcon = ImageIO.read(new File("money.png")); 
+            moneyIcon = ImageIO.read(new File("graphical/money.png")); 
         } catch (Exception e) {
             System.err.println("Nem található a money.png!");
         }
@@ -76,7 +76,7 @@ public class GameScreen extends JFrame {
 
     private void loadCustomFont() {
         try {
-            File fontFile = new File("Silkscreen-Regular.ttf"); 
+            File fontFile = new File("graphical/Silkscreen-Regular.ttf"); 
             Font customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);
