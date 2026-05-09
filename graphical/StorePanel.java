@@ -1,7 +1,24 @@
 import javax.swing.*;
+
+import src.Store;
+import src.SweeperHead;
+import src.ThrowerHead;
+import src.CleanerRole;
+import src.BusdriverRole;
+import src.DragonHead;
+import src.GravelSpreaderHead;
+import src.IcebreakerHead;
+import src.SaltSpreaderHead;
+import src.Buyable;
+
 import java.awt.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.imageio.ImageIO;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class StorePanel extends JFrame {
 
@@ -10,7 +27,19 @@ public class StorePanel extends JFrame {
     private static Font silkscreenNormal;
     private static Font silkscreenSmall;
 
-    public StorePanel() {
+    private TopPill moneyTopPill;
+    private Store store;
+    private GameScreen screen;
+
+
+    public void updateMoney(){
+        CleanerRole c=(CleanerRole)screen.getRole();
+        moneyTopPill.setText(Integer.toString(c.getMoney()));
+    }
+
+    public StorePanel(GameScreen screen, Store store) {
+        this.screen=screen;
+        this.store = store;
         setTitle("Snowplow - Store");
         setSize(1000, 700); // Kicsit szélesebb ablak a három oszlop miatt
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,7 +70,8 @@ public class StorePanel extends JFrame {
         gbc.insets = new Insets(0, 10, 0, 10);
 
         // 1. Bal oldali kapszula: Pénz mennyisége és ikon
-        topBarPanel.add(new TopPill("67", 200, moneyIcon), gbc);
+        moneyTopPill=new TopPill("0", 200, moneyIcon);
+        topBarPanel.add(moneyTopPill, gbc);
         
         // 2. Középső kapszula: STORE felirat (szélesebb)
         gbc.weightx = 2.0; 
@@ -50,6 +80,13 @@ public class StorePanel extends JFrame {
         // 3. Jobb oldali elem: CONTINUE gomb
         gbc.weightx = 1.0;
         StyledButton continueBtn = new StyledButton("CONTINUE");
+        continueBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                screen.moneyChanged();
+                setVisible(false);
+            }
+        });
         topBarPanel.add(continueBtn, gbc);
 
         mainPanel.add(topBarPanel, BorderLayout.NORTH);
@@ -62,12 +99,47 @@ public class StorePanel extends JFrame {
         StoreColumnPanel materialCol = new StoreColumnPanel("MATERIAL");
         materialCol.addItemRow("SALT");
         materialCol.addItemRow("BIOKERZIN");
-        materialCol.addItemRow("stone");
+        materialCol.addItemRow("GRAVEL");
+        materialCol.getBuyButton().addActionListener(e -> {
+               java.util.List<String> selectedItems = new java.util.ArrayList<>();
+                for (Component c : materialCol.getItemsContainer().getComponents()) {
+                    if (c instanceof ItemRow row) {
+                        int amount = row.getAmount();
+                        for(int i=0; i<amount;i++){
+                            selectedItems.add(row.getItemName());
+                        }
+                        
+                    }
+                }
+                if (selectedItems.isEmpty()) return;
+
+                for (String p : selectedItems) {
+                    // anyagot venni
+                }
+
+                updateMoney();
+            });
+
         columnsPanel.add(materialCol);
 
         // 2. Oszlop: VEHICLE
         StoreColumnPanel vehicleCol = new StoreColumnPanel("VEHICLE");
         vehicleCol.addItemRow("SNOWPLOW");
+        vehicleCol.getBuyButton().addActionListener(e -> {
+               int sumAmount=0;
+                for (Component c : vehicleCol.getItemsContainer().getComponents()) {
+                    if (c instanceof ItemRow row) {
+                        int amount = row.getAmount();
+                        for(int i=0; i<amount;i++){
+                            sumAmount+=amount;
+                        }
+                        
+                    }
+                }
+                
+                //sumAmount db hókotró vásárlása
+                updateMoney();
+            });
         columnsPanel.add(vehicleCol);
 
         // 3. Oszlop: HEAD
@@ -77,6 +149,25 @@ public class StorePanel extends JFrame {
         headCol.addItemRow("THROWER");
         headCol.addItemRow("ICEBREAKER");
         headCol.addItemRow("SALTSPREAD");
+        headCol.addItemRow("GRAVELSPREAD");
+        headCol.getBuyButton().addActionListener(e -> {
+                java.util.List<Buyable> selectedItems = new java.util.ArrayList<>();
+                for (Component c : headCol.getItemsContainer().getComponents()) {
+                    if (c instanceof ItemRow row) {
+                        int amount = row.getAmount();
+                        for(int i=0; i<amount;i++){
+                            selectedItems.add(convertToHead(row.getItemName()));
+                        }
+                        
+                    }
+                }
+                if (selectedItems.isEmpty()) return;
+                for (Buyable p : selectedItems) {
+                    store.buy((CleanerRole)screen.getRole(), p);
+                }
+                updateMoney();
+            });
+            
         columnsPanel.add(headCol);
 
         mainPanel.add(columnsPanel, BorderLayout.CENTER);
@@ -121,6 +212,12 @@ public class StorePanel extends JFrame {
             setPreferredSize(new Dimension(preferredWidth, 50));
         }
 
+         public void setText(String newText) {
+            this.text = newText;
+            repaint();
+            revalidate();
+        }
+
         @Override
         protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g.create();
@@ -158,11 +255,26 @@ public class StorePanel extends JFrame {
         }
     }
 
+    public Buyable convertToHead(String name){
+
+        if (name.equals("GRAVELSPREAD")) return new GravelSpreaderHead();
+    if (name.equals("SALTSPREAD")) return new SaltSpreaderHead();
+    if (name.equals("ICEBREAKER")) return new IcebreakerHead();
+    if (name.equals("THROWER")) return new ThrowerHead();
+    if (name.equals("SWEEPER")) return new SweeperHead();
+    if (name.equals("DRAGON")) return new DragonHead();
+        return null;
+    }
+
     /**
      * Egy áruházi oszlop panelje (áttetsző kék)
      */
-    static class StoreColumnPanel extends JPanel {
+    class StoreColumnPanel extends JPanel {
         private JPanel itemsContainer;
+        private StyledButton buyButton;
+        public StyledButton getBuyButton(){return buyButton;}
+        public JPanel getItemsContainer(){return itemsContainer;}
+
 
         public StoreColumnPanel(String title) {
             setOpaque(false);
@@ -182,7 +294,8 @@ public class StorePanel extends JFrame {
             add(itemsContainer, BorderLayout.CENTER);
 
             // Vásárlás gomb alulra
-            StyledButton buyButton = new StyledButton("BUY");
+            buyButton = new StyledButton("BUY");
+            
             add(buyButton, BorderLayout.SOUTH);
         }
 
@@ -206,7 +319,11 @@ public class StorePanel extends JFrame {
      * Egy sor a listában: Rózsaszín címke + Léptető (Spinner)
      */
     static class ItemRow extends JPanel {
+        private String name;
+        private JSpinner spinner;
+
         public ItemRow(String name) {
+            this.name = name;
             setOpaque(false);
             setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
             setMaximumSize(new Dimension(400, 40));
@@ -234,12 +351,20 @@ public class StorePanel extends JFrame {
             nameTag.add(nameLabel);
 
             // Léptető (JSpinner)
-            JSpinner spinner = new JSpinner(new SpinnerNumberModel(0, 0, 99, 1));
+            spinner = new JSpinner(new SpinnerNumberModel(0, 0, 99, 1));
             spinner.setPreferredSize(new Dimension(60, 35));
             spinner.setFont(new Font("SansSerif", Font.BOLD, 16));
 
             add(nameTag);
             add(spinner);
+        }
+
+         public int getAmount() {
+        return (int) spinner.getValue();
+    }
+
+        public String getItemName() {
+            return name;
         }
     }
 
@@ -301,15 +426,15 @@ public class StorePanel extends JFrame {
     }
 
     public static void main(String[] args) {
-        try {
+        /*try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         SwingUtilities.invokeLater(() -> {
-            StorePanel store = new StorePanel();
+            StorePanel store = new StorePanel(null);
             store.setVisible(true);
-        });
+        });*/
     }
 }

@@ -1,9 +1,29 @@
 import javax.swing.*;
+
+import src.CleanerRole;
+import src.GravelSpreaderHead;
+import src.IcebreakerHead;
+import src.SaltSpreaderHead;
+import src.ThrowerHead;
+import src.SweeperHead;
+import src.DragonHead;
+import src.Snowplow;
+import src.Lane;
+import src.Role;
+import src.BusdriverRole;
+import src.Store;
+import src.Buyable;
+import src.Head;
+
 import java.awt.*;
 import java.io.File;
-import javax.imageio.ImageIO;
+import java.util.ArrayList;
 
-public class GameScreen extends JFrame {
+import javax.imageio.ImageIO;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class GameScreen extends JFrame{
 
     private static Font silkscreenTitle;
     private static Font silkscreenNormal;
@@ -14,7 +34,49 @@ public class GameScreen extends JFrame {
     private final Color PINK_COLOR = Color.decode("#EE8695");
     private final Color DARK_SHADOW = new Color(25, 25, 30);
 
-    public GameScreen() {
+    
+    private TopPill roundTopPill;
+    private TopPill modeTopPill;
+    private TopPill moneyTopPill;
+    private GrayInfoBox infoBox;
+    private Role role;
+    private StorePanel storePanel;
+
+    public void roundChanged(int round){
+        roundTopPill.setText("Kör: "+round);
+    }
+    
+    public void moneyChanged(){
+        if(role instanceof CleanerRole){
+            CleanerRole c=(CleanerRole)role;
+            moneyTopPill.setText(Integer.toString(c.getMoney()));
+        }
+        if(role instanceof BusdriverRole){
+            BusdriverRole c=(BusdriverRole)role;
+            moneyTopPill.setText(Integer.toString(c.getMoney()));
+        }       
+    }
+
+    public void headChanged(String name){
+        if(role instanceof CleanerRole){
+            infoBox.setCurrentHeadLabel(name);
+        }
+            
+    }
+
+    public void roleChanged(Role role){
+        if (role instanceof CleanerRole) {
+               modeTopPill.setText("SNOWPOW MODE");
+        }
+        if(role instanceof BusdriverRole){
+            modeTopPill.setText("BUS MODE");
+        }
+    }
+
+    public Role getRole(){return role;}
+
+    public GameScreen(Role role, Store store) {
+        this.role=role;
         setTitle("Snowplow - Game Screen");
         setSize(1000, 600); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -39,9 +101,13 @@ public class GameScreen extends JFrame {
         JPanel topBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         topBar.setOpaque(false);
         
-        topBar.add(new TopPill("KÖR: 420", 220, null));
-        topBar.add(new TopPill("SNOWPLOW MODE", 380, null));
-        topBar.add(new TopPill("67", 160, moneyIcon));
+        roundTopPill=new TopPill("KÖR: 1", 220, null);
+        topBar.add(roundTopPill);
+        modeTopPill=new TopPill("SNOWPLOW MODE", 380, null);
+        topBar.add(modeTopPill);
+        moneyTopPill=new TopPill("", 160, moneyIcon);
+        moneyChanged();
+        topBar.add(moneyTopPill);
         
         mainBg.add(topBar, BorderLayout.NORTH);
 
@@ -51,14 +117,24 @@ public class GameScreen extends JFrame {
         rightPanel.setOpaque(false);
         rightPanel.setPreferredSize(new Dimension(260, 0));
         rightPanel.setBorder(BorderFactory.createEmptyBorder(40, 20, 20, 20));
-
+        storePanel= new StorePanel(this, store);
         // 1. STORE gomb
         StyledButton storeBtn = new StyledButton("STORE", 200, 55);
+        storeBtn.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (role instanceof CleanerRole) {
+                storePanel.updateMoney();
+                storePanel.setVisible(true);
+            }
+        }
+        });
         rightPanel.add(storeBtn);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 30)));
 
         // 2. Szürke "HEAD" doboz (Most már türkizes-szürke)
-        rightPanel.add(new GrayInfoBox());
+        infoBox=new GrayInfoBox();
+        rightPanel.add(infoBox);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 40)));
 
         // 3. SETTINGS és MENU gombok
@@ -125,6 +201,12 @@ public class GameScreen extends JFrame {
         private String text;
         private Image icon;
 
+        public void setText(String newText) {
+            this.text = newText;
+            repaint();
+            revalidate();
+        }
+
         public TopPill(String text, int width, Image icon) {
             this.text = text;
             this.icon = icon;
@@ -180,6 +262,13 @@ public class GameScreen extends JFrame {
      */
     class GrayInfoBox extends JPanel {
         private final int shadowSize = 4;
+        JLabel currentHeadLabel;
+
+        public void setCurrentHeadLabel(String head){
+            currentHeadLabel.setText(head);
+            repaint();
+            revalidate();
+        }
 
         public GrayInfoBox() {
             setOpaque(false);
@@ -190,14 +279,14 @@ public class GameScreen extends JFrame {
             setAlignmentX(Component.CENTER_ALIGNMENT);
 
             JLabel headLabel = createShadowedLabel("HEAD:", silkscreenNormal);
-            JLabel sweeperLabel = createShadowedLabel("SWEEPER", silkscreenTitle);
+            currentHeadLabel = createShadowedLabel("SWEEPER", silkscreenTitle);
             
             StyledButton changeBtn = new StyledButton("CHANGE", 160, 40);
             changeBtn.setFont(silkscreenSmall);
 
             add(headLabel);
             add(Box.createRigidArea(new Dimension(0, 5)));
-            add(sweeperLabel);
+            add(currentHeadLabel);
             add(Box.createVerticalGlue()); 
             add(changeBtn);
             add(Box.createRigidArea(new Dimension(0, 10)));
@@ -308,7 +397,16 @@ public class GameScreen extends JFrame {
         }
 
         SwingUtilities.invokeLater(() -> {
-            GameScreen screen = new GameScreen();
+            CleanerRole role= new CleanerRole("Cleaner-1", 150, new Snowplow("1", new Lane(), 10,new SweeperHead()));
+            java.util.List<Buyable> l=new ArrayList<>();
+            l.add(new SaltSpreaderHead());
+            l.add(new GravelSpreaderHead());
+            l.add(new IcebreakerHead());
+            l.add(new ThrowerHead());
+            l.add(new SweeperHead());
+            l.add(new DragonHead());
+            Store store= new Store(l);
+            GameScreen screen = new GameScreen(role, store);
             screen.setVisible(true);
         });
     }

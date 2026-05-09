@@ -59,9 +59,9 @@ public class Store{
      * @return true, ha a vasarlas sikeres volt
      */
     public boolean buy(CleanerRole cleanerRole, Buyable item) {
-        if (!inventory.contains(item)) {
+        /*if (!inventory.contains(item)) {
             return false; 
-        }
+        }*/
 
         int price = item.getPrice();
 
@@ -73,7 +73,7 @@ public class Store{
                 cleanerRole.addHead((Head) item);
             }
 
-            inventory.remove(item);
+            //inventory.remove(item);
             
             return true; 
         }
