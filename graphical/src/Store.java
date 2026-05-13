@@ -80,4 +80,44 @@ public class Store{
 
         return false;
     }
+
+    public boolean buyBiokerosene(CleanerRole cleanerRole){
+        int price=10;
+        if(cleanerRole.getMoney() >= price){
+             cleanerRole.decreaseMoney(price);
+             cleanerRole.addBiokerosene(1);
+             return true;
+        }
+        return false;
+    }
+
+    public boolean buySalt(CleanerRole cleanerRole){
+       int price=10;
+        if(cleanerRole.getMoney() >= price){
+             cleanerRole.decreaseMoney(price);
+             cleanerRole.addSalt(1);
+             return true;
+        }
+        return false;
+    }
+
+    public boolean buyGravel(CleanerRole cleanerRole){
+        int price=10;
+        if(cleanerRole.getMoney() >= price){
+             cleanerRole.decreaseMoney(price);
+             cleanerRole.addGravel(1);
+             return true;
+        }
+        return false;
+    }
+
+    public boolean buySnowplow(CleanerRole cleanerRole){
+        int price=150;
+        if(cleanerRole.getMoney() >= price){
+             cleanerRole.decreaseMoney(price);
+             cleanerRole.changeMoney(200);
+             return true;
+        }
+        return false;
+    }
 }

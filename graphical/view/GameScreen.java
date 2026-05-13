@@ -15,7 +15,6 @@ import src.Role;
 import src.BusdriverRole;
 import src.Store;
 import src.Buyable;
-import src.Head;
 
 import java.awt.*;
 import java.io.File;
@@ -123,15 +122,16 @@ public class GameScreen extends JFrame{
         rightPanel.setOpaque(false);
         rightPanel.setPreferredSize(new Dimension(260, 0));
         rightPanel.setBorder(BorderFactory.createEmptyBorder(40, 20, 20, 20));
-        storePanel= new StorePanel(this, store);
+        
+
         // 1. STORE gomb
         StyledButton storeBtn = new StyledButton("STORE", 200, 55, Color.decode("#E2E874"));
         storeBtn.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (role instanceof CleanerRole) {
-                storePanel.updateMoney();
-                storePanel.setVisible(true);
+                //StoreScreen storeScreen= new StoreScreen();
+                //storeScreen.setVisible(true);
             }
         }
         });

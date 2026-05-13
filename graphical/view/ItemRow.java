@@ -19,7 +19,7 @@ import java.io.File;
             setOpaque(false);
             setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
             setMaximumSize(new Dimension(400, 40));
-
+            loadCustomFont();
             // Kis rózsaszín panel a névnek
             JPanel nameTag = new JPanel() {
                 @Override
@@ -51,12 +51,16 @@ import java.io.File;
             add(spinner);
         }
 
-         public int getAmount() {
-        return (int) spinner.getValue();
-    }
+        public int getAmount() {
+            return (int) spinner.getValue();
+        }
 
         public String getItemName() {
             return name;
+        }
+
+        public void ClearSpinner(){
+            spinner.setValue(0);
         }
 
         private void loadCustomFont() {
