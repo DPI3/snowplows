@@ -1,3 +1,0 @@
-load test1_arrange.txt
-state
-exit

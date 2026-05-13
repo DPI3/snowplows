@@ -1,4 +1,0 @@
-load test2_arrange.txt
-mozgas snowplow_1 lane_12
-takarit snowplow_1
-exit

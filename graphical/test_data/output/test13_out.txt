@@ -1,1 +1,0 @@
-[Console]: "Sáv: lane_1; snowThickness=3; iceThickness=0; gravelThickness=0; isPassable=true; DynamicWeight=1.5"

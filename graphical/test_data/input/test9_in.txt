@@ -1,6 +1,0 @@
-load test9_arrange.txt
-mozgas car_1 lane_conflict_1
-mozgas car_2 lane_conflict_1
-mozgas bus_1 lane_conflict_2
-save test9_out.txt
-exit

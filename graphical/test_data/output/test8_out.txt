@@ -1,5 +1,0 @@
-[lane_next] [currentState]: Clear -> DeepSnow
-[Console]: Figyelmeztetés: A következő útszakasz járhatatlan. Útvonal újratervezése...
-[car_1] [currentRoute]: route_original -> route_recalculated
-[Console]: Új útvonal sikeresen kijelölve.
-[car_1] [currentLane]: lane_current -> lane_bypass_1

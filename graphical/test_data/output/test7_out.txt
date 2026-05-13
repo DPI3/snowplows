@@ -1,7 +1,0 @@
-[car_1] [residence]: home_1
-[car_1] [workplace]: work_1
-[car_1] [currentRoute]: null -> route_car_1
-[car_1] [currentLane]: lane_home -> lane_mid
-[car_1] [currentLane]: lane_mid -> lane_work
-[car_1] [location]: úton -> work_1
-[log] car_1 megérkezett a munkahely

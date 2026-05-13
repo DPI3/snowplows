@@ -1,5 +1,0 @@
-[store] [open]: false -> true
-[store] [selectedItem]: null -> salt
-[cleaner_1] [money]: 100 -> 70
-[plow_1] [saltStock]: 0 -> 3
-[log] Vásárlás sikeres: salt x3

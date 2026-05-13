@@ -1,5 +1,0 @@
-# Teszt 2 — Jármű sávváltása és út járhatósága
-add_lane -n "Terminal_A"
-add_lane -n "lane_12" -state DeepSnow -snow 5.0
-add_plow -n "snowplow_1" -pos "Terminal_A" -head "thrower"
-add_cleaner -n "player_cleaner" -money 100 -plow "snowplow_1"

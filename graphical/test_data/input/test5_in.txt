@@ -1,7 +1,0 @@
-load test5_arrange.txt
-auto_utvonal bus_1
-mozgas bus_1 lane_t1_1
-mozgas bus_1 lane_t1_2
-mozgas bus_1 lane_t2
-save test5_out.txt
-exit

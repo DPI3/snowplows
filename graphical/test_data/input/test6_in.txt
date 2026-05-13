@@ -1,7 +1,0 @@
-load test6_arrange.txt
-kijelol bus_1
-mozgas bus_1 lane_21
-mozgas bus_1 lane_22
-mozgas bus_1 lane_term
-save test6_out.txt
-exit

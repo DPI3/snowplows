@@ -1,6 +1,0 @@
-load test18_arrange.txt
-fej_csere plow_1 saltspreader
-mozgas plow_1 lane_ice2
-takarit plow_1
-save test18_out.txt
-exit

@@ -1,6 +1,0 @@
-load test15_arrange.txt
-fej_csere plow_1 sweeper
-mozgas plow_1 lane_5
-takarit plow_1
-save kimenet_15.txt
-exit

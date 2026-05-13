@@ -1,7 +1,0 @@
-load test11_arrange.txt
-takarit plow_1 lane_ice_1
-vasarol cleaner_1 salt
-takarit plow_1 lane_ice_1
-save test11_out.txt
-exit
-stat

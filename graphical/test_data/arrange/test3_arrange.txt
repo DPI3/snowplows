@@ -1,4 +1,0 @@
-# Teszt 3 — Hókotró tisztítása SweeperHead-del
-add_lane -n "lane_1"
-add_plow -n "snowplow_1" -pos "lane_1" -head "sweeper"
-add_cleaner -n "dummy_cleaner" -money 0 -plow "snowplow_1"
