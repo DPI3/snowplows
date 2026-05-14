@@ -1,9 +1,7 @@
 package controller;
 
-import java.lang.ref.Cleaner;
 import java.util.ArrayList;
 import java.util.List;
-
 import src.*;
 import view.StoreScreen;
 
@@ -20,6 +18,16 @@ public class StoreController {
 
     public void setStoreScreen(StoreScreen s){
         storeScreen=s;
+    }
+
+        /**
+     * Ellenőrzi, hogy a játékos meg tudja-e engedni az adott árat.
+     *
+     * @param price az ellenőrizendő ár
+     * @return igaz, ha a játékosnak van elég pénze
+     */
+    public boolean canAfford(int price) {
+        return getMoney() >= price;
     }
 
     public StoreController(){
