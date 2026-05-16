@@ -1,14 +1,15 @@
 package view;
 
 import javax.swing.*;
+
+import controller.AssetManager;
+
 import java.awt.*;
-import java.io.File;
 
 
 public class StoreColumnPanel extends JPanel {
         private JPanel itemsContainer;
         private StyledButton buyButton;
-        private Font silkscreenTitle;
 
         public StyledButton getBuyButton(){return buyButton;}
         public JPanel getItemsContainer(){return itemsContainer;}
@@ -18,11 +19,10 @@ public class StoreColumnPanel extends JPanel {
             setOpaque(false);
             setLayout(new BorderLayout(0, 20));
             setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-            loadCustomFont();
 
             // Cím
             JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
-            titleLabel.setFont(silkscreenTitle);
+            titleLabel.setFont(AssetManager.getInstance().getFont("silkscreenTitle"));
             titleLabel.setForeground(Color.decode("#EAE0D5"));
             add(titleLabel, BorderLayout.NORTH);
 
@@ -53,20 +53,5 @@ public class StoreColumnPanel extends JPanel {
             g2.dispose();
         }
 
-        private void loadCustomFont() {
-        try {
-            //File fontFile = new File("graphical/Silkscreen-Regular.ttf");
-            File fontFile = new File("Silkscreen-Regular.ttf");
-            Font customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-            
-            silkscreenTitle = customFont.deriveFont(Font.PLAIN, 28f);
-        } catch (Exception e) {
-            System.err.println("Nem található a Silkscreen betűtípus! Alapértelmezett lesz használva.");
-            Font fallback = new Font("SansSerif", Font.BOLD, 20);
-            silkscreenTitle = fallback.deriveFont(28f);
-        }
-    }
     
 }

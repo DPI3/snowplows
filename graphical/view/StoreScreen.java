@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.*;
 
+import controller.AssetManager;
 import controller.ScreenController;
 import controller.StoreController;
 
@@ -90,14 +91,12 @@ public class StoreScreen extends JFrame{
     static class TopPill extends JPanel {
         private String text;
         private Image icon;
-        private Font silkscreenHeader;
 
         public TopPill(String text, int preferredWidth, Image icon) {
             this.text = text;
             this.icon = icon;
             setOpaque(false);
             setPreferredSize(new Dimension(preferredWidth, 50));
-             loadCustomFont();
         }
 
          public void setText(String newText) {
@@ -115,7 +114,7 @@ public class StoreScreen extends JFrame{
             g2.setColor(new Color(116, 140, 171));
             g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
 
-            g2.setFont(silkscreenHeader);
+            g2.setFont(AssetManager.getInstance().getFont("silkscreenHeader"));
             g2.setColor(Color.decode("#EAE0D5"));
             FontMetrics fm = g2.getFontMetrics();
 
@@ -141,21 +140,7 @@ public class StoreScreen extends JFrame{
 
             g2.dispose();
         }
-        private void loadCustomFont() {
-        try {
-            //File fontFile = new File("graphical/Silkscreen-Regular.ttf");
-            File fontFile = new File("Silkscreen-Regular.ttf");
-            Font customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-            
-            silkscreenHeader = customFont.deriveFont(Font.PLAIN, 24f);
-        } catch (Exception e) {
-            System.err.println("Nem található a Silkscreen betűtípus! Alapértelmezett lesz használva.");
-            Font fallback = new Font("SansSerif", Font.BOLD, 20);
-            silkscreenHeader = fallback.deriveFont(24f);
-        }
-    }
+        
 }
  public static void main(String[] args) {
         try {

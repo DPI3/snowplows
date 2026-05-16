@@ -2,13 +2,12 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
+
+import controller.AssetManager;
 import controller.ScreenController;
 
 public class SnowplowMenu extends JFrame {
 
-    // Egyedi betűtípus tárolása
-    private static Font silkscreenFont;
 
     public SnowplowMenu(ScreenController screenController) {
         setTitle("Snowplow");
@@ -27,15 +26,14 @@ public class SnowplowMenu extends JFrame {
         MenuOverlayPanel menuPanel = new MenuOverlayPanel();
         
         // 3. Gombok létrehozása
-        loadCustomFont();
         StyledButton btnStart = new StyledButton("Start", 180, 50, Color.decode("#EAE0D5"));
-        btnStart.setFont(silkscreenFont);
+        btnStart.setFont(AssetManager.getInstance().getFont("silkscreenHeader"));
         StyledButton btnLoad = new StyledButton("Load", 180, 50,Color.decode("#EAE0D5"));
-        btnLoad.setFont(silkscreenFont);
+        btnLoad.setFont(AssetManager.getInstance().getFont("silkscreenHeader"));
         StyledButton btnSettings = new StyledButton("Settings", 180, 50,Color.decode("#EAE0D5"));
-        btnSettings.setFont(silkscreenFont);
+        btnSettings.setFont(AssetManager.getInstance().getFont("silkscreenHeader"));
         StyledButton btnExit = new StyledButton("Exit", 180, 50, Color.decode("#EAE0D5"));
-        btnExit.setFont(silkscreenFont);
+        btnExit.setFont(AssetManager.getInstance().getFont("silkscreenHeader"));
         
         // Gombok funkciói
         btnStart.addActionListener(e -> screenController.showGame());
@@ -59,27 +57,6 @@ public class SnowplowMenu extends JFrame {
 
         // Fő panel beállítása
         setContentPane(backgroundPanel);
-    }
-
-
-/**
-     * Megpróbálja betölteni a Silkscreen betűtípust a fájlrendszerből.
-     */
-    private void loadCustomFont() {
-        try {
-            // Fájlnévnek egyeznie kell a letöltött .ttf fájllal!
-            //File fontFile = new File("graphical/Silkscreen-Regular.ttf");
-            File fontFile = new File("Silkscreen-Regular.ttf");
-            Font customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-            // Beállítjuk a kívánt méretet (pl. 24 pixel)
-            silkscreenFont = customFont.deriveFont(Font.PLAIN, 24f);
-        } catch (Exception e) {
-            System.err.println("Nem található a Silkscreen-Regular.ttf. Alapértelmezett betűtípus lesz használva.");
-            // Fallback (ha nincs meg a fájl)
-            silkscreenFont = new Font("SansSerif", Font.BOLD, 22);
-        }
     }
 
     public static void main(String[] args) {

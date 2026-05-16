@@ -1,18 +1,15 @@
 package view;
 import javax.swing.*;
+
+import controller.AssetManager;
+
 import java.awt.*;
-import java.io.File;
 
     /**
      * 3D árnyékos gomb.
      */
     class StyledButton extends JButton {
         private final int shadowSize = 4;
-
-        private static Font silkscreenNormal;
-
-        private final Color PINK_COLOR = Color.decode("#EE8695");
-        private final Color DARK_SHADOW = new Color(25, 25, 30);
 
         public StyledButton(String text, int width, int height, Color textColor) {
             super(text);
@@ -21,9 +18,8 @@ import java.io.File;
             setBorderPainted(false);
             
             setBorder(BorderFactory.createEmptyBorder(0, 0, shadowSize, shadowSize));
-            loadCustomFont();
             setForeground(textColor); 
-            setFont(silkscreenNormal); 
+            setFont(AssetManager.getInstance().getFont("silkscreenNormal")); 
             
             Dimension size = new Dimension(width, height);
             setPreferredSize(size);
@@ -39,11 +35,11 @@ import java.io.File;
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            g2.setColor(DARK_SHADOW); 
+            g2.setColor(AssetManager.getInstance().getColor("DARK_SHADOW")); 
             g2.fillRoundRect(shadowSize, shadowSize, getWidth() - shadowSize, getHeight() - shadowSize, 15, 15);
 
             if (getModel().isPressed()) g2.setColor(new Color(218, 114, 129));
-            else g2.setColor(PINK_COLOR);
+            else g2.setColor(AssetManager.getInstance().getColor("PINK_COLOR"));
             g2.fillRoundRect(0, 0, getWidth() - shadowSize - 1, getHeight() - shadowSize - 1, 15, 15);
 
             g2.setColor(new Color(40, 40, 50, 100));
@@ -64,20 +60,4 @@ import java.io.File;
             g2.dispose();
         }
 
-        private void loadCustomFont() {
-        try {
-            //File fontFile = new File("graphical/Silkscreen-Regular.ttf"); 
-            File fontFile = new File("Silkscreen-Regular.ttf"); 
-            
-            Font customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-            
-            silkscreenNormal = customFont.deriveFont(Font.PLAIN, 22f);
-        } catch (Exception e) {
-            System.err.println("Nem található a Silkscreen betűtípus!");
-            Font fallback = new Font("SansSerif", Font.BOLD, 20);
-            silkscreenNormal = fallback.deriveFont(22f);
-        }
-    }
     }

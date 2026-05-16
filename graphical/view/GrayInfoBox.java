@@ -2,6 +2,8 @@ package view;
 
 import javax.swing.*;
 
+import controller.AssetManager;
+
 import java.awt.*;
 import java.io.File;
 
@@ -11,14 +13,6 @@ import java.io.File;
     class GrayInfoBox extends JPanel {
         private final int shadowSize = 4;
         JLabel currentHeadLabel;
-
-        private static Font silkscreenTitle;
-        private static Font silkscreenNormal;
-        private static Font silkscreenSmall;
-
-        // Közös színek a dizájnhoz
-        private final Color TEXT_COLOR = Color.decode("#E2E874"); // Sárgás-zöldes pixel szöveg
-        private final Color DARK_SHADOW = new Color(25, 25, 30);
 
         public void setCurrentHeadLabel(String head){
             currentHeadLabel.setText(head);
@@ -34,13 +28,12 @@ import java.io.File;
             setBorder(BorderFactory.createEmptyBorder(20, 0, shadowSize, shadowSize));
             setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            loadCustomFont();
-            JLabel headLabel = createShadowedLabel("HEAD:", silkscreenNormal);
-            currentHeadLabel = createShadowedLabel("", silkscreenTitle);
+            JLabel headLabel = createShadowedLabel("HEAD:", AssetManager.getInstance().getFont("silkscreenNormal"));
+            currentHeadLabel = createShadowedLabel("", AssetManager.getInstance().getFont("silkscreenTitle"));
             
             StyledButton changeBtn = new StyledButton("CHANGE", 160, 40, Color.decode("#E2E874"));
            
-            changeBtn.setFont(silkscreenSmall);
+            changeBtn.setFont(AssetManager.getInstance().getFont("silkscreenSmall"));
 
             add(headLabel);
             add(Box.createRigidArea(new Dimension(0, 5)));
@@ -68,7 +61,7 @@ import java.io.File;
                 }
             };
             label.setFont(font);
-            label.setForeground(TEXT_COLOR);
+            label.setForeground(AssetManager.getInstance().getColor("TEXT_COLOR"));
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
             return label;
         }
@@ -79,7 +72,7 @@ import java.io.File;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             // Fekete 3D árnyék
-            g2.setColor(DARK_SHADOW);
+            g2.setColor(AssetManager.getInstance().getColor("DARK_SHADOW"));
             g2.fillRoundRect(shadowSize, shadowSize, getWidth() - shadowSize, getHeight() - shadowSize, 15, 15);
 
             // ÚJ: Sötétebb türkizes-szürke panel háttér (#5A8B85)
@@ -89,25 +82,4 @@ import java.io.File;
             g2.dispose();
             super.paintComponent(g);
         }
-
-         private void loadCustomFont() {
-        try {
-            //File fontFile = new File("graphical/Silkscreen-Regular.ttf"); 
-            File fontFile = new File("Silkscreen-Regular.ttf"); 
-            
-            Font customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-            
-            silkscreenTitle = customFont.deriveFont(Font.PLAIN, 26f);
-            silkscreenNormal = customFont.deriveFont(Font.PLAIN, 22f);
-            silkscreenSmall = customFont.deriveFont(Font.PLAIN, 16f);
-        } catch (Exception e) {
-            System.err.println("Nem található a Silkscreen betűtípus!");
-            Font fallback = new Font("SansSerif", Font.BOLD, 20);
-            silkscreenTitle = fallback.deriveFont(26f);
-            silkscreenNormal = fallback.deriveFont(22f);
-            silkscreenSmall = fallback.deriveFont(16f);
-        }
-    }
     }

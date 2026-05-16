@@ -2,9 +2,9 @@ package view;
 
 import javax.swing.*;
 
+import controller.AssetManager;
 
 import java.awt.*;
-import java.io.File;
 
 /**
      * Egy sor a listában: Rózsaszín címke + Léptető (Spinner)
@@ -12,14 +12,12 @@ import java.io.File;
     public class ItemRow extends JPanel {
         private String name;
         private JSpinner spinner;
-        private Font silkscreenSmall;
 
         public ItemRow(String name, int preferredWidth, int preferredHeight) {
             this.name = name;
             setOpaque(false);
             setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
             setMaximumSize(new Dimension(400, 40));
-            loadCustomFont();
             // Kis rózsaszín panel a névnek
             JPanel nameTag = new JPanel() {
                 @Override
@@ -38,7 +36,7 @@ import java.io.File;
             nameTag.setLayout(new GridBagLayout());
             
             JLabel nameLabel = new JLabel(name);
-            nameLabel.setFont(silkscreenSmall);
+            nameLabel.setFont(AssetManager.getInstance().getFont("silkscreenSmall"));
             nameLabel.setForeground(Color.decode("#EAE0D5"));
             nameTag.add(nameLabel);
 
@@ -66,20 +64,4 @@ import java.io.File;
         public void ClearSpinner(){
             spinner.setValue(0);
         }
-
-        private void loadCustomFont() {
-        try {
-            //File fontFile = new File("graphical/Silkscreen-Regular.ttf");
-            File fontFile = new File("Silkscreen-Regular.ttf");
-            Font customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-            
-            silkscreenSmall = customFont.deriveFont(Font.PLAIN, 14f);
-        } catch (Exception e) {
-            System.err.println("Nem található a Silkscreen betűtípus! Alapértelmezett lesz használva.");
-            Font fallback = new Font("SansSerif", Font.BOLD, 20);
-            silkscreenSmall = fallback.deriveFont(14f);
-        }
-    }
     }

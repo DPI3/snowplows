@@ -9,12 +9,6 @@ import java.awt.*;
 
 public class StorePanel extends JPanel {
 
-
-    //private static Font silkscreenTitle;
-    //private static Font silkscreenHeader;
-    //private static Font silkscreenNormal;
-    //private static Font silkscreenSmall;
-
     //private TopPill moneyTopPill;
 
 
@@ -82,26 +76,4 @@ public class StorePanel extends JPanel {
 
         
     }
-
-    /*private void loadCustomFont() {
-        try {
-            //File fontFile = new File("graphical/Silkscreen-Regular.ttf");
-            File fontFile = new File("Silkscreen-Regular.ttf");
-            Font customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-            
-            silkscreenTitle = customFont.deriveFont(Font.PLAIN, 28f);
-            silkscreenHeader = customFont.deriveFont(Font.PLAIN, 24f);
-            silkscreenNormal = customFont.deriveFont(Font.PLAIN, 20f);
-            silkscreenSmall = customFont.deriveFont(Font.PLAIN, 14f);
-        } catch (Exception e) {
-            System.err.println("Nem található a Silkscreen betűtípus! Alapértelmezett lesz használva.");
-            Font fallback = new Font("SansSerif", Font.BOLD, 20);
-            silkscreenTitle = fallback.deriveFont(28f);
-            silkscreenHeader = fallback.deriveFont(24f);
-            silkscreenNormal = fallback.deriveFont(20f);
-            silkscreenSmall = fallback.deriveFont(14f);
-        }
-    }*/
 }
