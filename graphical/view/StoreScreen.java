@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.*;
 
+import controller.ScreenController;
 import controller.StoreController;
 
 import java.awt.*;
@@ -14,10 +15,11 @@ import java.awt.event.ActionListener;
 public class StoreScreen extends JFrame{
 
     private StorePanel storePanel;
+    private ScreenController screenController;
     private JPanel playerMoneyLabel;
     private TopPill moneyTopPill;
 
-    public StoreScreen(StoreController controller){
+    public StoreScreen(StoreController storeController){
         setTitle("Snowplow - Store");
         setSize(1000, 700); // Kicsit szélesebb ablak a három oszlop miatt
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -48,7 +50,7 @@ public class StoreScreen extends JFrame{
         gbc.insets = new Insets(0, 10, 0, 10);
 
         // 1. Bal oldali kapszula: Pénz mennyisége és ikon
-        moneyTopPill=new TopPill(Integer.toString(controller.getMoney()), 200, moneyIcon);
+        moneyTopPill=new TopPill(Integer.toString(storeController.getMoney()), 200, moneyIcon);
         playerMoneyLabel.add(moneyTopPill, gbc);
         
         // 2. Középső kapszula: STORE felirat (szélesebb)
@@ -61,22 +63,21 @@ public class StoreScreen extends JFrame{
         continueBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //screen.moneyChanged();
-                setVisible(false);
+               screenController.showGame();
             }
         });
 
         playerMoneyLabel.add(continueBtn, gbc);
         mainPanel.add(playerMoneyLabel, BorderLayout.NORTH);
 
-        storePanel= new StorePanel(controller, this);
+        storePanel= new StorePanel(storeController, this);
         mainPanel.add(storePanel, BorderLayout.CENTER);
 
         setContentPane(mainPanel);
     }
 
-    public void refreshStore(){
-        
+    public void setScreenController(ScreenController screenController){
+        this.screenController=screenController;
     }
 
     public void updateMoney(int amount){
@@ -165,10 +166,10 @@ public class StoreScreen extends JFrame{
 
 
         SwingUtilities.invokeLater(() -> {
-            StoreController sc= new StoreController();
+            /*StoreController sc= new StoreController();
             StoreScreen store = new StoreScreen(sc);
             sc.setStoreScreen(store);
-            store.setVisible(true);
+            store.setVisible(true);*/
         });
     }
 }

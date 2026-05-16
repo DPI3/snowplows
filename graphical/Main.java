@@ -29,22 +29,21 @@ public class Main {
 
         // StoreController inicializálása
         storeController = new StoreController();
-
-        // Nézetek (View) inicializálása
-        SnowplowMenu menuScreen = new SnowplowMenu();
         
         // GameScreen inicializálása a StoreController játékosának szerepkörével és boltjával
         Role role = storeController.getRole();
         Store store = storeController.getStore();
         GameScreen gameScreen = new GameScreen(role, store);
+        
+        StoreScreen storeScreen= new StoreScreen(storeController);
 
         // ScreenController inicializálása a nézetek segítségével
         // Megjegyzés: GameController nem létezik az alkalmazásban, így null-t adunk át
-        screenController = new ScreenController(menuScreen, gameScreen, null);
+        screenController = new ScreenController(gameScreen, null, storeScreen);
 
         // StoreScreen és StoreController összekapcsolása
-        StoreScreen storeScreen = new StoreScreen(storeController);
         storeController.setStoreScreen(storeScreen);
+        storeScreen.setScreenController(screenController);
 
         // Kezdeti képernyő megjelenítése
         screenController.showMenu();

@@ -14,7 +14,7 @@ import java.io.File;
         private JSpinner spinner;
         private Font silkscreenSmall;
 
-        public ItemRow(String name) {
+        public ItemRow(String name, int preferredWidth, int preferredHeight) {
             this.name = name;
             setOpaque(false);
             setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
@@ -34,7 +34,7 @@ import java.io.File;
                 }
             };
             nameTag.setOpaque(false);
-            nameTag.setPreferredSize(new Dimension(130, 35));
+            nameTag.setPreferredSize(new Dimension(preferredWidth, preferredHeight));
             nameTag.setLayout(new GridBagLayout());
             
             JLabel nameLabel = new JLabel(name);
@@ -49,6 +49,10 @@ import java.io.File;
 
             add(nameTag);
             add(spinner);
+        }
+
+        public ItemRow(String name){
+            this(name, 130, 35);
         }
 
         public int getAmount() {

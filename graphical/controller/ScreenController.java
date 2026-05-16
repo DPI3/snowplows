@@ -12,7 +12,7 @@ public class ScreenController {
     private final StoreScreen storeScreen;
     private JFrame currentScreen;
     private final Object gameController;
-
+     
     /**
      * ScreenController konstruktor a szükséges képernyőkkel.
      * A GameController opcionális lehet, ha nem szükséges az alkalmazásban.
@@ -21,13 +21,17 @@ public class ScreenController {
      * @param gameScreen a játék képernyő
      * @param gameController a játék kontroler (opcionális)
      */
-    public ScreenController(SnowplowMenu menuScreen, GameScreen gameScreen, Object gameController) {
-        this.menuScreen = menuScreen;
+    public ScreenController(GameScreen gameScreen, Object gameController, StoreScreen storeScreen) {
+        this.menuScreen = new SnowplowMenu(this);
         this.gameScreen = gameScreen;
         this.gameController = gameController;
         this.settingsScreen = new SettingsScreen(this);
-        this.storeScreen = new StoreScreen(this);
+        this.storeScreen = storeScreen;
         this.currentScreen = menuScreen;
+    }
+
+    public Object getGameController(){
+        return gameController;
     }
 
     public void showMenu(){
@@ -57,4 +61,5 @@ public class ScreenController {
     public void exitApplication(){
         System.exit(0);
     }
+
 }

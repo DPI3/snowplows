@@ -3,13 +3,14 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import controller.ScreenController;
 
 public class SnowplowMenu extends JFrame {
 
     // Egyedi betűtípus tárolása
     private static Font silkscreenFont;
 
-    public SnowplowMenu() {
+    public SnowplowMenu(ScreenController screenController) {
         setTitle("Snowplow");
         setSize(800, 500); // A kép arányaihoz igazodó méret
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,9 +38,9 @@ public class SnowplowMenu extends JFrame {
         btnExit.setFont(silkscreenFont);
         
         // Gombok funkciói
-        btnStart.addActionListener(e -> JOptionPane.showMessageDialog(this, "Start funkció helye"));
+        btnStart.addActionListener(e -> screenController.showGame());
         btnLoad.addActionListener(e -> JOptionPane.showMessageDialog(this, "Load funkció helye"));
-        btnSettings.addActionListener(e -> JOptionPane.showMessageDialog(this, "Settings funkció helye"));
+        btnSettings.addActionListener(e -> screenController.showSettings());
         btnExit.addActionListener(e -> System.exit(0)); // Kilépés
 
         // Gombok hozzáadása a menü panelhez térközökkel
@@ -81,51 +82,6 @@ public class SnowplowMenu extends JFrame {
         }
     }
 
-
-        
-
-       /**
-     * Egyedi stílusú gomb (#EE8695 háttérrel, #EAE0D5 szöveggel).
-     */
-   /* static class StyledButton extends JButton {
-        public StyledButton(String text) {
-            super(text);
-
-            setContentAreaFilled(false);
-            setFocusPainted(false);
-            setBorderPainted(false);
-            
-            setForeground(Color.decode("#EAE0D5")); 
-            setFont(new Font("Silkscreen", Font.PLAIN, 22));
-            
-            
-            Dimension size = new Dimension(180, 50);
-            setPreferredSize(size);
-            setMaximumSize(size);
-            setMinimumSize(size);
-
-            setAlignmentX(Component.CENTER_ALIGNMENT);
-            setCursor(new Cursor(Cursor.HAND_CURSOR));
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-            if (getModel().isPressed()) {
-                g2.setColor(new Color(218, 114, 129)); 
-            } else {
-                g2.setColor(Color.decode("#EE8695"));
-            }
-            g2.fillRoundRect(0, 0, getWidth() - 2, getHeight() - 2, 15, 15);
-
-            g2.dispose();
-            
-            super.paintComponent(g);
-        }
-    }*/
-
     public static void main(String[] args) {
         // Look and Feel beállítása
         try {
@@ -135,8 +91,8 @@ public class SnowplowMenu extends JFrame {
         }
 
         SwingUtilities.invokeLater(() -> {
-            SnowplowMenu menu = new SnowplowMenu();
-            menu.setVisible(true);
+            //SnowplowMenu menu = new SnowplowMenu();
+            //menu.setVisible(true);
         });
     }
 }
