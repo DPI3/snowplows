@@ -1,5 +1,8 @@
 package controller;
 
+import src.Game;
+import view.GameScreen;
+
 public class GameController {
     private final Game game;
     private final GameScreen gameScreen;
