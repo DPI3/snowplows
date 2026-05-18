@@ -1,6 +1,7 @@
 package controller;
 
 import src.Game;
+import src.Role;
 import view.GameScreen;
 
 public class GameController {
@@ -132,13 +133,14 @@ public class GameController {
         } catch (Exception ignored) {}
 
         try {
-            gameScreen.roleChanged();
+            Role role = game.getPlayer().getCurrentRole();
+            gameScreen.roleChanged(role);
         } catch (Exception ignored) {}
 
         try {
             Object snowplow = game.getSnowplow();
             Object head = snowplow.getClass().getMethod("getCurrentHead").invoke(snowplow);
-            gameScreen.headChanged(String.valueOf(head));
+            gameScreen.headChanged();
         } catch (Exception ignored) {}
 
         gameScreen.repaint();
