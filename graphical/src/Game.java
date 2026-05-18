@@ -2,7 +2,6 @@ package src;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * A Game osztály a szimuláció központi vezérlője.
@@ -104,4 +103,55 @@ public class Game {
     public List<Vehicle> getVehicles() {
         return vehicles;
     }
+
+    /**
+     * Visszaadja az első Snowplow típusú járművet.
+     *
+     * @return Snowplow objektum vagy null
+     */
+    public Snowplow getSnowplow() {
+        for (Vehicle v : vehicles) {
+            if (v instanceof Snowplow) {
+                return (Snowplow) v;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Visszaadja az első Bus típusú járművet.
+     *
+     * @return Bus objektum vagy null
+     */
+    public Bus getBus() {
+        for (Vehicle v : vehicles) {
+            if (v instanceof Bus) {
+                return (Bus) v;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Visszaadja az első játékost.
+     *
+     * @return Player objektum vagy null
+     */
+    public Player getPlayer() {
+        if (players.isEmpty()) {
+            return null;
+        }
+
+        return players.get(0);
+    }
+
+    /**
+     * Visszaadja az aktuális kör számát.
+     *
+     * @return aktuális kör
+     */
+    public int getRound() {
+        return currentRound;
+    }
+    
 }
