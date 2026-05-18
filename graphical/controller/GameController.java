@@ -138,8 +138,6 @@ public class GameController {
         } catch (Exception ignored) {}
 
         try {
-            Object snowplow = game.getSnowplow();
-            Object head = snowplow.getClass().getMethod("getCurrentHead").invoke(snowplow);
             gameScreen.headChanged();
         } catch (Exception ignored) {}
 
