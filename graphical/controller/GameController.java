@@ -155,4 +155,16 @@ public class GameController {
     public boolean isRunning() {
         return running;
     }
+
+    public void setPlayerCount(int count) {
+        // később ide jön a logika
+    }
+
+    public void setMaxRound(int maxRound) {
+        game.setMaxRound(maxRound);
+    }
+
+    public void setCarCount(int count) {
+        // később ide jön az autók létrehozása
+    }
 }

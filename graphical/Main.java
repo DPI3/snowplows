@@ -1,4 +1,10 @@
 import controller.*;
+import controller.AssetManager;
+import controller.ScreenController;
+import controller.SoundManager;
+import controller.StoreController;
+import view.GameScreen;
+import view.StoreScreen;
 import src.*;
 import view.*;
 
@@ -21,7 +27,7 @@ public class Main {
      */
     public Main() {
         // AssetManager inicializálása
-        assetManager = new AssetManager();
+        assetManager = AssetManager.getInstance();
         assetManager.preloadAssets();
 
         // SoundManager inicializálása

@@ -1,17 +1,16 @@
 package controller;
 
-import view.*;
 import javax.swing.JFrame;
+import view.*;
 
 public class ScreenController {
     private final SnowplowMenu menuScreen;
     private final GameScreen gameScreen;
     private final SettingsScreen settingsScreen;
     @SuppressWarnings("unused")
-    private final GamePanel gamePanel;
     private final StoreScreen storeScreen;
     private JFrame currentScreen;
-    private final Object gameController;
+    private final GameController gameController;
      
     /**
      * ScreenController konstruktor a szükséges képernyőkkel.
@@ -21,7 +20,7 @@ public class ScreenController {
      * @param gameScreen a játék képernyő
      * @param gameController a játék kontroler (opcionális)
      */
-    public ScreenController(GameScreen gameScreen, Object gameController, StoreScreen storeScreen) {
+    public ScreenController(GameScreen gameScreen, GameController gameController, StoreScreen storeScreen) {
         this.menuScreen = new SnowplowMenu(this);
         this.gameScreen = gameScreen;
         this.gameController = gameController;
@@ -30,7 +29,7 @@ public class ScreenController {
         this.currentScreen = menuScreen;
     }
 
-    public Object getGameController(){
+    public GameController getGameController(){
         return gameController;
     }
 

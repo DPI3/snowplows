@@ -10,7 +10,11 @@ public class AssetManager {
     private Map<String, Font> fontCache;
     private Map<String, Color> colorCache;
 
-    private AssetManager() { }
+    private AssetManager() {
+        imageCache = new java.util.HashMap<>();
+        fontCache = new java.util.HashMap<>();
+        colorCache = new java.util.HashMap<>();
+    }
 
     public static synchronized AssetManager getInstance() {
         if (instance == null) instance = new AssetManager();

@@ -20,6 +20,14 @@ public class StoreController {
         storeScreen=s;
     }
 
+    public Role getRole() {
+        return c;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
         /**
      * Ellenőrzi, hogy a játékos meg tudja-e engedni az adott árat.
      *
