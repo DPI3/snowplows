@@ -12,5 +12,6 @@ public enum InputAction {
     PAUSE,
     CONFIRM,
     CANCEL,
-    CHANGE_HEAD
+    CHANGE_HEAD,
+    RESTART
 }

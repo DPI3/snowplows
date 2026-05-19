@@ -1,9 +1,9 @@
 package controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import src.*;
 import view.GameScreen;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameController {
     private final Game game;
@@ -17,93 +17,41 @@ public class GameController {
 
     private static final int ROWS = 11;
     private static final int COLS = 15;
+
+    private static final int FIELD = 0;
+    private static final int ROAD = 1;
+    private static final int SNOW = 2;
+    private static final int ICE = 3;
+    private static final int DEPOT = 4;
+
     private final int[][] roadMap = new int[ROWS][COLS];
     private final List<TrafficCar> trafficCars = new ArrayList<>();
+
     private int playerRow = 5;
     private int playerCol = 1;
     private int targetRow = 5;
     private int targetCol = 13;
-    private int configuredCarCount = 4;
-    private String message = "Cél: juss el a jobb oldali depóig. Nyilak/WASD: mozgás, C: takarítás, B: bolt.";
+
+    private int configuredCarCount = 5;
+    private int cleanedTiles = 0;
+    private int totalDirtyTiles = 0;
+    private int collisions = 0;
+    private int plowLevel = 1;
+    private int completedJobs = 0;
+
+    private String message = "Cél: takarítsd le az utak 70%-át, majd menj a jobb oldali depóba.";
 
     public GameController(Game game, GameScreen gameScreen) {
         this.game = game;
         this.gameScreen = gameScreen;
         this.vehicleController = new VehicleController(game);
         this.keyboardController = new KeyboardController(this, game);
-        this.gameLoop = new GameLoop(this, 650);
+        this.gameLoop = new GameLoop(this, 600);
 
-        buildPlayableMap();
-        resetTrafficCars();
+        restartGameState();
 
         gameScreen.addKeyListener(keyboardController);
         gameScreen.setFocusable(true);
-    }
-
-    private void buildPlayableMap() {
-        for (int c = 1; c <= 13; c++) roadMap[5][c] = 1;
-        for (int r = 2; r <= 8; r++) roadMap[r][3] = 1;
-        for (int r = 2; r <= 8; r++) roadMap[r][11] = 1;
-        for (int c = 3; c <= 11; c++) roadMap[2][c] = 1;
-        for (int c = 3; c <= 11; c++) roadMap[8][c] = 1;
-        for (int c = 6; c <= 9; c++) roadMap[4][c] = 1;
-        for (int c = 6; c <= 9; c++) roadMap[6][c] = 1;
-
-        roadMap[playerRow][playerCol] = 4;
-        roadMap[targetRow][targetCol] = 4;
-
-        roadMap[5][5] = 2;
-        roadMap[5][6] = 2;
-        roadMap[4][6] = 2;
-        roadMap[2][7] = 2;
-        roadMap[8][9] = 2;
-        roadMap[3][11] = 2;
-        roadMap[6][9] = 3;
-        roadMap[8][5] = 3;
-        roadMap[5][10] = 3;
-    }
-
-    private void resetTrafficCars() {
-        trafficCars.clear();
-
-        List<int[]> routeA = route(new int[][]{{5, 2}, {5, 12}, {2, 11}, {2, 3}, {5, 3}});
-        List<int[]> routeB = route(new int[][]{{8, 3}, {8, 11}, {5, 11}, {2, 11}, {2, 3}, {5, 3}});
-        List<int[]> routeC = route(new int[][]{{4, 6}, {4, 9}, {6, 9}, {6, 6}, {4, 6}});
-        List<int[]> routeD = route(new int[][]{{5, 12}, {8, 11}, {8, 3}, {5, 3}, {5, 12}});
-
-        if (configuredCarCount >= 1) trafficCars.add(new TrafficCar(routeA, 0, "A"));
-        if (configuredCarCount >= 2) trafficCars.add(new TrafficCar(routeB, 4, "B"));
-        if (configuredCarCount >= 3) trafficCars.add(new TrafficCar(routeC, 1, "C"));
-        if (configuredCarCount >= 4) trafficCars.add(new TrafficCar(routeD, 2, "D"));
-        if (configuredCarCount >= 5) trafficCars.add(new TrafficCar(routeA, 7, "E"));
-        if (configuredCarCount >= 6) trafficCars.add(new TrafficCar(routeB, 10, "F"));
-    }
-
-    private List<int[]> route(int[][] points) {
-        List<int[]> result = new ArrayList<>();
-
-        for (int i = 0; i < points.length - 1; i++) {
-            int r = points[i][0];
-            int c = points[i][1];
-            int er = points[i + 1][0];
-            int ec = points[i + 1][1];
-
-            int dr = Integer.compare(er, r);
-            int dc = Integer.compare(ec, c);
-
-            if (result.isEmpty()) {
-                result.add(new int[]{r, c});
-            }
-
-            while (r != er || c != ec) {
-                if (r != er) r += dr;
-                else if (c != ec) c += dc;
-
-                result.add(new int[]{r, c});
-            }
-        }
-
-        return result;
     }
 
     public void setScreenController(ScreenController screenController) {
@@ -113,7 +61,7 @@ public class GameController {
     public void startGame() {
         running = true;
         keyboardController.setEnabled(true);
-        message = "Indulás! Takarítsd a havas/jeges útszakaszokat, és kerüld az autókat.";
+        message = "Indulás! WASD/nyilak: mozgás, C/CLEAN: takarítás, R/RESET: újrakezdés.";
         gameLoop.start();
         refreshView();
         gameScreen.requestFocusInWindow();
@@ -141,8 +89,13 @@ public class GameController {
     }
 
     public void togglePause() {
-        if (running) pauseGame();
-        else resumeGame();
+        if (running) {
+            pauseGame();
+            message = "Szünet.";
+        } else {
+            resumeGame();
+            message = "Folytatás.";
+        }
     }
 
     public void tick() {
@@ -152,13 +105,11 @@ public class GameController {
         moveTrafficCars();
 
         if (isTrafficAt(playerRow, playerCol)) {
-            message = "Ütközés történt egy autóval. A hókotró visszakerült a depóba.";
-            playerRow = 5;
-            playerCol = 1;
+            handleCollision();
         }
 
         if (game.isOver()) {
-            message = "Lejárt a játékidő. MENU -> Starttal újra próbálhatod.";
+            message = "Lejárt a játékidő. Nem sikerült teljesíteni a küldetést.";
             stopGame();
             return;
         }
@@ -166,12 +117,164 @@ public class GameController {
         refreshView();
     }
 
+    public void handleInputAction(InputAction action) {
+        if (action == null) return;
+
+        switch (action) {
+            case MOVE_UP -> movePlayer(-1, 0);
+            case MOVE_DOWN -> movePlayer(1, 0);
+            case MOVE_LEFT -> movePlayer(0, -1);
+            case MOVE_RIGHT -> movePlayer(0, 1);
+            case STOP -> vehicleController.stopMovement();
+            case OPEN_STORE -> openStore();
+            case OPEN_SETTINGS -> openSettings();
+            case OPEN_MENU, CANCEL -> openMenu();
+            case PAUSE -> togglePause();
+            case CHANGE_HEAD -> cleanAroundPlayer();
+            case CONFIRM -> confirm();
+            case RESTART -> restartGame();
+        }
+
+        refreshView();
+    }
+
+    private void restartGameState() {
+        running = false;
+
+        game.setCurrentRound(0);
+
+        playerRow = 5;
+        playerCol = 1;
+        targetRow = 5;
+        targetCol = 13;
+
+        cleanedTiles = 0;
+        totalDirtyTiles = 0;
+        collisions = 0;
+
+        buildPlayableMap();
+        resetTrafficCars();
+
+        message = "Új játék előkészítve. Start gombbal indul.";
+        refreshView();
+    }
+
+    public void restartGame() {
+        stopGame();
+        restartGameState();
+    }
+
+    private void buildPlayableMap() {
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                roadMap[r][c] = FIELD;
+            }
+        }
+
+        for (int c = 1; c <= 13; c++) roadMap[5][c] = ROAD;
+        for (int r = 2; r <= 8; r++) roadMap[r][3] = ROAD;
+        for (int r = 2; r <= 8; r++) roadMap[r][11] = ROAD;
+        for (int c = 3; c <= 11; c++) roadMap[2][c] = ROAD;
+        for (int c = 3; c <= 11; c++) roadMap[8][c] = ROAD;
+
+        for (int c = 6; c <= 9; c++) roadMap[4][c] = ROAD;
+        for (int c = 6; c <= 9; c++) roadMap[6][c] = ROAD;
+        roadMap[3][6] = ROAD;
+        roadMap[3][9] = ROAD;
+        roadMap[7][6] = ROAD;
+        roadMap[7][9] = ROAD;
+
+        roadMap[playerRow][playerCol] = DEPOT;
+        roadMap[targetRow][targetCol] = DEPOT;
+
+        addDirtyTile(5, 5, SNOW);
+        addDirtyTile(5, 6, SNOW);
+        addDirtyTile(4, 6, SNOW);
+        addDirtyTile(2, 7, SNOW);
+        addDirtyTile(8, 9, SNOW);
+        addDirtyTile(3, 11, SNOW);
+        addDirtyTile(6, 6, SNOW);
+        addDirtyTile(7, 9, SNOW);
+
+        addDirtyTile(6, 9, ICE);
+        addDirtyTile(8, 5, ICE);
+        addDirtyTile(5, 10, ICE);
+        addDirtyTile(2, 4, ICE);
+        addDirtyTile(4, 8, ICE);
+    }
+
+    private void addDirtyTile(int r, int c, int type) {
+        roadMap[r][c] = type;
+        totalDirtyTiles++;
+    }
+
+    private void resetTrafficCars() {
+        trafficCars.clear();
+
+        List<int[]> routeA = route(new int[][]{
+                {5, 2}, {5, 12}, {2, 11}, {2, 3}, {5, 3}
+        });
+
+        List<int[]> routeB = route(new int[][]{
+                {8, 3}, {8, 11}, {5, 11}, {2, 11}, {2, 3}, {5, 3}
+        });
+
+        List<int[]> routeC = route(new int[][]{
+                {4, 6}, {4, 9}, {6, 9}, {6, 6}, {4, 6}
+        });
+
+        List<int[]> routeD = route(new int[][]{
+                {5, 12}, {8, 11}, {8, 3}, {5, 3}, {5, 12}
+        });
+
+        List<int[]> routeE = route(new int[][]{
+                {2, 4}, {2, 11}, {5, 11}, {8, 11}, {8, 4}, {5, 3}
+        });
+
+        if (configuredCarCount >= 1) trafficCars.add(new TrafficCar(routeA, 0, "A", 0));
+        if (configuredCarCount >= 2) trafficCars.add(new TrafficCar(routeB, 4, "B", 1));
+        if (configuredCarCount >= 3) trafficCars.add(new TrafficCar(routeC, 1, "C", 2));
+        if (configuredCarCount >= 4) trafficCars.add(new TrafficCar(routeD, 2, "D", 3));
+        if (configuredCarCount >= 5) trafficCars.add(new TrafficCar(routeE, 7, "E", 4));
+        if (configuredCarCount >= 6) trafficCars.add(new TrafficCar(routeA, 9, "F", 5));
+    }
+
+    private List<int[]> route(int[][] points) {
+        List<int[]> result = new ArrayList<>();
+
+        for (int i = 0; i < points.length - 1; i++) {
+            int r = points[i][0];
+            int c = points[i][1];
+            int er = points[i + 1][0];
+            int ec = points[i + 1][1];
+
+            int dr = Integer.compare(er, r);
+            int dc = Integer.compare(ec, c);
+
+            if (result.isEmpty()) {
+                result.add(new int[]{r, c});
+            }
+
+            while (r != er || c != ec) {
+                if (r != er) {
+                    r += dr;
+                } else if (c != ec) {
+                    c += dc;
+                }
+
+                result.add(new int[]{r, c});
+            }
+        }
+
+        return result;
+    }
+
     private void moveTrafficCars() {
         for (TrafficCar car : trafficCars) {
             int next = (car.index + 1) % car.route.size();
             int[] p = car.route.get(next);
 
-            if (roadMap[p[0]][p[1]] == 2 || roadMap[p[0]][p[1]] == 3) {
+            if (roadMap[p[0]][p[1]] == SNOW || roadMap[p[0]][p[1]] == ICE) {
                 continue;
             }
 
@@ -193,29 +296,9 @@ public class GameController {
         return false;
     }
 
-    public void handleInputAction(InputAction action) {
-        if (action == null) return;
-
-        switch (action) {
-            case MOVE_UP -> movePlayer(-1, 0);
-            case MOVE_DOWN -> movePlayer(1, 0);
-            case MOVE_LEFT -> movePlayer(0, -1);
-            case MOVE_RIGHT -> movePlayer(0, 1);
-            case STOP -> vehicleController.stopMovement();
-            case OPEN_STORE -> openStore();
-            case OPEN_SETTINGS -> openSettings();
-            case OPEN_MENU, CANCEL -> openMenu();
-            case PAUSE -> togglePause();
-            case CHANGE_HEAD -> cleanCurrentTile();
-            case CONFIRM -> confirm();
-        }
-
-        refreshView();
-    }
-
     private void movePlayer(int dr, int dc) {
         if (!running) {
-            message = "A játék szünetel. Start vagy P gombbal indítható.";
+            message = "A játék nem fut. Nyomd meg a START gombot.";
             return;
         }
 
@@ -227,33 +310,41 @@ public class GameController {
             return;
         }
 
-        if (roadMap[nr][nc] == 0) {
+        if (roadMap[nr][nc] == FIELD) {
             message = "Csak az úton haladhatsz.";
             return;
         }
 
-        if (roadMap[nr][nc] == 2 || roadMap[nr][nc] == 3) {
-            message = "Akadályos útszakasz: előbb takarítsd le C/CLEAN gombbal.";
+        if (roadMap[nr][nc] == SNOW || roadMap[nr][nc] == ICE) {
+            message = "Akadályos útszakasz. Takarítsd le C/CLEAN gombbal.";
             return;
         }
 
         if (isTrafficAt(nr, nc)) {
-            message = "Ott éppen autó halad. Várj vagy válassz másik utat.";
+            handleCollision();
             return;
         }
 
         playerRow = nr;
         playerCol = nc;
-        message = "Mozgás sikeres.";
 
         if (playerRow == targetRow && playerCol == targetCol) {
-            rewardCleaner(150);
-            message = "Siker! Elérted a depót. +150 pénz.";
-            stopGame();
+            checkMissionEnd();
+        } else {
+            message = "Mozgás sikeres.";
         }
     }
 
     public void cleanCurrentTile() {
+        cleanAroundPlayer();
+    }
+
+    public void cleanAroundPlayer() {
+        if (!running) {
+            message = "Takarításhoz előbb indítsd el a játékot.";
+            return;
+        }
+
         int cleaned = 0;
 
         cleaned += cleanTile(playerRow, playerCol);
@@ -262,26 +353,68 @@ public class GameController {
         cleaned += cleanTile(playerRow, playerCol - 1);
         cleaned += cleanTile(playerRow, playerCol + 1);
 
-        if (cleaned > 0) {
-            int reward = cleaned * 25;
-            rewardCleaner(reward);
-            message = "Takarítás kész. +" + reward + " pénz.";
-        } else {
-            message = "Itt nincs közvetlenül takarítható havas/jeges mező.";
+        if (plowLevel >= 2) {
+            cleaned += cleanTile(playerRow - 1, playerCol - 1);
+            cleaned += cleanTile(playerRow - 1, playerCol + 1);
+            cleaned += cleanTile(playerRow + 1, playerCol - 1);
+            cleaned += cleanTile(playerRow + 1, playerCol + 1);
         }
 
+        if (plowLevel >= 3) {
+            cleaned += cleanTile(playerRow - 2, playerCol);
+            cleaned += cleanTile(playerRow + 2, playerCol);
+            cleaned += cleanTile(playerRow, playerCol - 2);
+            cleaned += cleanTile(playerRow, playerCol + 2);
+        }
+
+        if (cleaned > 0) {
+            int reward = cleaned * 25 * plowLevel;
+            rewardCleaner(reward);
+            message = "Takarítás kész: " + cleaned + " mező, +" + reward + " pénz.";
+        } else {
+            message = "Nincs a közeledben takarítható havas/jeges mező.";
+        }
+
+        checkMissionEnd();
         refreshView();
     }
 
     private int cleanTile(int r, int c) {
         if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return 0;
 
-        if (roadMap[r][c] == 2 || roadMap[r][c] == 3) {
-            roadMap[r][c] = 1;
+        if (roadMap[r][c] == SNOW || roadMap[r][c] == ICE) {
+            roadMap[r][c] = ROAD;
+            cleanedTiles++;
             return 1;
         }
 
         return 0;
+    }
+
+    private void handleCollision() {
+        collisions++;
+
+        int penalty = 40;
+        chargeCleaner(penalty);
+
+        playerRow = 5;
+        playerCol = 1;
+
+        message = "Ütközés történt. -" + penalty + " pénz, visszakerültél a depóba.";
+        refreshView();
+    }
+
+    private void checkMissionEnd() {
+        if (getCleanPercent() >= 70 && playerRow == targetRow && playerCol == targetCol) {
+            int reward = 200 + plowLevel * 50;
+            rewardCleaner(reward);
+            completedJobs++;
+
+            message = "Küldetés teljesítve! +" + reward + " pénz. RESET vagy MENU.";
+            stopGame();
+        } else if (playerRow == targetRow && playerCol == targetCol) {
+            message = "A cél depónál vagy, de még nincs meg a 70% takarítás.";
+        }
     }
 
     private void rewardCleaner(int amount) {
@@ -292,19 +425,67 @@ public class GameController {
         }
     }
 
+    private void chargeCleaner(int amount) {
+        Role role = gameScreen.getRole();
+
+        if (role instanceof CleanerRole cleanerRole) {
+            cleanerRole.changeMoney(-amount);
+        }
+    }
+
+    public void upgradePlow() {
+        int price = getUpgradePrice();
+
+        if (plowLevel >= 3) {
+            message = "A hókotró már maximális szintű.";
+            refreshView();
+            return;
+        }
+
+        Role role = gameScreen.getRole();
+
+        if (role instanceof CleanerRole cleanerRole) {
+            if (cleanerRole.getMoney() < price) {
+                message = "Nincs elég pénz a fejlesztéshez. Ár: " + price;
+                refreshView();
+                return;
+            }
+
+            cleanerRole.changeMoney(-price);
+            plowLevel++;
+
+            message = "Fejlesztés sikeres. Új hókotró szint: " + plowLevel;
+        }
+
+        refreshView();
+    }
+
+    public int getUpgradePrice() {
+        return 150 * plowLevel;
+    }
+
     public void openStore() {
         pauseGame();
-        if (screenController != null) screenController.showStore();
+
+        if (screenController != null) {
+            screenController.showStore();
+        }
     }
 
     public void openSettings() {
         pauseGame();
-        if (screenController != null) screenController.showSettings();
+
+        if (screenController != null) {
+            screenController.showSettings();
+        }
     }
 
     public void openMenu() {
         pauseGame();
-        if (screenController != null) screenController.showMenu();
+
+        if (screenController != null) {
+            screenController.showMenu();
+        }
     }
 
     public void confirm() {
@@ -312,7 +493,7 @@ public class GameController {
     }
 
     public void changeHead() {
-        cleanCurrentTile();
+        cleanAroundPlayer();
     }
 
     private void refreshView() {
@@ -324,6 +505,13 @@ public class GameController {
         }
 
         gameScreen.headChanged();
+        gameScreen.updateHud(
+                getCleanPercent(),
+                plowLevel,
+                collisions,
+                completedJobs,
+                getUpgradePrice()
+        );
         gameScreen.repaint();
     }
 
@@ -381,8 +569,26 @@ public class GameController {
         return trafficCars;
     }
 
+    public int getCleanPercent() {
+        if (totalDirtyTiles == 0) return 100;
+        return (int) Math.round((cleanedTiles * 100.0) / totalDirtyTiles);
+    }
+
+    public int getPlowLevel() {
+        return plowLevel;
+    }
+
+    public int getCollisions() {
+        return collisions;
+    }
+
+    public int getCompletedJobs() {
+        return completedJobs;
+    }
+
     public void setPlayerCount(int count) {
         message = "Játékosszám beállítva: " + Math.max(1, count);
+        refreshView();
     }
 
     public void setMaxRound(int maxRound) {
@@ -402,11 +608,13 @@ public class GameController {
         private final List<int[]> route;
         private int index;
         private final String label;
+        private final int colorIndex;
 
-        TrafficCar(List<int[]> route, int index, String label) {
+        TrafficCar(List<int[]> route, int index, String label, int colorIndex) {
             this.route = route;
             this.index = Math.min(index, route.size() - 1);
             this.label = label;
+            this.colorIndex = colorIndex;
         }
 
         public int getRow() {
@@ -419,6 +627,10 @@ public class GameController {
 
         public String getLabel() {
             return label;
+        }
+
+        public int getColorIndex() {
+            return colorIndex;
         }
     }
 }

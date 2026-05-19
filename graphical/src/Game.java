@@ -95,6 +95,10 @@ public class Game {
         return maxRound;
     }
 
+    public void setCurrentRound(int currentRound) {
+        this.currentRound = currentRound;
+    }
+
     public void setMaxRound(int maxRound) {
         this.maxRound = maxRound;
     }

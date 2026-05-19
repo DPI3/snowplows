@@ -42,5 +42,6 @@ public class InputMapper {
         keyBindings.put(KeyEvent.VK_P, InputAction.PAUSE);
         keyBindings.put(KeyEvent.VK_ENTER, InputAction.CONFIRM);
         keyBindings.put(KeyEvent.VK_C, InputAction.CHANGE_HEAD);
+        keyBindings.put(KeyEvent.VK_R, InputAction.RESTART);
     }
 }

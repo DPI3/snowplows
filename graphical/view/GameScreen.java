@@ -1,80 +1,35 @@
 package view;
 
-import javax.swing.*;
-import src.*;
 import controller.GameController;
 import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.swing.*;
+import src.*;
 
 public class GameScreen extends JFrame {
     private TopPill roundTopPill;
     private TopPill modeTopPill;
     private TopPill moneyTopPill;
-    private GrayInfoBox infoBox;
+
     private JLabel statusLabel;
+    private JLabel cleanLabel;
+    private JLabel levelLabel;
+    private JLabel collisionLabel;
+    private JLabel completedLabel;
+    private JLabel upgradeLabel;
+
+    private GrayInfoBox infoBox;
     private BoardPanel boardPanel;
+
     private Role role;
     private GameController gameController;
-
-    public void setGameController(GameController gameController) {
-        this.gameController = gameController;
-
-        if (boardPanel != null) {
-            boardPanel.setGameController(gameController);
-        }
-    }
-
-    public void roundChanged(int round) {
-        if (roundTopPill != null) {
-            roundTopPill.setText("Kör: " + round);
-        }
-    }
-
-    public void moneyChanged() {
-        if (moneyTopPill == null || role == null) return;
-
-        if (role instanceof CleanerRole c) {
-            moneyTopPill.setText(Integer.toString(c.getMoney()));
-        }
-
-        if (role instanceof BusdriverRole b) {
-            moneyTopPill.setText(Integer.toString(b.getMoney()));
-        }
-    }
-
-    public void headChanged() {
-        if (infoBox == null) return;
-
-        if (role instanceof CleanerRole c && c.getSnowplow() != null && c.getSnowplow().getCurrentHead() != null) {
-            infoBox.setCurrentHeadLabel(c.getSnowplow().getCurrentHead().getClass().getSimpleName());
-        }
-    }
-
-    public void roleChanged(Role role) {
-        this.role = role;
-
-        if (modeTopPill == null) return;
-
-        if (role instanceof CleanerRole) {
-            modeTopPill.setText("SNOWPLOW MODE");
-        }
-
-        if (role instanceof BusdriverRole) {
-            modeTopPill.setText("BUS MODE");
-        }
-    }
-
-    public Role getRole() {
-        return role;
-    }
 
     public GameScreen(Role role, Store store) {
         this.role = role;
 
         setTitle("Snowplow - Game Screen");
-        setSize(1000, 650);
+        setSize(1050, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -109,7 +64,7 @@ public class GameScreen extends JFrame {
         boardPanel = new BoardPanel();
         centerPanel.add(boardPanel, BorderLayout.CENTER);
 
-        statusLabel = new JLabel("Nyomd meg a Startot. Mozgás: WASD/nyilak, takarítás: C.");
+        statusLabel = new JLabel("Nyomd meg a START gombot. Mozgás: WASD / nyilak, takarítás: C.");
         statusLabel.setForeground(Color.decode("#E2E874"));
         statusLabel.setFont(new Font("SansSerif", Font.BOLD, 15));
         statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -120,72 +75,90 @@ public class GameScreen extends JFrame {
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         rightPanel.setOpaque(false);
-        rightPanel.setPreferredSize(new Dimension(260, 0));
-        rightPanel.setBorder(BorderFactory.createEmptyBorder(40, 20, 20, 20));
+        rightPanel.setPreferredSize(new Dimension(270, 0));
+        rightPanel.setBorder(BorderFactory.createEmptyBorder(30, 20, 20, 20));
 
-        StyledButton startBtn = new StyledButton("START", 200, 55, Color.decode("#E2E874"));
+        StyledButton startBtn = new StyledButton("START", 200, 45, Color.decode("#E2E874"));
         startBtn.addActionListener(e -> {
             if (gameController != null) {
                 gameController.startGame();
             }
-
             requestFocusInWindow();
         });
 
-        rightPanel.add(startBtn);
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-
-        StyledButton cleanBtn = new StyledButton("CLEAN", 200, 55, Color.decode("#E2E874"));
+        StyledButton cleanBtn = new StyledButton("CLEAN", 200, 45, Color.decode("#E2E874"));
         cleanBtn.addActionListener(e -> {
             if (gameController != null) {
                 gameController.cleanCurrentTile();
             }
-
             requestFocusInWindow();
         });
 
-        rightPanel.add(cleanBtn);
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        StyledButton resetBtn = new StyledButton("RESET", 200, 45, Color.decode("#E2E874"));
+        resetBtn.addActionListener(e -> {
+            if (gameController != null) {
+                gameController.restartGame();
+            }
+            requestFocusInWindow();
+        });
 
-        StyledButton storeBtn = new StyledButton("STORE", 200, 55, Color.decode("#E2E874"));
+        StyledButton upgradeBtn = new StyledButton("UPGRADE", 200, 45, Color.decode("#E2E874"));
+        upgradeBtn.addActionListener(e -> {
+            if (gameController != null) {
+                gameController.upgradePlow();
+            }
+            requestFocusInWindow();
+        });
+
+        StyledButton storeBtn = new StyledButton("STORE", 200, 45, Color.decode("#E2E874"));
         storeBtn.addActionListener(e -> {
             if (gameController != null) {
                 gameController.openStore();
             }
         });
 
-        rightPanel.add(storeBtn);
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 25)));
-
-        infoBox = new GrayInfoBox();
-        infoBox.setChangeAction(e -> {
-            if (gameController != null) {
-                gameController.cleanCurrentTile();
-            }
-
-            requestFocusInWindow();
-        });
-
-        rightPanel.add(infoBox);
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 35)));
-
-        StyledButton settingsBtn = new StyledButton("SETTINGS", 200, 55, Color.decode("#E2E874"));
+        StyledButton settingsBtn = new StyledButton("SETTINGS", 200, 45, Color.decode("#E2E874"));
         settingsBtn.addActionListener(e -> {
             if (gameController != null) {
                 gameController.openSettings();
             }
         });
 
-        rightPanel.add(settingsBtn);
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-
-        StyledButton menuBtn = new StyledButton("MENU", 200, 55, Color.decode("#E2E874"));
+        StyledButton menuBtn = new StyledButton("MENU", 200, 45, Color.decode("#E2E874"));
         menuBtn.addActionListener(e -> {
             if (gameController != null) {
                 gameController.openMenu();
             }
         });
 
+        rightPanel.add(startBtn);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        rightPanel.add(cleanBtn);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        rightPanel.add(resetBtn);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        rightPanel.add(upgradeBtn);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        infoBox = new GrayInfoBox();
+        infoBox.setChangeAction(e -> {
+            if (gameController != null) {
+                gameController.cleanCurrentTile();
+            }
+            requestFocusInWindow();
+        });
+
+        rightPanel.add(infoBox);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        JPanel hudPanel = createHudPanel();
+        rightPanel.add(hudPanel);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        rightPanel.add(storeBtn);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        rightPanel.add(settingsBtn);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         rightPanel.add(menuBtn);
 
         mainBg.add(rightPanel, BorderLayout.EAST);
@@ -194,6 +167,101 @@ public class GameScreen extends JFrame {
 
         moneyChanged();
         headChanged();
+    }
+
+    private JPanel createHudPanel() {
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        cleanLabel = createHudLabel("Tisztítás: 0%");
+        levelLabel = createHudLabel("Szint: 1");
+        collisionLabel = createHudLabel("Ütközés: 0");
+        completedLabel = createHudLabel("Küldetés: 0");
+        upgradeLabel = createHudLabel("Fejlesztés ára: 150");
+
+        panel.add(cleanLabel);
+        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+        panel.add(levelLabel);
+        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+        panel.add(collisionLabel);
+        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+        panel.add(completedLabel);
+        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+        panel.add(upgradeLabel);
+
+        return panel;
+    }
+
+    private JLabel createHudLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setForeground(Color.WHITE);
+        label.setFont(new Font("SansSerif", Font.BOLD, 13));
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return label;
+    }
+
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
+
+        if (boardPanel != null) {
+            boardPanel.setGameController(gameController);
+        }
+    }
+
+    public void roundChanged(int round) {
+        if (roundTopPill != null) {
+            roundTopPill.setText("Kör: " + round);
+        }
+    }
+
+    public void moneyChanged() {
+        if (moneyTopPill == null || role == null) return;
+
+        if (role instanceof CleanerRole c) {
+            moneyTopPill.setText(Integer.toString(c.getMoney()));
+        }
+
+        if (role instanceof BusdriverRole b) {
+            moneyTopPill.setText(Integer.toString(b.getMoney()));
+        }
+    }
+
+    public void headChanged() {
+        if (infoBox == null) return;
+
+        if (role instanceof CleanerRole c && c.getSnowplow() != null && c.getSnowplow().getCurrentHead() != null) {
+            infoBox.setCurrentHeadLabel(c.getSnowplow().getCurrentHead().getClass().getSimpleName());
+        } else {
+            infoBox.setCurrentHeadLabel("DEFAULT");
+        }
+    }
+
+    public void roleChanged(Role role) {
+        this.role = role;
+
+        if (modeTopPill == null) return;
+
+        if (role instanceof CleanerRole) {
+            modeTopPill.setText("SNOWPLOW MODE");
+        }
+
+        if (role instanceof BusdriverRole) {
+            modeTopPill.setText("BUS MODE");
+        }
+    }
+
+    public void updateHud(int cleanPercent, int plowLevel, int collisions, int completedJobs, int upgradePrice) {
+        if (cleanLabel != null) cleanLabel.setText("Tisztítás: " + cleanPercent + "% / 70%");
+        if (levelLabel != null) levelLabel.setText("Szint: " + plowLevel);
+        if (collisionLabel != null) collisionLabel.setText("Ütközés: " + collisions);
+        if (completedLabel != null) completedLabel.setText("Küldetés: " + completedJobs);
+        if (upgradeLabel != null) upgradeLabel.setText("Fejlesztés ára: " + upgradePrice);
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     @Override
@@ -210,7 +278,7 @@ public class GameScreen extends JFrame {
 
         public BoardPanel() {
             setOpaque(false);
-            setPreferredSize(new Dimension(680, 500));
+            setPreferredSize(new Dimension(700, 520));
         }
 
         public void setGameController(GameController gameController) {
@@ -258,12 +326,15 @@ public class GameScreen extends JFrame {
             drawMapTiles(g2, map, rows, cols, cell, startX, startY);
             drawRoadDetails(g2, map, rows, cols, cell, startX, startY);
             drawTrafficCars(g2, cell, startX, startY);
+
             drawSnowplow(
                     g2,
                     startX + gameController.getPlayerCol() * cell,
                     startY + gameController.getPlayerRow() * cell,
                     cell
             );
+
+            drawMissionOverlay(g2);
             drawLegend(g2);
 
             g2.dispose();
@@ -272,7 +343,7 @@ public class GameScreen extends JFrame {
         private void drawSnowyBackground(Graphics2D g2) {
             g2.setColor(new Color(235, 247, 255, 22));
 
-            for (int i = 0; i < 45; i++) {
+            for (int i = 0; i < 60; i++) {
                 int x = (i * 47 + 23) % Math.max(1, getWidth());
                 int y = (i * 31 + 17) % Math.max(1, getHeight());
                 int size = 2 + (i % 3);
@@ -312,15 +383,7 @@ public class GameScreen extends JFrame {
                     int y = startY + r * cell;
 
                     if (map[r][c] == 4) {
-                        g2.setColor(new Color(218, 223, 88));
-                        g2.fillRoundRect(x + 4, y + 4, cell - 8, cell - 8, 14, 14);
-
-                        g2.setColor(new Color(76, 82, 58));
-                        g2.setStroke(new BasicStroke(2f));
-                        g2.drawRoundRect(x + 5, y + 5, cell - 10, cell - 10, 14, 14);
-
-                        g2.setFont(new Font("SansSerif", Font.BOLD, Math.max(11, cell / 4)));
-                        g2.drawString("D", x + cell / 2 - 5, y + cell / 2 + 5);
+                        drawDepot(g2, x, y, cell);
                         continue;
                     }
 
@@ -349,24 +412,56 @@ public class GameScreen extends JFrame {
                     }
 
                     if (map[r][c] == 2) {
-                        g2.setColor(new Color(245, 251, 255, 210));
-                        g2.fillRoundRect(x + 7, y + 7, cell - 14, cell - 14, 10, 10);
-
-                        g2.setColor(new Color(205, 222, 235));
-                        g2.drawString("❄", x + cell / 2 - 5, y + cell / 2 + 6);
+                        drawSnow(g2, x, y, cell);
                     } else if (map[r][c] == 3) {
-                        g2.setColor(new Color(125, 204, 232, 185));
-                        g2.fillRoundRect(x + 7, y + 7, cell - 14, cell - 14, 10, 10);
-
-                        g2.setColor(new Color(230, 250, 255, 190));
-                        g2.drawLine(x + 10, y + cell - 12, x + cell - 10, y + 10);
+                        drawIce(g2, x, y, cell);
                     }
                 }
             }
         }
 
+        private void drawDepot(Graphics2D g2, int x, int y, int cell) {
+            g2.setColor(new Color(218, 223, 88));
+            g2.fillRoundRect(x + 4, y + 4, cell - 8, cell - 8, 14, 14);
+
+            g2.setColor(new Color(76, 82, 58));
+            g2.setStroke(new BasicStroke(2f));
+            g2.drawRoundRect(x + 5, y + 5, cell - 10, cell - 10, 14, 14);
+
+            g2.setFont(new Font("SansSerif", Font.BOLD, Math.max(11, cell / 4)));
+            g2.drawString("D", x + cell / 2 - 5, y + cell / 2 + 5);
+        }
+
+        private void drawSnow(Graphics2D g2, int x, int y, int cell) {
+            g2.setColor(new Color(245, 251, 255, 220));
+            g2.fillRoundRect(x + 7, y + 7, cell - 14, cell - 14, 10, 10);
+
+            g2.setColor(new Color(205, 222, 235));
+            g2.setFont(new Font("SansSerif", Font.BOLD, Math.max(12, cell / 4)));
+            g2.drawString("*", x + cell / 2 - 4, y + cell / 2 + 6);
+        }
+
+        private void drawIce(Graphics2D g2, int x, int y, int cell) {
+            g2.setColor(new Color(125, 204, 232, 185));
+            g2.fillRoundRect(x + 7, y + 7, cell - 14, cell - 14, 10, 10);
+
+            g2.setColor(new Color(230, 250, 255, 190));
+            g2.setStroke(new BasicStroke(2f));
+            g2.drawLine(x + 10, y + cell - 12, x + cell - 10, y + 10);
+            g2.drawLine(x + 14, y + 12, x + cell - 14, y + cell - 12);
+        }
+
         private void drawTrafficCars(Graphics2D g2, int cell, int startX, int startY) {
             if (gameController.getTrafficCars() == null) return;
+
+            Color[] colors = {
+                    new Color(72, 167, 220),
+                    new Color(224, 92, 92),
+                    new Color(109, 201, 119),
+                    new Color(232, 179, 66),
+                    new Color(166, 119, 222),
+                    new Color(230, 129, 68)
+            };
 
             for (GameController.TrafficCar car : gameController.getTrafficCars()) {
                 int x = startX + car.getCol() * cell;
@@ -376,7 +471,7 @@ public class GameScreen extends JFrame {
                 g2.setColor(new Color(37, 42, 55, 110));
                 g2.fillOval(x + pad, y + cell - pad, cell - 2 * pad, Math.max(5, cell / 8));
 
-                g2.setColor(new Color(72, 167, 220));
+                g2.setColor(colors[car.getColorIndex() % colors.length]);
                 g2.fillRoundRect(x + pad, y + cell / 3, cell - 2 * pad, cell / 3, 10, 10);
 
                 g2.setColor(new Color(176, 222, 245));
@@ -425,11 +520,21 @@ public class GameScreen extends JFrame {
             g2.drawString("P", x + cell / 2 - 4, y + cell / 2 + 6);
         }
 
+        private void drawMissionOverlay(Graphics2D g2) {
+            g2.setColor(new Color(0, 0, 0, 90));
+            g2.fillRoundRect(18, 18, 250, 55, 16, 16);
+
+            g2.setColor(Color.WHITE);
+            g2.setFont(new Font("SansSerif", Font.BOLD, 13));
+            g2.drawString("Küldetés:", 35, 40);
+            g2.drawString("70% tisztítás + cél depó", 35, 60);
+        }
+
         private void drawLegend(Graphics2D g2) {
             g2.setColor(new Color(255, 255, 255, 215));
             g2.setFont(new Font("SansSerif", Font.BOLD, 13));
             g2.drawString(
-                    "Depó: sárga | Hó: fehér | Jég: kék | Autók: automatikus forgalom",
+                    "Depó: sárga | Hó: fehér | Jég: kék | Autók: forgalom | P: hókotró",
                     25,
                     getHeight() - 18
             );
