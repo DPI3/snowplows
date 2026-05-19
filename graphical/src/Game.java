@@ -95,6 +95,10 @@ public class Game {
         return maxRound;
     }
 
+    public void setMaxRound(int maxRound) {
+        this.maxRound = maxRound;
+    }
+
     /**
      * Visszaadja a szimulációban résztvevő járművek listáját.
      * 
