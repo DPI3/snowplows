@@ -43,6 +43,10 @@ public class ScreenController {
         currentScreen.setVisible(false);
         gameScreen.setVisible(true);
         currentScreen=gameScreen;
+        gameScreen.requestFocusInWindow();
+        if (gameController != null && !gameController.isRunning()) {
+            gameController.resumeGame();
+        }
     }
 
     public void showSettings(){

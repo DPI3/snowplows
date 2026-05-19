@@ -35,19 +35,27 @@ public class Main {
 
         // StoreController inicializálása
         storeController = new StoreController();
-        
-        // GameScreen inicializálása a StoreController játékosának szerepkörével és boltjával
+
         Role role = storeController.getRole();
         Store store = storeController.getStore();
         GameScreen gameScreen = new GameScreen(role, store);
-        
-        StoreScreen storeScreen= new StoreScreen(storeController);
+        StoreScreen storeScreen = new StoreScreen(storeController);
 
-        // ScreenController inicializálása a nézetek segítségével
-        // Megjegyzés: GameController nem létezik az alkalmazásban, így null-t adunk át
-        screenController = new ScreenController(gameScreen, null, storeScreen);
+        java.util.List<Vehicle> vehicles = new java.util.ArrayList<>();
+        java.util.List<Player> players = new java.util.ArrayList<>();
 
-        // StoreScreen és StoreController összekapcsolása
+        if (role instanceof CleanerRole cleanerRole) {
+            vehicles.add(cleanerRole.getSnowplow());
+        }
+        players.add(new Player(1, "Player", role));
+
+        Game game = new Game(0, 30, vehicles, players);
+        GameController gameController = new GameController(game, gameScreen);
+
+        screenController = new ScreenController(gameScreen, gameController, storeScreen);
+        gameController.setScreenController(screenController);
+        gameScreen.setGameController(gameController);
+
         storeController.setStoreScreen(storeScreen);
         storeScreen.setScreenController(screenController);
 

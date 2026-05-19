@@ -1,7 +1,6 @@
 package controller;
 
-import src.Game;
-import src.Role;
+import src.*;
 import view.GameScreen;
 
 public class GameController {
@@ -14,6 +13,15 @@ public class GameController {
     private ScreenController screenController;
     private boolean running;
 
+    private static final int ROWS = 7;
+    private static final int COLS = 10;
+    private final int[][] roadMap = new int[ROWS][COLS];
+    private int playerRow = 3;
+    private int playerCol = 0;
+    private int targetRow = 3;
+    private int targetCol = 9;
+    private String message = "Juss el a jobb oldali terminálig. Nyilak/WASD: mozgás, C: takarítás, B: bolt.";
+
     public GameController(Game game, GameScreen gameScreen) {
         this.game = game;
         this.gameScreen = gameScreen;
@@ -22,9 +30,25 @@ public class GameController {
         this.gameLoop = new GameLoop(this, 1000);
         this.running = false;
 
+        buildPlayableMap();
+
         gameScreen.addKeyListener(keyboardController);
         gameScreen.setFocusable(true);
-        gameScreen.requestFocusInWindow();
+    }
+
+    private void buildPlayableMap() {
+        // 0 = mező, 1 = tiszta út, 2 = havas út, 3 = jég, 4 = terminál/cél
+        for (int c = 0; c < COLS; c++) roadMap[3][c] = 1;
+        for (int r = 1; r <= 5; r++) roadMap[r][2] = 1;
+        for (int c = 2; c <= 7; c++) roadMap[1][c] = 1;
+        for (int r = 1; r <= 5; r++) roadMap[r][7] = 1;
+        roadMap[3][0] = 4;
+        roadMap[targetRow][targetCol] = 4;
+        roadMap[3][4] = 2;
+        roadMap[3][5] = 2;
+        roadMap[1][5] = 2;
+        roadMap[5][7] = 3;
+        roadMap[2][2] = 2;
     }
 
     public void setScreenController(ScreenController screenController) {
@@ -35,17 +59,21 @@ public class GameController {
         running = true;
         keyboardController.setEnabled(true);
         gameLoop.start();
+        refreshView();
         gameScreen.requestFocusInWindow();
     }
 
     public void pauseGame() {
         running = false;
         gameLoop.stop();
+        refreshView();
     }
 
     public void resumeGame() {
         running = true;
+        keyboardController.setEnabled(true);
         gameLoop.start();
+        refreshView();
         gameScreen.requestFocusInWindow();
     }
 
@@ -53,61 +81,123 @@ public class GameController {
         running = false;
         keyboardController.setEnabled(false);
         gameLoop.stop();
+        refreshView();
     }
 
     public void togglePause() {
-        if (running) {
-            pauseGame();
-        } else {
-            resumeGame();
-        }
+        if (running) pauseGame(); else resumeGame();
     }
 
     public void tick() {
+        if (!running) return;
         game.tick();
-        vehicleController.updateControlledVehicle();
+        if (game.isOver()) {
+            message = "Lejárt a játékidő. MENU -> Starttal újra próbálhatod.";
+            stopGame();
+            return;
+        }
         refreshView();
     }
 
     public void handleInputAction(InputAction action) {
-        if (action == null) {
-            return;
-        }
+        if (action == null) return;
 
         switch (action) {
-            case MOVE_UP -> vehicleController.moveUp();
-            case MOVE_DOWN -> vehicleController.moveDown();
-            case MOVE_LEFT -> vehicleController.moveLeft();
-            case MOVE_RIGHT -> vehicleController.moveRight();
+            case MOVE_UP -> movePlayer(-1, 0);
+            case MOVE_DOWN -> movePlayer(1, 0);
+            case MOVE_LEFT -> movePlayer(0, -1);
+            case MOVE_RIGHT -> movePlayer(0, 1);
             case STOP -> vehicleController.stopMovement();
             case OPEN_STORE -> openStore();
             case OPEN_SETTINGS -> openSettings();
             case OPEN_MENU, CANCEL -> openMenu();
             case PAUSE -> togglePause();
-            case CHANGE_HEAD -> changeHead();
+            case CHANGE_HEAD -> cleanCurrentTile();
             case CONFIRM -> confirm();
         }
 
         refreshView();
     }
 
-    public void openStore() {
-        if (screenController != null) {
-            screenController.showStore();
+    private void movePlayer(int dr, int dc) {
+        if (!running) {
+            message = "A játék szünetel. Start vagy P gombbal indítható.";
+            return;
+        }
+
+        int nr = playerRow + dr;
+        int nc = playerCol + dc;
+        if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) {
+            message = "Nem lehet lemenni a pályáról.";
+            return;
+        }
+        if (roadMap[nr][nc] == 0) {
+            message = "Csak az úton haladhatsz.";
+            return;
+        }
+        if (roadMap[nr][nc] == 2) {
+            message = "Havas út: előbb takarítsd le C gombbal vagy a CLEAN gombbal.";
+            return;
+        }
+
+        playerRow = nr;
+        playerCol = nc;
+        message = "Mozgás sikeres.";
+
+        if (playerRow == targetRow && playerCol == targetCol) {
+            rewardCleaner(100);
+            message = "Siker! Elérted a terminált. +100 pénz.";
+            stopGame();
         }
     }
 
-    public void openSettings() {
-        if (screenController != null) {
-            screenController.showSettings();
+    public void cleanCurrentTile() {
+        int cleaned = 0;
+        cleaned += cleanTile(playerRow, playerCol);
+        cleaned += cleanTile(playerRow - 1, playerCol);
+        cleaned += cleanTile(playerRow + 1, playerCol);
+        cleaned += cleanTile(playerRow, playerCol - 1);
+        cleaned += cleanTile(playerRow, playerCol + 1);
+
+        if (cleaned > 0) {
+            int reward = cleaned * 25;
+            rewardCleaner(reward);
+            message = "Takarítás kész. +" + reward + " pénz.";
+        } else {
+            message = "Itt nincs közvetlenül takarítható havas mező.";
         }
+        refreshView();
+    }
+
+    private int cleanTile(int r, int c) {
+        if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return 0;
+        if (roadMap[r][c] == 2 || roadMap[r][c] == 3) {
+            roadMap[r][c] = 1;
+            return 1;
+        }
+        return 0;
+    }
+
+    private void rewardCleaner(int amount) {
+        Role role = gameScreen.getRole();
+        if (role instanceof CleanerRole cleanerRole) {
+            cleanerRole.changeMoney(amount);
+        }
+    }
+
+    public void openStore() {
+        pauseGame();
+        if (screenController != null) screenController.showStore();
+    }
+
+    public void openSettings() {
+        pauseGame();
+        if (screenController != null) screenController.showSettings();
     }
 
     public void openMenu() {
         pauseGame();
-        if (screenController != null) {
-            screenController.showMenu();
-        }
+        if (screenController != null) screenController.showMenu();
     }
 
     public void confirm() {
@@ -115,56 +205,40 @@ public class GameController {
     }
 
     public void changeHead() {
-        try {
-            Object snowplow = game.getSnowplow();
-            snowplow.getClass().getMethod("changeHead").invoke(snowplow);
-        } catch (Exception ignored) {
-            // Ha a modellben más néven van a fejcserélő metódus, itt kell hozzáigazítani.
-        }
+        cleanCurrentTile();
     }
 
     private void refreshView() {
-        try {
-            gameScreen.roundChanged((int) game.getClass().getMethod("getRound").invoke(game));
-        } catch (Exception ignored) {}
-
-        try {
-            gameScreen.moneyChanged();
-        } catch (Exception ignored) {}
-
-        try {
-            Role role = game.getPlayer().getCurrentRole();
-            gameScreen.roleChanged(role);
-        } catch (Exception ignored) {}
-
-        try {
-            gameScreen.headChanged();
-        } catch (Exception ignored) {}
-
+        gameScreen.roundChanged(game.getRound());
+        gameScreen.moneyChanged();
+        if (game.getPlayer() != null) gameScreen.roleChanged(game.getPlayer().getCurrentRole());
+        gameScreen.headChanged();
         gameScreen.repaint();
     }
 
-    public VehicleController getVehicleController() {
-        return vehicleController;
-    }
+    public VehicleController getVehicleController() { return vehicleController; }
+    public KeyboardController getKeyboardController() { return keyboardController; }
+    public boolean isRunning() { return running; }
 
-    public KeyboardController getKeyboardController() {
-        return keyboardController;
-    }
-
-    public boolean isRunning() {
-        return running;
-    }
+    public int[][] getRoadMap() { return roadMap; }
+    public int getPlayerRow() { return playerRow; }
+    public int getPlayerCol() { return playerCol; }
+    public int getTargetRow() { return targetRow; }
+    public int getTargetCol() { return targetCol; }
+    public String getMessage() { return message; }
+    public int getMaxRound() { return game.getMaxRound(); }
 
     public void setPlayerCount(int count) {
-        // később ide jön a logika
+        message = "Játékosszám beállítva: " + Math.max(1, count);
     }
 
     public void setMaxRound(int maxRound) {
-        game.setMaxRound(maxRound);
+        game.setMaxRound(Math.max(1, maxRound));
+        message = "Játék hossza beállítva: " + game.getMaxRound() + " kör.";
+        refreshView();
     }
 
     public void setCarCount(int count) {
-        // később ide jön az autók létrehozása
+        message = "Autók száma beállítva: " + Math.max(0, count) + ".";
     }
 }
