@@ -1,11 +1,8 @@
 package view;
 
-import javax.swing.*;
-
 import controller.AssetManager;
-
 import java.awt.*;
-import java.io.File;
+import javax.swing.*;
 
 /**
      * Sötét türkiz-szürke információs doboz a jobb oldali menüben.
@@ -13,6 +10,8 @@ import java.io.File;
     class GrayInfoBox extends JPanel {
         private final int shadowSize = 4;
         JLabel currentHeadLabel;
+
+        private JButton changeButton;
 
         public void setCurrentHeadLabel(String head){
             currentHeadLabel.setText(head);
@@ -31,16 +30,15 @@ import java.io.File;
             JLabel headLabel = createShadowedLabel("HEAD:", AssetManager.getInstance().getFont("silkscreenNormal"));
             currentHeadLabel = createShadowedLabel("", AssetManager.getInstance().getFont("silkscreenTitle"));
             
-            StyledButton changeBtn = new StyledButton("CHANGE", 160, 40, Color.decode("#E2E874"));
-           
-            changeBtn.setFont(AssetManager.getInstance().getFont("silkscreenSmall"));
+            changeButton = new StyledButton("CHANGE", 160, 40, Color.decode("#E2E874"));
+
+            changeButton.setFont(AssetManager.getInstance().getFont("silkscreenSmall"));
 
             add(headLabel);
             add(Box.createRigidArea(new Dimension(0, 5)));
             add(currentHeadLabel);
             add(Box.createVerticalGlue()); 
-            add(changeBtn);
-            add(Box.createRigidArea(new Dimension(0, 10)));
+            add(changeButton);
         }
 
         private JLabel createShadowedLabel(String text, Font font) {
@@ -81,5 +79,9 @@ import java.io.File;
 
             g2.dispose();
             super.paintComponent(g);
+        }
+
+        public void setChangeAction(java.awt.event.ActionListener listener) {
+            changeButton.addActionListener(listener);
         }
     }

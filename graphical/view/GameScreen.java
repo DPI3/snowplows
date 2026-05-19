@@ -20,21 +20,33 @@ public class GameScreen extends JFrame {
 
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
-        if (boardPanel != null) boardPanel.setGameController(gameController);
+
+        if (boardPanel != null) {
+            boardPanel.setGameController(gameController);
+        }
     }
 
     public void roundChanged(int round) {
-        if (roundTopPill != null) roundTopPill.setText("Kör: " + round);
+        if (roundTopPill != null) {
+            roundTopPill.setText("Kör: " + round);
+        }
     }
 
     public void moneyChanged() {
         if (moneyTopPill == null || role == null) return;
-        if (role instanceof CleanerRole c) moneyTopPill.setText(Integer.toString(c.getMoney()));
-        if (role instanceof BusdriverRole b) moneyTopPill.setText(Integer.toString(b.getMoney()));
+
+        if (role instanceof CleanerRole c) {
+            moneyTopPill.setText(Integer.toString(c.getMoney()));
+        }
+
+        if (role instanceof BusdriverRole b) {
+            moneyTopPill.setText(Integer.toString(b.getMoney()));
+        }
     }
 
     public void headChanged() {
         if (infoBox == null) return;
+
         if (role instanceof CleanerRole c && c.getSnowplow() != null && c.getSnowplow().getCurrentHead() != null) {
             infoBox.setCurrentHeadLabel(c.getSnowplow().getCurrentHead().getClass().getSimpleName());
         }
@@ -42,15 +54,25 @@ public class GameScreen extends JFrame {
 
     public void roleChanged(Role role) {
         this.role = role;
+
         if (modeTopPill == null) return;
-        if (role instanceof CleanerRole) modeTopPill.setText("SNOWPLOW MODE");
-        if (role instanceof BusdriverRole) modeTopPill.setText("BUS MODE");
+
+        if (role instanceof CleanerRole) {
+            modeTopPill.setText("SNOWPLOW MODE");
+        }
+
+        if (role instanceof BusdriverRole) {
+            modeTopPill.setText("BUS MODE");
+        }
     }
 
-    public Role getRole() { return role; }
+    public Role getRole() {
+        return role;
+    }
 
     public GameScreen(Role role, Store store) {
         this.role = role;
+
         setTitle("Snowplow - Game Screen");
         setSize(1000, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,6 +82,7 @@ public class GameScreen extends JFrame {
         mainBg.setLayout(new BorderLayout());
 
         Image moneyIcon = null;
+
         try {
             moneyIcon = ImageIO.read(new File("money.png"));
         } catch (Exception e) {
@@ -68,12 +91,15 @@ public class GameScreen extends JFrame {
 
         JPanel topBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         topBar.setOpaque(false);
+
         roundTopPill = new TopPill("Kör: 0", 220, null);
         modeTopPill = new TopPill("SNOWPLOW MODE", 380, null);
         moneyTopPill = new TopPill("", 160, moneyIcon);
+
         topBar.add(roundTopPill);
         topBar.add(modeTopPill);
         topBar.add(moneyTopPill);
+
         mainBg.add(topBar, BorderLayout.NORTH);
 
         JPanel centerPanel = new JPanel(new BorderLayout(0, 10));
@@ -87,6 +113,7 @@ public class GameScreen extends JFrame {
         statusLabel.setForeground(Color.decode("#E2E874"));
         statusLabel.setFont(new Font("SansSerif", Font.BOLD, 15));
         statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
         centerPanel.add(statusLabel, BorderLayout.SOUTH);
         mainBg.add(centerPanel, BorderLayout.CENTER);
 
@@ -98,50 +125,73 @@ public class GameScreen extends JFrame {
 
         StyledButton startBtn = new StyledButton("START", 200, 55, Color.decode("#E2E874"));
         startBtn.addActionListener(e -> {
-            if (gameController != null) gameController.startGame();
+            if (gameController != null) {
+                gameController.startGame();
+            }
+
             requestFocusInWindow();
         });
+
         rightPanel.add(startBtn);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         StyledButton cleanBtn = new StyledButton("CLEAN", 200, 55, Color.decode("#E2E874"));
         cleanBtn.addActionListener(e -> {
-            if (gameController != null) gameController.cleanCurrentTile();
+            if (gameController != null) {
+                gameController.cleanCurrentTile();
+            }
+
             requestFocusInWindow();
         });
+
         rightPanel.add(cleanBtn);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         StyledButton storeBtn = new StyledButton("STORE", 200, 55, Color.decode("#E2E874"));
         storeBtn.addActionListener(e -> {
-            if (gameController != null) gameController.openStore();
+            if (gameController != null) {
+                gameController.openStore();
+            }
         });
+
         rightPanel.add(storeBtn);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 25)));
 
         infoBox = new GrayInfoBox();
         infoBox.setChangeAction(e -> {
-            if (gameController != null) gameController.cleanCurrentTile();
+            if (gameController != null) {
+                gameController.cleanCurrentTile();
+            }
+
             requestFocusInWindow();
         });
+
         rightPanel.add(infoBox);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 35)));
 
         StyledButton settingsBtn = new StyledButton("SETTINGS", 200, 55, Color.decode("#E2E874"));
         settingsBtn.addActionListener(e -> {
-            if (gameController != null) gameController.openSettings();
+            if (gameController != null) {
+                gameController.openSettings();
+            }
         });
+
         rightPanel.add(settingsBtn);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         StyledButton menuBtn = new StyledButton("MENU", 200, 55, Color.decode("#E2E874"));
         menuBtn.addActionListener(e -> {
-            if (gameController != null) gameController.openMenu();
+            if (gameController != null) {
+                gameController.openMenu();
+            }
         });
+
         rightPanel.add(menuBtn);
 
         mainBg.add(rightPanel, BorderLayout.EAST);
+
         setContentPane(mainBg);
+
         moneyChanged();
         headChanged();
     }
@@ -149,6 +199,7 @@ public class GameScreen extends JFrame {
     @Override
     public void repaint() {
         super.repaint();
+
         if (statusLabel != null && gameController != null) {
             statusLabel.setText(gameController.getMessage());
         }
@@ -159,7 +210,7 @@ public class GameScreen extends JFrame {
 
         public BoardPanel() {
             setOpaque(false);
-            setPreferredSize(new Dimension(650, 450));
+            setPreferredSize(new Dimension(680, 500));
         }
 
         public void setGameController(GameController gameController) {
@@ -169,11 +220,25 @@ public class GameScreen extends JFrame {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            g2.setColor(new Color(30, 38, 55, 210));
-            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
+            Graphics2D g2 = (Graphics2D) g.create();
+
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+            GradientPaint bg = new GradientPaint(
+                    0,
+                    0,
+                    new Color(20, 30, 48),
+                    0,
+                    getHeight(),
+                    new Color(9, 18, 32)
+            );
+
+            g2.setPaint(bg);
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
+
+            drawSnowyBackground(g2);
 
             if (gameController == null) {
                 g2.setColor(Color.WHITE);
@@ -185,58 +250,189 @@ public class GameScreen extends JFrame {
             int[][] map = gameController.getRoadMap();
             int rows = map.length;
             int cols = map[0].length;
-            int cell = Math.min((getWidth() - 60) / cols, (getHeight() - 60) / rows);
+
+            int cell = Math.min((getWidth() - 70) / cols, (getHeight() - 70) / rows);
             int startX = (getWidth() - cols * cell) / 2;
             int startY = (getHeight() - rows * cell) / 2;
 
+            drawMapTiles(g2, map, rows, cols, cell, startX, startY);
+            drawRoadDetails(g2, map, rows, cols, cell, startX, startY);
+            drawTrafficCars(g2, cell, startX, startY);
+            drawSnowplow(
+                    g2,
+                    startX + gameController.getPlayerCol() * cell,
+                    startY + gameController.getPlayerRow() * cell,
+                    cell
+            );
+            drawLegend(g2);
+
+            g2.dispose();
+        }
+
+        private void drawSnowyBackground(Graphics2D g2) {
+            g2.setColor(new Color(235, 247, 255, 22));
+
+            for (int i = 0; i < 45; i++) {
+                int x = (i * 47 + 23) % Math.max(1, getWidth());
+                int y = (i * 31 + 17) % Math.max(1, getHeight());
+                int size = 2 + (i % 3);
+
+                g2.fillOval(x, y, size, size);
+            }
+        }
+
+        private void drawMapTiles(Graphics2D g2, int[][] map, int rows, int cols, int cell, int startX, int startY) {
             for (int r = 0; r < rows; r++) {
                 for (int c = 0; c < cols; c++) {
                     int x = startX + c * cell;
                     int y = startY + r * cell;
-                    switch (map[r][c]) {
-                        case 0 -> g2.setColor(new Color(34, 55, 70));
-                        case 1 -> g2.setColor(new Color(115, 130, 145));
-                        case 2 -> g2.setColor(new Color(230, 240, 245));
-                        case 3 -> g2.setColor(new Color(150, 210, 235));
-                        case 4 -> g2.setColor(new Color(226, 232, 116));
-                        default -> g2.setColor(Color.GRAY);
+
+                    if (map[r][c] == 0) {
+                        g2.setColor(new Color(221, 236, 244, 105));
+                        g2.fillRoundRect(x + 2, y + 2, cell - 4, cell - 4, 14, 14);
+
+                        g2.setColor(new Color(255, 255, 255, 35));
+                        g2.fillOval(
+                                x + cell / 4,
+                                y + cell / 4,
+                                Math.max(3, cell / 7),
+                                Math.max(3, cell / 7)
+                        );
                     }
-                    g2.fillRoundRect(x + 3, y + 3, cell - 6, cell - 6, 12, 12);
-                    g2.setColor(new Color(0, 0, 0, 70));
-                    g2.drawRoundRect(x + 3, y + 3, cell - 6, cell - 6, 12, 12);
                 }
             }
-
-            int pr = gameController.getPlayerRow();
-            int pc = gameController.getPlayerCol();
-            int px = startX + pc * cell;
-            int py = startY + pr * cell;
-            g2.setColor(new Color(238, 134, 149));
-            g2.fillOval(px + 8, py + 8, cell - 16, cell - 16);
-            g2.setColor(Color.WHITE);
-            g2.setFont(new Font("SansSerif", Font.BOLD, Math.max(12, cell / 4)));
-            g2.drawString("P", px + cell / 2 - 5, py + cell / 2 + 5);
-
-            g2.setColor(Color.WHITE);
-            g2.setFont(new Font("SansSerif", Font.BOLD, 13));
-            g2.drawString("Szürke: út | Fehér: hó | Kék: jég | Sárga: terminál/cél", 25, getHeight() - 18);
-            g2.dispose();
         }
-    }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            CleanerRole role = new CleanerRole("Cleaner-1", 300, new Snowplow("1", new Lane(), 10, new SweeperHead()));
-            java.util.List<Buyable> l = new ArrayList<>();
-            l.add(new SaltSpreaderHead());
-            l.add(new GravelSpreaderHead());
-            l.add(new IcebreakerHead());
-            l.add(new ThrowerHead());
-            l.add(new SweeperHead());
-            l.add(new DragonHead());
-            Store store = new Store(l);
-            GameScreen screen = new GameScreen(role, store);
-            screen.setVisible(true);
-        });
+        private void drawRoadDetails(Graphics2D g2, int[][] map, int rows, int cols, int cell, int startX, int startY) {
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < cols; c++) {
+                    if (map[r][c] == 0) continue;
+
+                    int x = startX + c * cell;
+                    int y = startY + r * cell;
+
+                    if (map[r][c] == 4) {
+                        g2.setColor(new Color(218, 223, 88));
+                        g2.fillRoundRect(x + 4, y + 4, cell - 8, cell - 8, 14, 14);
+
+                        g2.setColor(new Color(76, 82, 58));
+                        g2.setStroke(new BasicStroke(2f));
+                        g2.drawRoundRect(x + 5, y + 5, cell - 10, cell - 10, 14, 14);
+
+                        g2.setFont(new Font("SansSerif", Font.BOLD, Math.max(11, cell / 4)));
+                        g2.drawString("D", x + cell / 2 - 5, y + cell / 2 + 5);
+                        continue;
+                    }
+
+                    g2.setColor(new Color(78, 88, 101));
+                    g2.fillRoundRect(x + 3, y + 3, cell - 6, cell - 6, 12, 12);
+
+                    boolean north = r > 0 && map[r - 1][c] != 0;
+                    boolean south = r < rows - 1 && map[r + 1][c] != 0;
+                    boolean west = c > 0 && map[r][c - 1] != 0;
+                    boolean east = c < cols - 1 && map[r][c + 1] != 0;
+
+                    g2.setColor(new Color(70, 80, 92));
+
+                    if (north) g2.fillRect(x + cell / 3, y, cell / 3, cell / 2);
+                    if (south) g2.fillRect(x + cell / 3, y + cell / 2, cell / 3, cell / 2);
+                    if (west) g2.fillRect(x, y + cell / 3, cell / 2, cell / 3);
+                    if (east) g2.fillRect(x + cell / 2, y + cell / 3, cell / 2, cell / 3);
+
+                    g2.setStroke(new BasicStroke(2f));
+                    g2.setColor(new Color(205, 210, 168, 135));
+
+                    if (east || west) {
+                        g2.drawLine(x + 8, y + cell / 2, x + cell - 8, y + cell / 2);
+                    } else if (north || south) {
+                        g2.drawLine(x + cell / 2, y + 8, x + cell / 2, y + cell - 8);
+                    }
+
+                    if (map[r][c] == 2) {
+                        g2.setColor(new Color(245, 251, 255, 210));
+                        g2.fillRoundRect(x + 7, y + 7, cell - 14, cell - 14, 10, 10);
+
+                        g2.setColor(new Color(205, 222, 235));
+                        g2.drawString("❄", x + cell / 2 - 5, y + cell / 2 + 6);
+                    } else if (map[r][c] == 3) {
+                        g2.setColor(new Color(125, 204, 232, 185));
+                        g2.fillRoundRect(x + 7, y + 7, cell - 14, cell - 14, 10, 10);
+
+                        g2.setColor(new Color(230, 250, 255, 190));
+                        g2.drawLine(x + 10, y + cell - 12, x + cell - 10, y + 10);
+                    }
+                }
+            }
+        }
+
+        private void drawTrafficCars(Graphics2D g2, int cell, int startX, int startY) {
+            if (gameController.getTrafficCars() == null) return;
+
+            for (GameController.TrafficCar car : gameController.getTrafficCars()) {
+                int x = startX + car.getCol() * cell;
+                int y = startY + car.getRow() * cell;
+                int pad = Math.max(7, cell / 6);
+
+                g2.setColor(new Color(37, 42, 55, 110));
+                g2.fillOval(x + pad, y + cell - pad, cell - 2 * pad, Math.max(5, cell / 8));
+
+                g2.setColor(new Color(72, 167, 220));
+                g2.fillRoundRect(x + pad, y + cell / 3, cell - 2 * pad, cell / 3, 10, 10);
+
+                g2.setColor(new Color(176, 222, 245));
+                g2.fillRoundRect(x + pad + 5, y + cell / 3 + 3, cell / 3, cell / 7, 5, 5);
+
+                g2.setColor(new Color(20, 24, 30));
+                g2.fillOval(x + pad + 3, y + cell / 2 + 8, Math.max(5, cell / 8), Math.max(5, cell / 8));
+                g2.fillOval(x + cell - pad - 9, y + cell / 2 + 8, Math.max(5, cell / 8), Math.max(5, cell / 8));
+            }
+        }
+
+        private void drawSnowplow(Graphics2D g2, int x, int y, int cell) {
+            int pad = Math.max(5, cell / 8);
+
+            g2.setColor(new Color(30, 35, 45, 120));
+            g2.fillOval(x + pad, y + cell - pad, cell - 2 * pad, Math.max(6, cell / 7));
+
+            g2.setColor(new Color(206, 60, 72));
+            g2.fillRoundRect(x + pad, y + cell / 3, cell - 2 * pad, cell / 3, 12, 12);
+
+            g2.setColor(new Color(242, 151, 58));
+            g2.fillRoundRect(x + cell / 3, y + cell / 5, cell / 3, cell / 4, 8, 8);
+
+            g2.setColor(new Color(185, 230, 245));
+            g2.fillRoundRect(x + cell / 3 + 4, y + cell / 5 + 4, cell / 3 - 8, cell / 8, 5, 5);
+
+            Polygon blade = new Polygon();
+            blade.addPoint(x + cell - pad, y + cell / 3);
+            blade.addPoint(x + cell - 2, y + cell / 2);
+            blade.addPoint(x + cell - pad, y + 2 * cell / 3);
+
+            g2.setColor(new Color(235, 238, 240));
+            g2.fillPolygon(blade);
+
+            g2.setColor(new Color(110, 120, 130));
+            g2.drawPolygon(blade);
+
+            g2.setColor(new Color(28, 31, 38));
+            int wheel = Math.max(6, cell / 7);
+
+            g2.fillOval(x + pad + 3, y + cell / 2 + 9, wheel, wheel);
+            g2.fillOval(x + cell - pad - wheel - 3, y + cell / 2 + 9, wheel, wheel);
+
+            g2.setColor(Color.WHITE);
+            g2.setFont(new Font("SansSerif", Font.BOLD, Math.max(10, cell / 5)));
+            g2.drawString("P", x + cell / 2 - 4, y + cell / 2 + 6);
+        }
+
+        private void drawLegend(Graphics2D g2) {
+            g2.setColor(new Color(255, 255, 255, 215));
+            g2.setFont(new Font("SansSerif", Font.BOLD, 13));
+            g2.drawString(
+                    "Depó: sárga | Hó: fehér | Jég: kék | Autók: automatikus forgalom",
+                    25,
+                    getHeight() - 18
+            );
+        }
     }
 }
