@@ -24,6 +24,7 @@ public class GameScreen extends JFrame {
 
     private Role role;
     private GameController gameController;
+    private String TEXT_COLOR = "#E2E874";
 
     public GameScreen(Role role, Store store) {
         this.role = role;
@@ -65,7 +66,7 @@ public class GameScreen extends JFrame {
         centerPanel.add(boardPanel, BorderLayout.CENTER);
 
         statusLabel = new JLabel("Nyomd meg a START gombot. Mozgás: WASD / nyilak, takarítás: C.");
-        statusLabel.setForeground(Color.decode("#E2E874"));
+        statusLabel.setForeground(Color.decode(TEXT_COLOR));
         statusLabel.setFont(new Font("SansSerif", Font.BOLD, 15));
         statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -78,7 +79,7 @@ public class GameScreen extends JFrame {
         rightPanel.setPreferredSize(new Dimension(270, 0));
         rightPanel.setBorder(BorderFactory.createEmptyBorder(30, 20, 20, 20));
 
-        StyledButton startBtn = new StyledButton("START", 200, 45, Color.decode("#E2E874"));
+        StyledButton startBtn = new StyledButton("START", 200, 45, Color.decode(TEXT_COLOR));
         startBtn.addActionListener(e -> {
             if (gameController != null) {
                 gameController.startGame();
@@ -86,7 +87,7 @@ public class GameScreen extends JFrame {
             requestFocusInWindow();
         });
 
-        StyledButton cleanBtn = new StyledButton("CLEAN", 200, 45, Color.decode("#E2E874"));
+        StyledButton cleanBtn = new StyledButton("CLEAN", 200, 45, Color.decode(TEXT_COLOR));
         cleanBtn.addActionListener(e -> {
             if (gameController != null) {
                 gameController.cleanCurrentTile();
@@ -94,7 +95,7 @@ public class GameScreen extends JFrame {
             requestFocusInWindow();
         });
 
-        StyledButton resetBtn = new StyledButton("RESET", 200, 45, Color.decode("#E2E874"));
+        StyledButton resetBtn = new StyledButton("RESET", 200, 45, Color.decode(TEXT_COLOR));
         resetBtn.addActionListener(e -> {
             if (gameController != null) {
                 gameController.restartGame();
@@ -102,7 +103,7 @@ public class GameScreen extends JFrame {
             requestFocusInWindow();
         });
 
-        StyledButton upgradeBtn = new StyledButton("UPGRADE", 200, 45, Color.decode("#E2E874"));
+        StyledButton upgradeBtn = new StyledButton("UPGRADE", 200, 45, Color.decode(TEXT_COLOR));
         upgradeBtn.addActionListener(e -> {
             if (gameController != null) {
                 gameController.upgradePlow();
@@ -110,21 +111,21 @@ public class GameScreen extends JFrame {
             requestFocusInWindow();
         });
 
-        StyledButton storeBtn = new StyledButton("STORE", 200, 45, Color.decode("#E2E874"));
+        StyledButton storeBtn = new StyledButton("STORE", 200, 45, Color.decode(TEXT_COLOR));
         storeBtn.addActionListener(e -> {
             if (gameController != null) {
                 gameController.openStore();
             }
         });
 
-        StyledButton settingsBtn = new StyledButton("SETTINGS", 200, 45, Color.decode("#E2E874"));
+        StyledButton settingsBtn = new StyledButton("SETTINGS", 200, 45, Color.decode(TEXT_COLOR));
         settingsBtn.addActionListener(e -> {
             if (gameController != null) {
                 gameController.openSettings();
             }
         });
 
-        StyledButton menuBtn = new StyledButton("MENU", 200, 45, Color.decode("#E2E874"));
+        StyledButton menuBtn = new StyledButton("MENU", 200, 45, Color.decode(TEXT_COLOR));
         menuBtn.addActionListener(e -> {
             if (gameController != null) {
                 gameController.openMenu();
