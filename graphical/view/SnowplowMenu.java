@@ -18,8 +18,7 @@ public class SnowplowMenu extends JFrame {
         // 1. Háttér panel (kép betöltése vagy sötétszürke háttér)
         //BackgroundPanel backgroundPanel = new BackgroundPanel("graphical/pixel_art_large-3.png"); // Ide ird a képed nevét!
         
-        BackgroundPanel backgroundPanel = new BackgroundPanel("pixel_art_large-3.png"); // Ide ird a képed nevét!
-        System.out.println("Itt keresek: " + System.getProperty("user.dir"));
+        BackgroundPanel backgroundPanel = new BackgroundPanel("pixel_art_large-3.png");
         backgroundPanel.setLayout(new GridBagLayout()); // A középre igazításhoz
 
         // 2. Középső áttetsző, lekerekített kékes-szürke panel

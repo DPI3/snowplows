@@ -121,18 +121,18 @@ public class GameController {
         if (action == null) return;
 
         switch (action) {
-            case MOVE_UP -> movePlayer(-1, 0);
-            case MOVE_DOWN -> movePlayer(1, 0);
-            case MOVE_LEFT -> movePlayer(0, -1);
-            case MOVE_RIGHT -> movePlayer(0, 1);
-            case STOP -> vehicleController.stopMovement();
-            case OPEN_STORE -> openStore();
-            case OPEN_SETTINGS -> openSettings();
-            case OPEN_MENU, CANCEL -> openMenu();
-            case PAUSE -> togglePause();
-            case CHANGE_HEAD -> cleanAroundPlayer();
-            case CONFIRM -> confirm();
-            case RESTART -> restartGame();
+            case MOVE_UP: movePlayer(-1, 0); break;
+            case MOVE_DOWN: movePlayer(1, 0); break;
+            case MOVE_LEFT: movePlayer(0, -1); break;
+            case MOVE_RIGHT: movePlayer(0, 1); break;
+            case STOP: vehicleController.stopMovement(); break;
+            case OPEN_STORE: openStore(); break;
+            case OPEN_SETTINGS: openSettings(); break;
+            case OPEN_MENU: case CANCEL: openMenu(); break;
+            case PAUSE: togglePause(); break;
+            case CHANGE_HEAD: cleanAroundPlayer(); break;
+            case CONFIRM: confirm(); break;
+            case RESTART: restartGame(); break;
         }
 
         refreshView();
@@ -420,16 +420,16 @@ public class GameController {
     private void rewardCleaner(int amount) {
         Role role = gameScreen.getRole();
 
-        if (role instanceof CleanerRole cleanerRole) {
-            cleanerRole.changeMoney(amount);
+        if (role instanceof CleanerRole) {
+            ((CleanerRole) role).changeMoney(amount);
         }
     }
 
     private void chargeCleaner(int amount) {
         Role role = gameScreen.getRole();
 
-        if (role instanceof CleanerRole cleanerRole) {
-            cleanerRole.changeMoney(-amount);
+        if (role instanceof CleanerRole) {
+            ((CleanerRole) role).changeMoney(-amount);
         }
     }
 
@@ -444,7 +444,8 @@ public class GameController {
 
         Role role = gameScreen.getRole();
 
-        if (role instanceof CleanerRole cleanerRole) {
+        if (role instanceof CleanerRole) {
+            CleanerRole cleanerRole = (CleanerRole) role;
             if (cleanerRole.getMoney() < price) {
                 message = "Nincs elég pénz a fejlesztéshez. Ár: " + price;
                 refreshView();

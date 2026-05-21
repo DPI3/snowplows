@@ -44,8 +44,8 @@ public class Main {
         java.util.List<Vehicle> vehicles = new java.util.ArrayList<>();
         java.util.List<Player> players = new java.util.ArrayList<>();
 
-        if (role instanceof CleanerRole cleanerRole) {
-            vehicles.add(cleanerRole.getSnowplow());
+        if (role instanceof CleanerRole) {
+            vehicles.add(((CleanerRole) role).getSnowplow());
         }
         players.add(new Player(1, "Player", role));
 

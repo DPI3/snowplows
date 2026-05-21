@@ -28,12 +28,12 @@ public class MouseController implements MouseListener, MouseMotionListener {
         }
 
         switch (name.toUpperCase()) {
-            case "STORE" -> controller.openStore();
-            case "SETTINGS" -> controller.openSettings();
-            case "MENU" -> controller.openMenu();
-            case "CHANGE" -> controller.changeHead();
-            case "PAUSE" -> controller.togglePause();
-            default -> controller.confirm();
+            case "STORE": controller.openStore(); break;
+            case "SETTINGS": controller.openSettings(); break;
+            case "MENU": controller.openMenu(); break;
+            case "CHANGE": controller.changeHead(); break;
+            case "PAUSE": controller.togglePause(); break;
+            default: controller.confirm(); break;
         }
     }
 

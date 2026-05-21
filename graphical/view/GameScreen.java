@@ -219,20 +219,25 @@ public class GameScreen extends JFrame {
     public void moneyChanged() {
         if (moneyTopPill == null || role == null) return;
 
-        if (role instanceof CleanerRole c) {
-            moneyTopPill.setText(Integer.toString(c.getMoney()));
+        if (role instanceof CleanerRole) {
+            moneyTopPill.setText(Integer.toString(((CleanerRole) role).getMoney()));
         }
 
-        if (role instanceof BusdriverRole b) {
-            moneyTopPill.setText(Integer.toString(b.getMoney()));
+        if (role instanceof BusdriverRole) {
+            moneyTopPill.setText(Integer.toString(((BusdriverRole) role).getMoney()));
         }
     }
 
     public void headChanged() {
         if (infoBox == null) return;
 
-        if (role instanceof CleanerRole c && c.getSnowplow() != null && c.getSnowplow().getCurrentHead() != null) {
-            infoBox.setCurrentHeadLabel(c.getSnowplow().getCurrentHead().getClass().getSimpleName());
+        if (role instanceof CleanerRole) {
+            CleanerRole c = (CleanerRole) role;
+            if (c.getSnowplow() != null && c.getSnowplow().getCurrentHead() != null) {
+                infoBox.setCurrentHeadLabel(c.getSnowplow().getCurrentHead().getClass().getSimpleName());
+            } else {
+                infoBox.setCurrentHeadLabel("DEFAULT");
+            }
         } else {
             infoBox.setCurrentHeadLabel("DEFAULT");
         }

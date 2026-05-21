@@ -1,11 +1,12 @@
 package controller;
 
+import java.util.HashMap;
 import java.util.Map;
 import javax.sound.sampled.Clip;
 
 public class SoundManager {
     private Clip backgroundMusic;
-    private Map<String, Clip> soundEffects;
+    private Map<String, Clip> soundEffects = new HashMap<>();
 
     public void playMusic(String id) {
         if (backgroundMusic != null && backgroundMusic.isRunning()) {

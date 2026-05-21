@@ -19,10 +19,10 @@ public class StorePanel extends JPanel {
     private void buy(StoreColumnPanel itemCol, StoreController controller){
         java.util.List<String> selectedItems = new java.util.ArrayList<>();
                 for (Component c : itemCol.getItemsContainer().getComponents()) {
-                    if (c instanceof ItemRow row) {
-                        int amount = row.getAmount();
+                    if (c instanceof ItemRow) {
+                        int amount = ((ItemRow) c).getAmount();
                         for(int i=0; i<amount;i++){
-                            selectedItems.add(row.getItemName());
+                            selectedItems.add(((ItemRow) c).getItemName());
                         }
                     }
                 }
@@ -36,8 +36,8 @@ public class StorePanel extends JPanel {
 
 
                 for (Component c : itemCol.getItemsContainer().getComponents()) {
-                    if (c instanceof ItemRow row) {
-                        row.ClearSpinner();
+                    if (c instanceof ItemRow) {
+                        ((ItemRow) c).ClearSpinner();
                     }
                 }
     }
