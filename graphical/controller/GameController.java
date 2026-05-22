@@ -3,6 +3,7 @@ package controller;
 import controller.GameController.TrafficCar;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import src.*;
 import view.GameScreen;
 
@@ -16,8 +17,8 @@ public class GameController {
     private ScreenController screenController;
     private boolean running;
 
-    private static final int ROWS = 11;
-    private static final int COLS = 15;
+    private static final int ROWS = 40;
+    private static final int COLS = 60;
 
     private static final int FIELD = 0;
     private static final int ROAD = 1;
@@ -33,9 +34,13 @@ public class GameController {
     private final List<TrafficCar> trafficCars = new ArrayList<>();
 
     private boolean busMode = false;
+    private final Random random = new Random();
+
     private int roundDurationSeconds = 300;
     private int remainingSeconds = 300;
     private long lastSecondUpdate = System.currentTimeMillis();
+
+    private int weatherCounter = 0;
 
     private static final int START_ROW = 5;
     private static final int START_COL = 1;
@@ -121,9 +126,16 @@ public class GameController {
             remainingSeconds--;
 
             if (remainingSeconds <= 0) {
-                toggleGameMode();
-                return;
+                game.setCurrentRound(game.getRound() + 1);
+                remainingSeconds = roundDurationSeconds;
             }
+        }
+
+        weatherCounter++;
+
+        if (weatherCounter >= 8) {
+            weatherCounter = 0;
+            randomWeatherChange();
         }
 
         moveTrafficCars();
@@ -184,38 +196,42 @@ public class GameController {
     }
 
     private void buildPlayableMap() {
+        totalDirtyTiles = 0;
+
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
                 roadMap[r][c] = FIELD;
             }
         }
 
-        markHorizontalRoad(5, 1, 13);
-        markVerticalRoad(3, 2, 8);
-        markVerticalRoad(11, 2, 8);
-        markHorizontalRoad(2, 3, 11);
-        markHorizontalRoad(8, 3, 11);
+        // vízszintes 2x2-es utak
+        markHorizontalRoad(6, 2, 55);
+        markHorizontalRoad(15, 4, 52);
+        markHorizontalRoad(25, 2, 57);
+        markHorizontalRoad(34, 5, 55);
 
-        roadMap[START_ROW][START_COL] = DEPOT;
+        // függőleges 2x2-es utak
+        markVerticalRoad(8, 4, 35);
+        markVerticalRoad(22, 4, 35);
+        markVerticalRoad(38, 4, 35);
+        markVerticalRoad(52, 6, 35);
+
+        // összekötő rövid szakaszok
+        markHorizontalRoad(10, 8, 22);
+        markHorizontalRoad(20, 22, 38);
+        markHorizontalRoad(30, 38, 52);
+
+        playerRow = 6;
+        playerCol = 2;
+
+        targetRow = 34;
+        targetCol = 55;
+
+        roadMap[playerRow][playerCol] = DEPOT;
         roadMap[targetRow][targetCol] = DEPOT;
 
-        roadMap[2][6] = TUNNEL;
-        roadMap[2][7] = TUNNEL;
-        roadMap[8][6] = BRIDGE;
-        roadMap[8][7] = BRIDGE;
-
-        addDirtyTile(5, 5, SNOW);
-        addDirtyTile(5, 6, SNOW);
-        addDirtyTile(4, 6, SNOW);
-        addDirtyTile(3, 11, SNOW);
-        addDirtyTile(6, 6, SNOW);
-        addDirtyTile(7, 9, SNOW);
-
-        addDirtyTile(6, 9, ICE);
-        addDirtyTile(8, 5, ICE);
-        addDirtyTile(5, 10, ICE);
-        addDirtyTile(2, 4, ICE);
-        addDirtyTile(4, 8, ICE);
+        placeRandomTunnelsAndBridges();
+        addInitialSnowAndIce();
     }
 
     private void markRoad(int r, int c) {
@@ -241,12 +257,74 @@ public class GameController {
     }
 
     private void addDirtyTile(int r, int c, int type) {
-        if (roadMap[r][c] == TUNNEL || roadMap[r][c] == BRIDGE) {
-            return;
+        if (roadMap[r][c] == ROAD) {
+            roadMap[r][c] = type;
+            totalDirtyTiles++;
+        }
+    }
+
+    private int[] getRandomRoadCell() {
+        for (int i = 0; i < 500; i++) {
+            int r = random.nextInt(ROWS);
+            int c = random.nextInt(COLS);
+
+            if (roadMap[r][c] == ROAD) {
+                return new int[]{r, c};
+            }
         }
 
-        roadMap[r][c] = type;
-        totalDirtyTiles++;
+        return null;
+    }
+
+    private void placeRandomTunnelsAndBridges() {
+        int placedTunnel = 0;
+        int placedBridge = 0;
+
+        while (placedTunnel < 8) {
+            int[] p = getRandomRoadCell();
+
+            if (p != null && roadMap[p[0]][p[1]] == ROAD) {
+                roadMap[p[0]][p[1]] = TUNNEL;
+                placedTunnel++;
+            }
+        }
+
+        while (placedBridge < 8) {
+            int[] p = getRandomRoadCell();
+
+            if (p != null && roadMap[p[0]][p[1]] == ROAD) {
+                roadMap[p[0]][p[1]] = BRIDGE;
+                placedBridge++;
+            }
+        }
+    }
+
+    private void addInitialSnowAndIce() {
+        for (int i = 0; i < 35; i++) {
+            int[] p = getRandomRoadCell();
+
+            if (p != null) {
+                addDirtyTile(p[0], p[1], random.nextBoolean() ? SNOW : ICE);
+            }
+        }
+    }
+
+    private void randomWeatherChange() {
+        for (int i = 0; i < 4; i++) {
+            int[] p = getRandomRoadCell();
+
+            if (p == null) continue;
+
+            int r = p[0];
+            int c = p[1];
+
+            if (roadMap[r][c] == ROAD) {
+                roadMap[r][c] = random.nextInt(100) < 70 ? SNOW : ICE;
+                totalDirtyTiles++;
+            }
+        }
+
+        message = "Időjárás: új hó vagy jég jelent meg a pályán.";
     }
 
     private void resetTrafficCars() {
@@ -337,6 +415,19 @@ public class GameController {
         return false;
     }
 
+    private boolean isDriveable(int r, int c) {
+        if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return false;
+
+        int tile = roadMap[r][c];
+
+        return tile == ROAD
+                || tile == DEPOT
+                || tile == TUNNEL
+                || tile == BRIDGE
+                || tile == SNOW
+                || tile == ICE;
+    }
+
     private void movePlayer(int dr, int dc) {
         if (!running) {
             message = "A játék nem fut. Nyomd meg a START gombot.";
@@ -351,8 +442,8 @@ public class GameController {
             return;
         }
 
-        if (roadMap[nr][nc] == FIELD) {
-            message = "Csak az úton haladhatsz.";
+        if (!isDriveable(nr, nc)) {
+            message = "Csak az úton, hídon vagy alagútban haladhatsz.";
             return;
         }
 
@@ -511,9 +602,26 @@ public class GameController {
         if (busMode) {
             if (playerRow == targetRow && playerCol == targetCol) {
                 completedJobs++;
-                message = "Busz mód teljesítve. Váltás Snowplow módra.";
-                toggleGameMode();
+
+                int[] newPlayer = getRandomRoadCell();
+                int[] newTarget = getRandomRoadCell();
+
+                if (newPlayer != null && newTarget != null) {
+                    playerRow = newPlayer[0];
+                    playerCol = newPlayer[1];
+
+                    if (roadMap[targetRow][targetCol] == DEPOT) {
+                        roadMap[targetRow][targetCol] = ROAD;
+                    }
+
+                    targetRow = newTarget[0];
+                    targetCol = newTarget[1];
+                    roadMap[targetRow][targetCol] = DEPOT;
+                }
+
+                message = "Busz cél teljesítve. Új indulási hely és új célállomás kijelölve.";
             }
+
             return;
         }
 
@@ -704,7 +812,7 @@ public class GameController {
     }
 
     public void setCarCount(int count) {
-        configuredCarCount = Math.max(0, Math.min(6, count));
+        configuredCarCount = Math.max(0, Math.min(30, count));
         resetTrafficCars();
         message = "Autók száma beállítva: " + configuredCarCount + ".";
         refreshView();
@@ -817,7 +925,10 @@ public class GameController {
     public void setRoundDurationSeconds(int seconds) {
         roundDurationSeconds = Math.max(30, seconds);
         remainingSeconds = roundDurationSeconds;
+        message = "Kör ideje beállítva: " + (roundDurationSeconds / 60) + " perc.";
+        refreshView();
     }
+
 
     public int getCurrentRoundForDisplay() {
         return game.getRound();

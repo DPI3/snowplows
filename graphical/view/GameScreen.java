@@ -269,8 +269,14 @@ public class GameScreen extends JFrame {
         int sec = seconds % 60;
 
         if (roundTopPill != null) {
+            int round = 0;
+
+            if (gameController != null) {
+                round = gameController.getCurrentRoundForDisplay();
+            }
+
             roundTopPill.setText(String.format("Kör: %d | Idő: %02d:%02d",
-                    gameController.getCurrentRoundForDisplay(),
+                    round,
                     min,
                     sec));
         }
@@ -328,9 +334,19 @@ public class GameScreen extends JFrame {
             int rows = map.length;
             int cols = map[0].length;
 
-            int cell = Math.min((getWidth() - 70) / cols, (getHeight() - 70) / rows);
-            int startX = (getWidth() - cols * cell) / 2;
-            int startY = (getHeight() - rows * cell) / 2;
+            int cell = 42;
+
+            int visibleCols = Math.max(1, (getWidth() - 70) / cell);
+            int visibleRows = Math.max(1, (getHeight() - 90) / cell);
+
+            int cameraCol = gameController.getPlayerCol() - visibleCols / 2;
+            int cameraRow = gameController.getPlayerRow() - visibleRows / 2;
+
+            cameraCol = Math.max(0, Math.min(cameraCol, cols - visibleCols));
+            cameraRow = Math.max(0, Math.min(cameraRow, rows - visibleRows));
+
+            int startX = 25 - cameraCol * cell;
+            int startY = 25 - cameraRow * cell;
 
             drawMapTiles(g2, map, rows, cols, cell, startX, startY);
             drawRoadDetails(g2, map, rows, cols, cell, startX, startY);
@@ -352,6 +368,7 @@ public class GameScreen extends JFrame {
                 );
             }
 
+            drawMiniMap(g2, map, rows, cols);
             drawMissionOverlay(g2);
             drawLegend(g2);
 
@@ -371,10 +388,16 @@ public class GameScreen extends JFrame {
         }
 
         private void drawMapTiles(Graphics2D g2, int[][] map, int rows, int cols, int cell, int startX, int startY) {
+            Rectangle clip = g2.getClipBounds();
+
             for (int r = 0; r < rows; r++) {
                 for (int c = 0; c < cols; c++) {
                     int x = startX + c * cell;
                     int y = startY + r * cell;
+
+                    if (x + cell < 0 || y + cell < 0 || x > getWidth() || y > getHeight()) {
+                        continue;
+                    }
 
                     if (map[r][c] == 0) {
                         g2.setColor(new Color(221, 236, 244, 105));
@@ -399,6 +422,10 @@ public class GameScreen extends JFrame {
 
                     int x = startX + c * cell;
                     int y = startY + r * cell;
+
+                    if (x + cell < 0 || y + cell < 0 || x > getWidth() || y > getHeight()) {
+                        continue;
+                    }
 
                     if (map[r][c] == 4) {
                         drawDepot(g2, x, y, cell);
@@ -480,29 +507,26 @@ public class GameScreen extends JFrame {
         }
 
         private void drawTunnel(Graphics2D g2, int x, int y, int cell) {
-            g2.setColor(new Color(45, 45, 55));
+            g2.setColor(new Color(35, 35, 45));
             g2.fillRoundRect(x + 3, y + 3, cell - 6, cell - 6, 12, 12);
 
-            g2.setColor(new Color(20, 20, 25));
-            g2.fillArc(x + 8, y + 8, cell - 16, cell - 8, 0, 180);
-
             g2.setColor(Color.WHITE);
-            g2.setFont(new Font("SansSerif", Font.BOLD, Math.max(10, cell / 5)));
-            g2.drawString("T", x + cell / 2 - 4, y + cell / 2 + 8);
+            g2.setFont(new Font("SansSerif", Font.BOLD, Math.max(11, cell / 4)));
+            g2.drawString("T", x + cell / 2 - 5, y + cell / 2 + 6);
         }
 
         private void drawBridge(Graphics2D g2, int x, int y, int cell) {
-            g2.setColor(new Color(95, 105, 115));
+            g2.setColor(new Color(135, 95, 55));
             g2.fillRoundRect(x + 3, y + 3, cell - 6, cell - 6, 12, 12);
 
-            g2.setColor(new Color(150, 95, 55));
+            g2.setColor(new Color(230, 230, 230));
             g2.setStroke(new BasicStroke(3f));
-            g2.drawLine(x + 8, y + 10, x + cell - 8, y + 10);
-            g2.drawLine(x + 8, y + cell - 10, x + cell - 8, y + cell - 10);
+            g2.drawLine(x + 7, y + 10, x + cell - 7, y + 10);
+            g2.drawLine(x + 7, y + cell - 10, x + cell - 7, y + cell - 10);
 
             g2.setColor(Color.WHITE);
-            g2.setFont(new Font("SansSerif", Font.BOLD, Math.max(10, cell / 5)));
-            g2.drawString("H", x + cell / 2 - 4, y + cell / 2 + 8);
+            g2.setFont(new Font("SansSerif", Font.BOLD, Math.max(11, cell / 4)));
+            g2.drawString("H", x + cell / 2 - 5, y + cell / 2 + 6);
         }
 
         private void drawTrafficCars(Graphics2D g2, int cell, int startX, int startY) {
@@ -614,6 +638,66 @@ public class GameScreen extends JFrame {
                     25,
                     getHeight() - 18
             );
+        }
+
+        private void drawMiniMap(Graphics2D g2, int[][] map, int rows, int cols) {
+            int miniW = 210;
+            int miniH = 140;
+            int x0 = 18;
+            int y0 = getHeight() - miniH - 38;
+
+            g2.setColor(new Color(0, 0, 0, 145));
+            g2.fillRoundRect(x0 - 8, y0 - 8, miniW + 16, miniH + 16, 16, 16);
+
+            double cellW = miniW / (double) cols;
+            double cellH = miniH / (double) rows;
+
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < cols; c++) {
+                    int tile = map[r][c];
+
+                    if (tile == 0) {
+                        g2.setColor(new Color(210, 225, 235));
+                    } else if (tile == 1) {
+                        g2.setColor(new Color(80, 90, 100));
+                    } else if (tile == 2) {
+                        g2.setColor(Color.WHITE);
+                    } else if (tile == 3) {
+                        g2.setColor(new Color(90, 190, 230));
+                    } else if (tile == 4) {
+                        g2.setColor(new Color(220, 220, 70));
+                    } else if (tile == 5) {
+                        g2.setColor(new Color(35, 35, 45));
+                    } else if (tile == 6) {
+                        g2.setColor(new Color(150, 100, 60));
+                    } else {
+                        g2.setColor(Color.GRAY);
+                    }
+
+                    int x = x0 + (int) Math.round(c * cellW);
+                    int y = y0 + (int) Math.round(r * cellH);
+                    int w = Math.max(1, (int) Math.ceil(cellW));
+                    int h = Math.max(1, (int) Math.ceil(cellH));
+
+                    g2.fillRect(x, y, w, h);
+                }
+            }
+
+            int px = x0 + (int) Math.round(gameController.getPlayerCol() * cellW);
+            int py = y0 + (int) Math.round(gameController.getPlayerRow() * cellH);
+
+            g2.setColor(Color.RED);
+            g2.fillOval(px - 3, py - 3, 7, 7);
+
+            int tx = x0 + (int) Math.round(gameController.getTargetCol() * cellW);
+            int ty = y0 + (int) Math.round(gameController.getTargetRow() * cellH);
+
+            g2.setColor(Color.GREEN);
+            g2.fillOval(tx - 3, ty - 3, 7, 7);
+
+            g2.setColor(Color.WHITE);
+            g2.setFont(new Font("SansSerif", Font.BOLD, 11));
+            g2.drawString("MINIMAP", x0, y0 - 12);
         }
     }
 }

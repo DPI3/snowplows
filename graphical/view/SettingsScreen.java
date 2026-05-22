@@ -34,8 +34,8 @@ public class SettingsScreen extends JFrame{
         overlayPanel.setBorder(BorderFactory.createEmptyBorder(50, 40, 0, 40)); 
         ItemRow playerCount= new ItemRow("Játékosok száma: ", 250, 50);
         overlayPanel.add(playerCount);
-        ItemRow timeLimit = new ItemRow("Kör ideje percben: ", 250, 50);
-        overlayPanel.add(timeLimit);
+        ItemRow roundTime = new ItemRow("Kör ideje percben: ", 250, 50);
+        overlayPanel.add(roundTime);
         ItemRow carCount= new ItemRow("Autók száma: ", 250, 50);
         overlayPanel.add(carCount);
         
@@ -43,7 +43,7 @@ public class SettingsScreen extends JFrame{
         okButton.addActionListener(
             (e) -> {
                 screenController.getGameController().setPlayerCount(playerCount.getAmount());
-                screenController.getGameController().setRoundDurationSeconds(timeLimit.getAmount() * 60);
+                screenController.getGameController().setRoundDurationSeconds(roundTime.getAmount() * 60);
                 screenController.getGameController().setCarCount(carCount.getAmount());
                 screenController.showMenu();
             }

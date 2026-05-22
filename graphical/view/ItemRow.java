@@ -1,10 +1,8 @@
 package view;
 
-import javax.swing.*;
-
 import controller.AssetManager;
-
 import java.awt.*;
+import javax.swing.*;
 
 /**
      * Egy sor a listában: Rózsaszín címke + Léptető (Spinner)
@@ -41,7 +39,7 @@ import java.awt.*;
             nameTag.add(nameLabel);
 
             // Léptető (JSpinner)
-            spinner = new JSpinner(new SpinnerNumberModel(0, 0, 99, 1));
+            spinner = new JSpinner(new SpinnerNumberModel(5, 0, 99, 1));
             spinner.setPreferredSize(new Dimension(60, 35));
             spinner.setFont(new Font("SansSerif", Font.BOLD, 16));
 
