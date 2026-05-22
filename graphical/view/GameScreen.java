@@ -48,6 +48,16 @@ public class GameScreen extends JFrame {
 
         roundTopPill = new TopPill("Kör: 0", 220, null);
         modeTopPill = new TopPill("SNOWPLOW MODE", 380, null);
+
+        modeTopPill.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (gameController != null) {
+                    gameController.toggleGameMode();
+                }
+            }
+        });
+
         moneyTopPill = new TopPill("", 160, moneyIcon);
 
         topBar.add(roundTopPill);
@@ -230,24 +240,9 @@ public class GameScreen extends JFrame {
     public void roleChanged(Role role) {
         this.role = role;
 
-        if (modeTopPill == null) return;
+        if (modeTopPill == null || gameController == null) return;
 
-        if (role instanceof CleanerRole) {
-            modeTopPill.setText("SNOWPLOW MODE");
-        }
-
-        if (role instanceof BusdriverRole) {
-            modeTopPill.setText("BUS MODE");
-        }
-
-        modeTopPill.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                if (gameController != null) {
-                    gameController.toggleGameMode();
-                }
-            }
-        });
+        modeTopPill.setText(gameController.isBusMode() ? "BUS MODE" : "SNOWPLOW MODE");
     }
 
     public void updateHud(int cleanPercent, int collisions, int completedJobs) {
@@ -269,14 +264,16 @@ public class GameScreen extends JFrame {
         }
     }
 
-    public void updateHud(int cleanPercent, int plowLevel, int collisions, int completedJobs, int upgradePrice) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     public void timeChanged(int seconds) {
         int min = seconds / 60;
         int sec = seconds % 60;
-        roundTopPill.setText(String.format("Idő: %02d:%02d", min, sec));
+
+        if (roundTopPill != null) {
+            roundTopPill.setText(String.format("Kör: %d | Idő: %02d:%02d",
+                    gameController.getCurrentRoundForDisplay(),
+                    min,
+                    sec));
+        }
     }
 
     public void setModeText(String text) {
@@ -339,12 +336,21 @@ public class GameScreen extends JFrame {
             drawRoadDetails(g2, map, rows, cols, cell, startX, startY);
             drawTrafficCars(g2, cell, startX, startY);
 
-            drawSnowplow(
-                    g2,
-                    startX + gameController.getPlayerCol() * cell,
-                    startY + gameController.getPlayerRow() * cell,
-                    cell
-            );
+            if (gameController.isBusMode()) {
+                drawBus(
+                        g2,
+                        startX + gameController.getPlayerCol() * cell,
+                        startY + gameController.getPlayerRow() * cell,
+                        cell
+                );
+            } else {
+                drawSnowplow(
+                        g2,
+                        startX + gameController.getPlayerCol() * cell,
+                        startY + gameController.getPlayerRow() * cell,
+                        cell
+                );
+            }
 
             drawMissionOverlay(g2);
             drawLegend(g2);
@@ -399,6 +405,16 @@ public class GameScreen extends JFrame {
                         continue;
                     }
 
+                    if (map[r][c] == 5) {
+                        drawTunnel(g2, x, y, cell);
+                        continue;
+                    }
+
+                    if (map[r][c] == 6) {
+                        drawBridge(g2, x, y, cell);
+                        continue;
+                    }
+
                     g2.setColor(new Color(78, 88, 101));
                     g2.fillRoundRect(x + 3, y + 3, cell - 6, cell - 6, 12, 12);
 
@@ -414,7 +430,7 @@ public class GameScreen extends JFrame {
                     if (west) g2.fillRect(x, y + cell / 3, cell / 2, cell / 3);
                     if (east) g2.fillRect(x + cell / 2, y + cell / 3, cell / 2, cell / 3);
 
-                    g2.setStroke(new BasicStroke(2f));
+                    g2.setStroke(new BasicStroke(3f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1f, new float[]{8f, 8f}, 0f));
                     g2.setColor(new Color(205, 210, 168, 135));
 
                     if (east || west) {
@@ -461,6 +477,32 @@ public class GameScreen extends JFrame {
             g2.setStroke(new BasicStroke(2f));
             g2.drawLine(x + 10, y + cell - 12, x + cell - 10, y + 10);
             g2.drawLine(x + 14, y + 12, x + cell - 14, y + cell - 12);
+        }
+
+        private void drawTunnel(Graphics2D g2, int x, int y, int cell) {
+            g2.setColor(new Color(45, 45, 55));
+            g2.fillRoundRect(x + 3, y + 3, cell - 6, cell - 6, 12, 12);
+
+            g2.setColor(new Color(20, 20, 25));
+            g2.fillArc(x + 8, y + 8, cell - 16, cell - 8, 0, 180);
+
+            g2.setColor(Color.WHITE);
+            g2.setFont(new Font("SansSerif", Font.BOLD, Math.max(10, cell / 5)));
+            g2.drawString("T", x + cell / 2 - 4, y + cell / 2 + 8);
+        }
+
+        private void drawBridge(Graphics2D g2, int x, int y, int cell) {
+            g2.setColor(new Color(95, 105, 115));
+            g2.fillRoundRect(x + 3, y + 3, cell - 6, cell - 6, 12, 12);
+
+            g2.setColor(new Color(150, 95, 55));
+            g2.setStroke(new BasicStroke(3f));
+            g2.drawLine(x + 8, y + 10, x + cell - 8, y + 10);
+            g2.drawLine(x + 8, y + cell - 10, x + cell - 8, y + cell - 10);
+
+            g2.setColor(Color.WHITE);
+            g2.setFont(new Font("SansSerif", Font.BOLD, Math.max(10, cell / 5)));
+            g2.drawString("H", x + cell / 2 - 4, y + cell / 2 + 8);
         }
 
         private void drawTrafficCars(Graphics2D g2, int cell, int startX, int startY) {
@@ -530,6 +572,28 @@ public class GameScreen extends JFrame {
             g2.setColor(Color.WHITE);
             g2.setFont(new Font("SansSerif", Font.BOLD, Math.max(10, cell / 5)));
             g2.drawString("P", x + cell / 2 - 4, y + cell / 2 + 6);
+        }
+
+        private void drawBus(Graphics2D g2, int x, int y, int cell) {
+            int pad = Math.max(5, cell / 8);
+
+            g2.setColor(new Color(30, 35, 45, 120));
+            g2.fillOval(x + pad, y + cell - pad, cell - 2 * pad, Math.max(6, cell / 7));
+
+            g2.setColor(new Color(245, 184, 55));
+            g2.fillRoundRect(x + pad, y + cell / 4, cell - 2 * pad, cell / 2, 12, 12);
+
+            g2.setColor(new Color(180, 225, 245));
+            g2.fillRoundRect(x + pad + 5, y + cell / 3, cell - 2 * pad - 10, cell / 7, 5, 5);
+
+            g2.setColor(new Color(25, 25, 25));
+            int wheel = Math.max(6, cell / 7);
+            g2.fillOval(x + pad + 4, y + cell / 2 + 10, wheel, wheel);
+            g2.fillOval(x + cell - pad - wheel - 4, y + cell / 2 + 10, wheel, wheel);
+
+            g2.setColor(Color.WHITE);
+            g2.setFont(new Font("SansSerif", Font.BOLD, Math.max(10, cell / 5)));
+            g2.drawString("B", x + cell / 2 - 4, y + cell / 2 + 7);
         }
 
         private void drawMissionOverlay(Graphics2D g2) {
