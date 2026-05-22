@@ -14,10 +14,8 @@ public class GameScreen extends JFrame {
 
     private JLabel statusLabel;
     private JLabel cleanLabel;
-    private JLabel levelLabel;
     private JLabel collisionLabel;
     private JLabel completedLabel;
-    private JLabel upgradeLabel;
 
     private GrayInfoBox infoBox;
     private BoardPanel boardPanel;
@@ -103,14 +101,6 @@ public class GameScreen extends JFrame {
             requestFocusInWindow();
         });
 
-        StyledButton upgradeBtn = new StyledButton("UPGRADE", 200, 45, Color.decode(TEXT_COLOR));
-        upgradeBtn.addActionListener(e -> {
-            if (gameController != null) {
-                gameController.upgradePlow();
-            }
-            requestFocusInWindow();
-        });
-
         StyledButton storeBtn = new StyledButton("STORE", 200, 45, Color.decode(TEXT_COLOR));
         storeBtn.addActionListener(e -> {
             if (gameController != null) {
@@ -138,13 +128,11 @@ public class GameScreen extends JFrame {
         rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         rightPanel.add(resetBtn);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        rightPanel.add(upgradeBtn);
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
         infoBox = new GrayInfoBox();
         infoBox.setChangeAction(e -> {
             if (gameController != null) {
-                gameController.cleanCurrentTile();
+                gameController.showHeadSelector();
             }
             requestFocusInWindow();
         });
@@ -177,20 +165,15 @@ public class GameScreen extends JFrame {
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         cleanLabel = createHudLabel("Tisztítás: 0%");
-        levelLabel = createHudLabel("Szint: 1");
         collisionLabel = createHudLabel("Ütközés: 0");
         completedLabel = createHudLabel("Küldetés: 0");
-        upgradeLabel = createHudLabel("Fejlesztés ára: 150");
 
         panel.add(cleanLabel);
-        panel.add(Box.createRigidArea(new Dimension(0, 5)));
-        panel.add(levelLabel);
         panel.add(Box.createRigidArea(new Dimension(0, 5)));
         panel.add(collisionLabel);
         panel.add(Box.createRigidArea(new Dimension(0, 5)));
         panel.add(completedLabel);
         panel.add(Box.createRigidArea(new Dimension(0, 5)));
-        panel.add(upgradeLabel);
 
         return panel;
     }
@@ -256,14 +239,21 @@ public class GameScreen extends JFrame {
         if (role instanceof BusdriverRole) {
             modeTopPill.setText("BUS MODE");
         }
+
+        modeTopPill.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (gameController != null) {
+                    gameController.toggleGameMode();
+                }
+            }
+        });
     }
 
-    public void updateHud(int cleanPercent, int plowLevel, int collisions, int completedJobs, int upgradePrice) {
+    public void updateHud(int cleanPercent, int collisions, int completedJobs) {
         if (cleanLabel != null) cleanLabel.setText("Tisztítás: " + cleanPercent + "% / 70%");
-        if (levelLabel != null) levelLabel.setText("Szint: " + plowLevel);
         if (collisionLabel != null) collisionLabel.setText("Ütközés: " + collisions);
         if (completedLabel != null) completedLabel.setText("Küldetés: " + completedJobs);
-        if (upgradeLabel != null) upgradeLabel.setText("Fejlesztés ára: " + upgradePrice);
     }
 
     public Role getRole() {
@@ -276,6 +266,22 @@ public class GameScreen extends JFrame {
 
         if (statusLabel != null && gameController != null) {
             statusLabel.setText(gameController.getMessage());
+        }
+    }
+
+    public void updateHud(int cleanPercent, int plowLevel, int collisions, int completedJobs, int upgradePrice) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void timeChanged(int seconds) {
+        int min = seconds / 60;
+        int sec = seconds % 60;
+        roundTopPill.setText(String.format("Idő: %02d:%02d", min, sec));
+    }
+
+    public void setModeText(String text) {
+        if (modeTopPill != null) {
+            modeTopPill.setText(text);
         }
     }
 

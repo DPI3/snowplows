@@ -17,6 +17,8 @@ public class CleanerRole extends Role {
     /** A takarító neve.  */
     private String name;
 
+    private java.util.List<Head> ownedHeads = new java.util.ArrayList<>();
+
      /** A  CleanerRole objektum konstruktora
      * 
      * @param name a takarító neve
@@ -27,6 +29,10 @@ public class CleanerRole extends Role {
         this.name=name;
         this.money = money;
         this.snowplow=snowplow;
+
+        if (snowplow != null && snowplow.getCurrentHead() != null) {
+            ownedHeads.add(snowplow.getCurrentHead());
+        }
     }
 
     public boolean buy(Role role, Buyable item) {
@@ -122,11 +128,12 @@ public class CleanerRole extends Role {
      * @param newHead a takarító által irányított hókotró új feje
      */
     public void addHead(Head newHead) {
+        addOwnedHead(newHead);
         snowplow.changeHead(newHead);
     }
 
     /**
-     * A takarító irányítja a megadott hókotrót.
+     * A takarító irányítja a megadott hókotró
      *
      * @param sp a vezérelni kívánt hókotró
      */
@@ -151,5 +158,15 @@ public class CleanerRole extends Role {
     @Override
     public int getScore() {
         return money;
+    }
+
+    public java.util.List<Head> getOwnedHeads() {
+        return ownedHeads;
+    }
+
+    public void addOwnedHead(Head head) {
+        if (head != null) {
+            ownedHeads.add(head);
+        }
     }
 }

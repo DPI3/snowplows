@@ -1,9 +1,10 @@
 package controller;
 
-import src.*;
-import view.GameScreen;
+import controller.GameController.TrafficCar;
 import java.util.ArrayList;
 import java.util.List;
+import src.*;
+import view.GameScreen;
 
 public class GameController {
     private final Game game;
@@ -40,6 +41,10 @@ public class GameController {
     private int completedJobs = 0;
 
     private String message = "Cél: takarítsd le az utak 70%-át, majd menj a jobb oldali depóba.";
+
+    private int roundDurationSeconds = 300;
+    private int remainingSeconds = 300;
+    private long lastSecondUpdate = System.currentTimeMillis();
 
     public GameController(Game game, GameScreen gameScreen) {
         this.game = game;
@@ -101,12 +106,20 @@ public class GameController {
     public void tick() {
         if (!running) return;
 
+        long now = System.currentTimeMillis();
+
+        if (now - lastSecondUpdate >= 1000) {
+            lastSecondUpdate = now;
+            remainingSeconds--;
+
+            if (remainingSeconds <= 0) {
+                game.setCurrentRound(game.getRound() + 1);
+                remainingSeconds = roundDurationSeconds;
+            }
+        }
+
         game.tick();
         moveTrafficCars();
-
-        if (isTrafficAt(playerRow, playerCol)) {
-            handleCollision();
-        }
 
         if (game.isOver()) {
             message = "Lejárt a játékidő. Nem sikerült teljesíteni a küldetést.";
@@ -171,11 +184,11 @@ public class GameController {
             }
         }
 
-        for (int c = 1; c <= 13; c++) roadMap[5][c] = ROAD;
-        for (int r = 2; r <= 8; r++) roadMap[r][3] = ROAD;
-        for (int r = 2; r <= 8; r++) roadMap[r][11] = ROAD;
-        for (int c = 3; c <= 11; c++) roadMap[2][c] = ROAD;
-        for (int c = 3; c <= 11; c++) roadMap[8][c] = ROAD;
+        markHorizontalRoad(5, 1, 13);
+        markVerticalRoad(3, 2, 8);
+        markVerticalRoad(11, 2, 8);
+        markHorizontalRoad(2, 3, 11);
+        markHorizontalRoad(8, 3, 11);
 
         for (int c = 6; c <= 9; c++) roadMap[4][c] = ROAD;
         for (int c = 6; c <= 9; c++) roadMap[6][c] = ROAD;
@@ -201,6 +214,28 @@ public class GameController {
         addDirtyTile(5, 10, ICE);
         addDirtyTile(2, 4, ICE);
         addDirtyTile(4, 8, ICE);
+    }
+
+    private void markRoad(int r, int c) {
+        if (r >= 0 && r < ROWS && c >= 0 && c < COLS) {
+            roadMap[r][c] = ROAD;
+        }
+    }
+
+    private void markHorizontalRoad(int row, int fromCol, int toCol) {
+        for (int r = row - 1; r <= row + 2; r++) {
+            for (int c = fromCol; c <= toCol; c++) {
+                markRoad(r, c);
+            }
+        }
+    }
+
+    private void markVerticalRoad(int col, int fromRow, int toRow) {
+        for (int c = col - 1; c <= col + 2; c++) {
+            for (int r = fromRow; r <= toRow; r++) {
+                markRoad(r, c);
+            }
+        }
     }
 
     private void addDirtyTile(int r, int c, int type) {
@@ -320,11 +355,6 @@ public class GameController {
             return;
         }
 
-        if (isTrafficAt(nr, nc)) {
-            handleCollision();
-            return;
-        }
-
         playerRow = nr;
         playerCol = nc;
 
@@ -382,7 +412,27 @@ public class GameController {
     private int cleanTile(int r, int c) {
         if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return 0;
 
-        if (roadMap[r][c] == SNOW || roadMap[r][c] == ICE) {
+        if (roadMap[r][c] != SNOW && roadMap[r][c] != ICE) return 0;
+
+        Role role = gameScreen.getRole();
+        if (!(role instanceof CleanerRole)) return 0;
+
+        CleanerRole cleaner = (CleanerRole) role;
+        Snowplow snowplow = cleaner.getSnowplow();
+
+        Lane lane = new Lane();
+
+        if (roadMap[r][c] == SNOW) {
+            lane.setState(new DeepSnow());
+            lane.setSnowThickness(10);
+        } else {
+            lane.setState(new IceSheet());
+            lane.setIceThickness(10);
+        }
+
+        snowplow.clean(lane);
+
+        if (lane.getLaneState() instanceof Clear || lane.getLaneState() instanceof Gravel) {
             roadMap[r][c] = ROAD;
             cleanedTiles++;
             return 1;
@@ -405,15 +455,19 @@ public class GameController {
     }
 
     private void checkMissionEnd() {
-        if (getCleanPercent() >= 70 && playerRow == targetRow && playerCol == targetCol) {
-            int reward = 200 + plowLevel * 50;
-            rewardCleaner(reward);
-            completedJobs++;
+        if (busMode) {
+            if (playerRow == targetRow && playerCol == targetCol) {
+                completedJobs++;
+                message = "Busz mód teljesítve: megérkeztél a depóba.";
+                stopGame();
+            }
+            return;
+        }
 
-            message = "Küldetés teljesítve! +" + reward + " pénz. RESET vagy MENU.";
+        if (getCleanPercent() >= 70) {
+            completedJobs++;
+            message = "Snowplow mód teljesítve: elég utat megtisztítottál.";
             stopGame();
-        } else if (playerRow == targetRow && playerCol == targetCol) {
-            message = "A cél depónál vagy, de még nincs meg a 70% takarítás.";
         }
     }
 
@@ -498,7 +552,7 @@ public class GameController {
     }
 
     private void refreshView() {
-        gameScreen.roundChanged(game.getRound());
+        gameScreen.timeChanged(remainingSeconds);
         gameScreen.moneyChanged();
 
         if (game.getPlayer() != null) {
@@ -633,5 +687,78 @@ public class GameController {
         public int getColorIndex() {
             return colorIndex;
         }
+    }
+
+    public void showHeadSelector() {
+        Role role = gameScreen.getRole();
+
+        if (!(role instanceof CleanerRole)) {
+            message = "Fejcseréhez Snowplow mód kell.";
+            refreshView();
+            return;
+        }
+
+        CleanerRole cleaner = (CleanerRole) role;
+
+        java.util.List<Head> heads = cleaner.getOwnedHeads();
+
+        if (heads.isEmpty()) {
+            message = "Nincs megvásárolt fej.";
+            refreshView();
+            return;
+        }
+
+        String[] names = heads.stream()
+                .map(h -> h.getClass().getSimpleName())
+                .toArray(String[]::new);
+
+        String selected = (String) javax.swing.JOptionPane.showInputDialog(
+                gameScreen,
+                "Válaszd ki az aktív fejet:",
+                "Fejcsere",
+                javax.swing.JOptionPane.PLAIN_MESSAGE,
+                null,
+                names,
+                names[0]
+        );
+
+        if (selected == null) return;
+
+        for (Head h : heads) {
+            if (h.getClass().getSimpleName().equals(selected)) {
+                cleaner.getSnowplow().changeHead(h);
+                message = "Aktív fej: " + selected;
+                refreshView();
+                return;
+            }
+        }
+    }
+
+    public int getRemainingSeconds() {
+        return remainingSeconds;
+    }
+
+    public void setRoundDurationSeconds(int seconds) {
+        this.roundDurationSeconds = Math.max(30, seconds);
+        this.remainingSeconds = this.roundDurationSeconds;
+    }
+
+    private boolean busMode = false;
+
+    public void toggleGameMode() {
+        busMode = !busMode;
+
+        if (busMode) {
+            message = "BUS MODE: juss el a depóba.";
+        } else {
+            message = "SNOWPLOW MODE: takarítsd az utakat.";
+        }
+
+        gameScreen.setModeText(busMode ? "BUS MODE" : "SNOWPLOW MODE");
+        refreshView();
+    }
+
+    public boolean isBusMode() {
+        return busMode;
     }
 }

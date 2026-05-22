@@ -72,7 +72,13 @@ public class StoreController {
                 return true;
             }
         }
-        if(store.buy(c, ConvertToBuyable(item))){
+        Buyable buyable = ConvertToBuyable(item);
+
+        if (store.buy(c, buyable)) {
+            if (buyable instanceof Head) {
+                c.addOwnedHead((Head) buyable);
+            }
+
             storeScreen.updateMoney(getMoney());
             return true;
         }
