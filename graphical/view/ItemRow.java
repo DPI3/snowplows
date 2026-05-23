@@ -39,7 +39,7 @@ import javax.swing.*;
             nameTag.add(nameLabel);
 
             // Léptető (JSpinner)
-            spinner = new JSpinner(new SpinnerNumberModel(5, 0, 99, 1));
+            spinner = new JSpinner(new SpinnerNumberModel(0, 0, 99, 1));
             spinner.setPreferredSize(new Dimension(60, 35));
             spinner.setFont(new Font("SansSerif", Font.BOLD, 16));
 
@@ -61,5 +61,9 @@ import javax.swing.*;
 
         public void ClearSpinner(){
             spinner.setValue(0);
+        }
+
+        public void setMaxAmount(int max) {
+            spinner.setModel(new SpinnerNumberModel(0, 0, max, 1));
         }
     }

@@ -291,25 +291,12 @@ public class GameController {
     }
 
     private void placeRandomTunnelsAndBridges() {
-        int placedTunnel = 0;
-        int placedBridge = 0;
-
-        while (placedTunnel < 8) {
-            int[] p = getRandomRoadCell();
-
-            if (p != null && roadMap[p[0]][p[1]] == ROAD) {
-                roadMap[p[0]][p[1]] = TUNNEL;
-                placedTunnel++;
-            }
+        for (int i = 0; i < 6; i++) {
+            placeRoadSegment(TUNNEL, 3 + random.nextInt(4));
         }
 
-        while (placedBridge < 8) {
-            int[] p = getRandomRoadCell();
-
-            if (p != null && roadMap[p[0]][p[1]] == ROAD) {
-                roadMap[p[0]][p[1]] = BRIDGE;
-                placedBridge++;
-            }
+        for (int i = 0; i < 6; i++) {
+            placeRoadSegment(BRIDGE, 3 + random.nextInt(4));
         }
     }
 
@@ -320,6 +307,35 @@ public class GameController {
             if (p != null) {
                 addDirtyTile(p[0], p[1], random.nextBoolean() ? SNOW : ICE);
             }
+        }
+    }
+
+    private void placeRoadSegment(int type, int length) {
+        int[] start = getRandomRoadCell();
+        if (start == null) return;
+
+        int r = start[0];
+        int c = start[1];
+
+        boolean horizontal = random.nextBoolean();
+
+        for (int i = 0; i < length; i++) {
+            int rr = horizontal ? r : r + i;
+            int cc = horizontal ? c + i : c;
+
+            if (rr < 0 || rr >= ROWS || cc < 0 || cc >= COLS) {
+                return;
+            }
+
+            if (roadMap[rr][cc] != ROAD) {
+                return;
+            }
+        }
+
+        for (int i = 0; i < length; i++) {
+            int rr = horizontal ? r : r + i;
+            int cc = horizontal ? c + i : c;
+            roadMap[rr][cc] = type;
         }
     }
 

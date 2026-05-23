@@ -12,7 +12,7 @@ public class StoreController {
     private Player player;
     private StoreScreen storeScreen;
     private CleanerRole c;
-    private boolean extraHeadBought = false;
+    private java.util.Set<String> boughtHeads = new java.util.HashSet<>();
 
     public int getMoney(){
         return c.getMoney();
@@ -85,13 +85,15 @@ public class StoreController {
         Buyable buyable = ConvertToBuyable(item);
 
         if (buyable instanceof Head) {
-            if (extraHeadBought) {
-                JOptionPane.showMessageDialog(storeScreen, "Már vettél egy plusz fejet, többet nem vehetsz.");
+            String headName = buyable.getClass().getSimpleName();
+
+            if (boughtHeads.contains(headName)) {
+                JOptionPane.showMessageDialog(storeScreen, "Ebből a fejből már vettél egyet.");
                 return false;
             }
 
             if (store.buy(c, buyable)) {
-                extraHeadBought = true;
+                boughtHeads.add(headName);
                 storeScreen.updateMoney(getMoney());
                 storeScreen.updateStock(c.getSnowplow());
                 return true;

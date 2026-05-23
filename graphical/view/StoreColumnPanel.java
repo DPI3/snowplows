@@ -38,8 +38,14 @@ public class StoreColumnPanel extends JPanel {
         }
 
         public void addItemRow(String itemName) {
-            itemsContainer.add(new ItemRow(itemName));
-            itemsContainer.add(Box.createRigidArea(new Dimension(0, 20))); // Térköz a sorok között
+            ItemRow row = new ItemRow(itemName);
+
+            if ("HEAD".equals(getTitle())) {
+                row.setMaxAmount(1);
+            }
+
+            itemsContainer.add(row);
+            itemsContainer.add(Box.createRigidArea(new Dimension(0, 20)));
         }
 
         @Override

@@ -32,7 +32,7 @@ public class GameScreen extends JFrame {
         this.role = role;
 
         setTitle("Snowplow - Game Screen");
-        setSize(1050, 700);
+        setSize(1400, 850);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -50,7 +50,7 @@ public class GameScreen extends JFrame {
         JPanel topBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         topBar.setOpaque(false);
 
-        roundTopPill = new TopPill("Kör: 0", 220, null);
+        roundTopPill = new TopPill("Kör: 0 | Idő: 05:00", 320, null);
         modeTopPill = new TopPill("SNOWPLOW MODE", 380, null);
 
         modeTopPill.addMouseListener(new java.awt.event.MouseAdapter() {

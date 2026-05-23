@@ -1,10 +1,8 @@
 package view;
 
-import javax.swing.*;
-
 import controller.StoreController;
-
 import java.awt.*;
+import javax.swing.*;
 
 
 public class StorePanel extends JPanel {
@@ -17,21 +15,6 @@ public class StorePanel extends JPanel {
     }
 
     private void buy(StoreColumnPanel itemCol, StoreController controller){
-        if ("HEAD".equals(itemCol.getTitle())) {
-            int headAmount = 0;
-
-            for (Component c : itemCol.getItemsContainer().getComponents()) {
-                if (c instanceof ItemRow) {
-                    headAmount += ((ItemRow) c).getAmount();
-                }
-            }
-
-            if (headAmount > 1) {
-                JOptionPane.showMessageDialog(this, "Egyszerre csak 1 fejet vehetsz.");
-                return;
-            }
-        }
-
         java.util.List<String> selectedItems = new java.util.ArrayList<>();
                 for (Component c : itemCol.getItemsContainer().getComponents()) {
                     if (c instanceof ItemRow) {

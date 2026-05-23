@@ -23,7 +23,7 @@ public class StoreScreen extends JFrame{
 
     public StoreScreen(StoreController storeController){
         setTitle("Snowplow - Store");
-        setSize(1000, 700); // Kicsit szélesebb ablak a három oszlop miatt
+        setSize(1300, 760); // Kicsit szélesebb ablak a három oszlop miatt
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -31,7 +31,7 @@ public class StoreScreen extends JFrame{
         //BackgroundPanel mainPanel =  new BackgroundPanel("graphical/factoryite.png"); 
 
         BackgroundPanel mainPanel =  new BackgroundPanel("factoryite.png"); 
-        mainPanel.setLayout(new BorderLayout(20, 20));
+        mainPanel.setLayout(new BorderLayout(10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Pénz ikon betöltése előre, hogy használhassuk a fejlécben
@@ -44,50 +44,33 @@ public class StoreScreen extends JFrame{
         }
 
         // --- FELSŐ SÁV (HEADER) ---
-        playerMoneyLabel = new JPanel(new GridBagLayout());
+        playerMoneyLabel = new JPanel(new FlowLayout(FlowLayout.CENTER, 18, 0));
         playerMoneyLabel.setOpaque(false);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = 1.0;
-        gbc.insets = new Insets(0, 10, 0, 10);
 
-        // 1. Bal oldali kapszula: Pénz mennyisége és ikon
-        moneyTopPill=new TopPill(Integer.toString(storeController.getMoney()), 200, moneyIcon);
-        playerMoneyLabel.add(moneyTopPill, gbc);
-        
-        // 2. Középső kapszula: STORE felirat (szélesebb)
-        gbc.weightx = 2.0; 
-        playerMoneyLabel.add(new TopPill("STORE", 400, null), gbc);
-        
-        // 3. Jobb oldali elem: CONTINUE gomb
-        gbc.weightx = 1.0;
+        moneyTopPill = new TopPill(Integer.toString(storeController.getMoney()), 160, moneyIcon);
+        TopPill storeTitlePill = new TopPill("STORE", 260, null);
+
+        saltStockPill = new TopPill("SALT: 0%", 130, null);
+        bioStockPill = new TopPill("BIO: 0%", 130, null);
+        gravelStockPill = new TopPill("GRAVEL: 0%", 150, null);
+
         StyledButton continueBtn = new StyledButton("CONTINUE", 180, 50, Color.decode("#EAE0D5"));
+        continueBtn.addActionListener(e -> screenController.showGame());
+
+        playerMoneyLabel.add(moneyTopPill);
+        playerMoneyLabel.add(storeTitlePill);
+        playerMoneyLabel.add(saltStockPill);
+        playerMoneyLabel.add(bioStockPill);
+        playerMoneyLabel.add(gravelStockPill);
+        playerMoneyLabel.add(continueBtn);
+
+        mainPanel.add(playerMoneyLabel, BorderLayout.NORTH);
         continueBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                screenController.showGame();
             }
         });
-
-        playerMoneyLabel.add(continueBtn, gbc);
-        mainPanel.add(playerMoneyLabel, BorderLayout.NORTH);
-
-        JPanel stockPanel = new JPanel();
-        stockPanel.setOpaque(false);
-        stockPanel.setLayout(new BoxLayout(stockPanel, BoxLayout.Y_AXIS));
-        stockPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
-
-        saltStockPill = new TopPill("SALT: 0%", 180, null);
-        bioStockPill = new TopPill("BIO: 0%", 180, null);
-        gravelStockPill = new TopPill("GRAVEL: 0%", 180, null);
-
-        stockPanel.add(saltStockPill);
-        stockPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        stockPanel.add(bioStockPill);
-        stockPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        stockPanel.add(gravelStockPill);
-
-        mainPanel.add(stockPanel, BorderLayout.EAST);
 
         storePanel= new StorePanel(storeController, this);
         mainPanel.add(storePanel, BorderLayout.CENTER);
