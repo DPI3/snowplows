@@ -1,10 +1,9 @@
 package view;
 
-import javax.swing.*;
-import java.awt.*;
-
 import controller.AssetManager;
 import controller.ScreenController;
+import java.awt.*;
+import javax.swing.*;
 
 public class SnowplowMenu extends JFrame {
 
@@ -27,8 +26,6 @@ public class SnowplowMenu extends JFrame {
         // 3. Gombok létrehozása
         StyledButton btnStart = new StyledButton("Start", 180, 50, Color.decode("#EAE0D5"));
         btnStart.setFont(AssetManager.getInstance().getFont("silkscreenHeader"));
-        StyledButton btnLoad = new StyledButton("Load", 180, 50,Color.decode("#EAE0D5"));
-        btnLoad.setFont(AssetManager.getInstance().getFont("silkscreenHeader"));
         StyledButton btnSettings = new StyledButton("Settings", 180, 50,Color.decode("#EAE0D5"));
         btnSettings.setFont(AssetManager.getInstance().getFont("silkscreenHeader"));
         StyledButton btnExit = new StyledButton("Exit", 180, 50, Color.decode("#EAE0D5"));
@@ -36,15 +33,12 @@ public class SnowplowMenu extends JFrame {
         
         // Gombok funkciói
         btnStart.addActionListener(e -> screenController.showGame());
-        btnLoad.addActionListener(e -> JOptionPane.showMessageDialog(this, "Load funkció helye"));
         btnSettings.addActionListener(e -> screenController.showSettings());
         btnExit.addActionListener(e -> System.exit(0)); // Kilépés
 
         // Gombok hozzáadása a menü panelhez térközökkel
         menuPanel.add(Box.createRigidArea(new Dimension(0, 30)));
         menuPanel.add(btnStart);
-        menuPanel.add(Box.createRigidArea(new Dimension(0, 25)));
-        menuPanel.add(btnLoad);
         menuPanel.add(Box.createRigidArea(new Dimension(0, 25)));
         menuPanel.add(btnSettings);
         menuPanel.add(Box.createRigidArea(new Dimension(0, 25)));

@@ -70,7 +70,8 @@ public class Store{
             cleanerRole.decreaseMoney(price);
             
             if (item instanceof Head) {
-                cleanerRole.addHead((Head) item);
+                cleanerRole.addOwnedHead((Head) item);
+                cleanerRole.getSnowplow().changeHead((Head) item);
             }
 
             //inventory.remove(item);
@@ -82,32 +83,38 @@ public class Store{
     }
 
     public boolean buyBiokerosene(CleanerRole cleanerRole){
-        int price=10;
+        int price = 10;
+
         if(cleanerRole.getMoney() >= price){
-             cleanerRole.decreaseMoney(price);
-             cleanerRole.addBiokerosene(1);
-             return true;
+            cleanerRole.decreaseMoney(price);
+            cleanerRole.addBiokerosene(10);
+            return true;
         }
+
         return false;
     }
 
     public boolean buySalt(CleanerRole cleanerRole){
-       int price=10;
+        int price = 10;
+
         if(cleanerRole.getMoney() >= price){
-             cleanerRole.decreaseMoney(price);
-             cleanerRole.addSalt(1);
-             return true;
+            cleanerRole.decreaseMoney(price);
+            cleanerRole.addSalt(10);
+            return true;
         }
+
         return false;
     }
 
     public boolean buyGravel(CleanerRole cleanerRole){
-        int price=10;
+        int price = 10;
+
         if(cleanerRole.getMoney() >= price){
-             cleanerRole.decreaseMoney(price);
-             cleanerRole.addGravel(1);
-             return true;
+            cleanerRole.decreaseMoney(price);
+            cleanerRole.addGravel(10);
+            return true;
         }
+
         return false;
     }
 

@@ -24,6 +24,10 @@ public class GameScreen extends JFrame {
     private GameController gameController;
     private String TEXT_COLOR = "#E2E874";
 
+    private JLabel saltStockLabel;
+    private JLabel bioStockLabel;
+    private JLabel gravelStockLabel;
+
     public GameScreen(Role role, Store store) {
         this.role = role;
 
@@ -177,12 +181,21 @@ public class GameScreen extends JFrame {
         cleanLabel = createHudLabel("Tisztítás: 0%");
         collisionLabel = createHudLabel("Ütközés: 0");
         completedLabel = createHudLabel("Küldetés: 0");
+        saltStockLabel = createHudLabel("Só: 0%");
+        bioStockLabel = createHudLabel("Biokerozin: 0%");
+        gravelStockLabel = createHudLabel("Gravel: 0%");
 
         panel.add(cleanLabel);
         panel.add(Box.createRigidArea(new Dimension(0, 5)));
         panel.add(collisionLabel);
         panel.add(Box.createRigidArea(new Dimension(0, 5)));
         panel.add(completedLabel);
+        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+        panel.add(saltStockLabel);
+        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+        panel.add(bioStockLabel);
+        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+        panel.add(gravelStockLabel);
         panel.add(Box.createRigidArea(new Dimension(0, 5)));
 
         return panel;
@@ -285,6 +298,25 @@ public class GameScreen extends JFrame {
     public void setModeText(String text) {
         if (modeTopPill != null) {
             modeTopPill.setText(text);
+        }
+    }
+
+    public void updateStockHud() {
+        if (!(role instanceof CleanerRole)) return;
+
+        Snowplow snowplow = ((CleanerRole) role).getSnowplow();
+        if (snowplow == null) return;
+
+        if (saltStockLabel != null) {
+            saltStockLabel.setText("Só: " + snowplow.getSaltStock() + "%");
+        }
+
+        if (bioStockLabel != null) {
+            bioStockLabel.setText("Biokerozin: " + snowplow.getBiokeroseneStock() + "%");
+        }
+
+        if (gravelStockLabel != null) {
+            gravelStockLabel.setText("Gravel: " + snowplow.getGravelStock() + "%");
         }
     }
 

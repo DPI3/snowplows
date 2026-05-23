@@ -1,15 +1,14 @@
 package view;
 
-import javax.swing.*;
-
 import controller.AssetManager;
-
 import java.awt.*;
+import javax.swing.*;
 
 
 public class StoreColumnPanel extends JPanel {
         private JPanel itemsContainer;
         private StyledButton buyButton;
+        private JLabel titleLabel;
 
         public StyledButton getBuyButton(){return buyButton;}
         public JPanel getItemsContainer(){return itemsContainer;}
@@ -21,7 +20,7 @@ public class StoreColumnPanel extends JPanel {
             setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
             // Cím
-            JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
+            titleLabel = new JLabel(title, SwingConstants.CENTER);
             titleLabel.setFont(AssetManager.getInstance().getFont("silkscreenTitle"));
             titleLabel.setForeground(Color.decode("#EAE0D5"));
             add(titleLabel, BorderLayout.NORTH);
@@ -53,5 +52,7 @@ public class StoreColumnPanel extends JPanel {
             g2.dispose();
         }
 
-    
+        public String getTitle() {
+            return titleLabel.getText();
+        }
 }

@@ -1,17 +1,14 @@
 package view;
 
-import javax.swing.*;
-
 import controller.AssetManager;
 import controller.ScreenController;
 import controller.StoreController;
-
 import java.awt.*;
-import java.io.File;
-
-import javax.imageio.ImageIO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 public class StoreScreen extends JFrame{
 
@@ -19,6 +16,10 @@ public class StoreScreen extends JFrame{
     private ScreenController screenController;
     private JPanel playerMoneyLabel;
     private TopPill moneyTopPill;
+
+    private TopPill saltStockPill;
+    private TopPill bioStockPill;
+    private TopPill gravelStockPill;
 
     public StoreScreen(StoreController storeController){
         setTitle("Snowplow - Store");
@@ -71,10 +72,29 @@ public class StoreScreen extends JFrame{
         playerMoneyLabel.add(continueBtn, gbc);
         mainPanel.add(playerMoneyLabel, BorderLayout.NORTH);
 
+        JPanel stockPanel = new JPanel();
+        stockPanel.setOpaque(false);
+        stockPanel.setLayout(new BoxLayout(stockPanel, BoxLayout.Y_AXIS));
+        stockPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
+
+        saltStockPill = new TopPill("SALT: 0%", 180, null);
+        bioStockPill = new TopPill("BIO: 0%", 180, null);
+        gravelStockPill = new TopPill("GRAVEL: 0%", 180, null);
+
+        stockPanel.add(saltStockPill);
+        stockPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        stockPanel.add(bioStockPill);
+        stockPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        stockPanel.add(gravelStockPill);
+
+        mainPanel.add(stockPanel, BorderLayout.EAST);
+
         storePanel= new StorePanel(storeController, this);
         mainPanel.add(storePanel, BorderLayout.CENTER);
 
         setContentPane(mainPanel);
+
+        updateStock(storeController.getCleanerRole().getSnowplow());
     }
 
     public void setScreenController(ScreenController screenController){
@@ -83,6 +103,22 @@ public class StoreScreen extends JFrame{
 
     public void updateMoney(int amount){
         moneyTopPill.setText(Integer.toString(amount));
+    }
+
+    public void updateStock(src.Snowplow snowplow) {
+        if (snowplow == null) return;
+
+        if (saltStockPill != null) {
+            saltStockPill.setText("SALT: " + snowplow.getSaltStock() + "%");
+        }
+
+        if (bioStockPill != null) {
+            bioStockPill.setText("BIO: " + snowplow.getBiokeroseneStock() + "%");
+        }
+
+        if (gravelStockPill != null) {
+            gravelStockPill.setText("GRAVEL: " + snowplow.getGravelStock() + "%");
+        }
     }
 
      /**
@@ -142,7 +178,7 @@ public class StoreScreen extends JFrame{
         }
         
 }
- public static void main(String[] args) {
+    public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (Exception e) {

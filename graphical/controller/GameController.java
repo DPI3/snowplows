@@ -138,6 +138,7 @@ public class GameController {
             randomWeatherChange();
         }
 
+        randomWeatherChange();
         moveTrafficCars();
         refreshView();
     }
@@ -161,6 +162,19 @@ public class GameController {
         }
 
         refreshView();
+    }
+
+    private void randomWeatherChange() {
+        for (int i = 0; i < 3; i++) {
+            int r = (int) (Math.random() * ROWS);
+            int c = (int) (Math.random() * COLS);
+
+            if (roadMap[r][c] == ROAD) {
+                roadMap[r][c] = Math.random() < 0.65 ? SNOW : ICE;
+                totalDirtyTiles++;
+            }
+        }
+        message = "Időjárás: új hó vagy jég jelent meg a pályán.";
     }
 
     private void restartGameState() {
@@ -309,24 +323,6 @@ public class GameController {
         }
     }
 
-    private void randomWeatherChange() {
-        for (int i = 0; i < 4; i++) {
-            int[] p = getRandomRoadCell();
-
-            if (p == null) continue;
-
-            int r = p[0];
-            int c = p[1];
-
-            if (roadMap[r][c] == ROAD) {
-                roadMap[r][c] = random.nextInt(100) < 70 ? SNOW : ICE;
-                totalDirtyTiles++;
-            }
-        }
-
-        message = "Időjárás: új hó vagy jég jelent meg a pályán.";
-    }
-
     private void resetTrafficCars() {
         trafficCars.clear();
 
@@ -392,6 +388,14 @@ public class GameController {
         for (TrafficCar car : trafficCars) {
             int next = (car.index + 1) % car.route.size();
             int[] p = car.route.get(next);
+
+            if (p[0] < 0 || p[0] >= ROWS || p[1] < 0 || p[1] >= COLS) {
+                continue;
+            }
+
+            if (roadMap[p[0]][p[1]] == FIELD) {
+                continue;
+            }
 
             if (roadMap[p[0]][p[1]] == SNOW || roadMap[p[0]][p[1]] == ICE) {
                 continue;
@@ -526,10 +530,10 @@ public class GameController {
         Head head = snowplow.getCurrentHead();
 
         if (head instanceof DragonHead) {
-            if (snowplow.getBiokeroseneStock() <= 0) return 0;
+            if (snowplow.getBiokeroseneStock() < 10) return 0;
 
             if (tile == SNOW || tile == ICE || tile == BROKEN_ICE) {
-                snowplow.consumeBiokerosene(1);
+                snowplow.consumeBiokerosene(10);
                 roadMap[r][c] = ROAD;
                 cleanedTiles++;
                 return 1;
@@ -548,10 +552,10 @@ public class GameController {
         }
 
         if (head instanceof SaltSpreaderHead) {
-            if (snowplow.getSaltStock() <= 0) return 0;
+            if (snowplow.getSaltStock() < 10) return 0;
 
             if (tile == SNOW || tile == ICE || tile == BROKEN_ICE) {
-                snowplow.consumeSalt(1);
+                snowplow.consumeSalt(10);
                 roadMap[r][c] = ROAD;
                 cleanedTiles++;
                 return 1;
@@ -561,10 +565,10 @@ public class GameController {
         }
 
         if (head instanceof GravelSpreaderHead) {
-            if (snowplow.getGravelStock() <= 0) return 0;
+            if (snowplow.getGravelStock() < 10) return 0;
 
             if (tile == ICE) {
-                snowplow.consumeGravel(1);
+                snowplow.consumeGravel(10);
                 roadMap[r][c] = GRAVEL;
                 return 1;
             }
@@ -726,6 +730,7 @@ public class GameController {
                 collisions,
                 completedJobs
         );
+        gameScreen.updateStockHud();
         gameScreen.repaint();
     }
 

@@ -63,13 +63,19 @@ public class Snowplow extends Vehicle {
     }
 
     /** Készletkezelés */
-    public void addSalt(int amount) { saltStock += amount; }
+    public void addSalt(int amount) {
+        saltStock = Math.min(100, saltStock + amount);
+    }
     public void consumeSalt(int amount) { saltStock = Math.max(0, saltStock - amount); }
 
-    public void addBiokerosene(int amount) { biokeroseneStock += amount; }
+    public void addBiokerosene(int amount) {
+        biokeroseneStock = Math.min(100, biokeroseneStock + amount);
+    }
     public void consumeBiokerosene(int amount) { biokeroseneStock = Math.max(0, biokeroseneStock - amount); }
 
-    public void addGravel(int amount) { gravelStock += amount; }
+    public void addGravel(int amount) {
+        gravelStock = Math.min(100, gravelStock + amount);
+    }
     public void consumeGravel(int amount) { gravelStock = Math.max(0, gravelStock - amount); }
 
     /** Getterek */

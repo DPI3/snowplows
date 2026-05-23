@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import src.*;
 import view.StoreScreen;
 
@@ -11,6 +12,7 @@ public class StoreController {
     private Player player;
     private StoreScreen storeScreen;
     private CleanerRole c;
+    private boolean extraHeadBought = false;
 
     public int getMoney(){
         return c.getMoney();
@@ -51,20 +53,28 @@ public class StoreController {
         if(item.equals("BIOKEROZIN")){
             if(store.buyBiokerosene(c)){
                 storeScreen.updateMoney(getMoney());
+                storeScreen.updateStock(c.getSnowplow());
                 return true;
             }
+            return false;
         }
+
         if(item.equals("SALT")){
             if(store.buySalt(c)){
                 storeScreen.updateMoney(getMoney());
+                storeScreen.updateStock(c.getSnowplow());
                 return true;
             }
+            return false;
         }
+
         if(item.equals("GRAVEL")){
             if(store.buyGravel(c)){
                 storeScreen.updateMoney(getMoney());
+                storeScreen.updateStock(c.getSnowplow());
                 return true;
             }
+            return false;
         }
         if(item.equals("SNOWPLOW")){
             if(store.buySnowplow(c)){
@@ -74,13 +84,20 @@ public class StoreController {
         }
         Buyable buyable = ConvertToBuyable(item);
 
-        if (store.buy(c, buyable)) {
-            if (buyable instanceof Head) {
-                c.addOwnedHead((Head) buyable);
+        if (buyable instanceof Head) {
+            if (extraHeadBought) {
+                JOptionPane.showMessageDialog(storeScreen, "Már vettél egy plusz fejet, többet nem vehetsz.");
+                return false;
             }
 
-            storeScreen.updateMoney(getMoney());
-            return true;
+            if (store.buy(c, buyable)) {
+                extraHeadBought = true;
+                storeScreen.updateMoney(getMoney());
+                storeScreen.updateStock(c.getSnowplow());
+                return true;
+            }
+
+            return false;
         }
         return false;
     }
@@ -93,5 +110,9 @@ public class StoreController {
         if (itemId.equals("SWEEPER")) return new SweeperHead();
         if (itemId.equals("DRAGON")) return new DragonHead();
         return null;
+    }
+
+    public CleanerRole getCleanerRole() {
+        return c;
     }
 }
