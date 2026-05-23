@@ -320,7 +320,7 @@ public class GameScreen extends JFrame {
         }
     }
 
-    private static class BoardPanel extends JPanel {
+    private class BoardPanel extends JPanel {
         private GameController gameController;
 
         public BoardPanel() {
@@ -596,38 +596,129 @@ public class GameScreen extends JFrame {
         private void drawSnowplow(Graphics2D g2, int x, int y, int cell) {
             int pad = Math.max(5, cell / 8);
 
+            // Árnyék
             g2.setColor(new Color(30, 35, 45, 120));
             g2.fillOval(x + pad, y + cell - pad, cell - 2 * pad, Math.max(6, cell / 7));
 
-            g2.setColor(new Color(206, 60, 72));
-            g2.fillRoundRect(x + pad, y + cell / 3, cell - 2 * pad, cell / 3, 12, 12);
+            // Hókotró teste
+            g2.setColor(new Color(70, 120, 190));
+            g2.fillRoundRect(x + pad, y + cell / 4, cell - 2 * pad, cell / 2, 12, 12);
 
-            g2.setColor(new Color(242, 151, 58));
-            g2.fillRoundRect(x + cell / 3, y + cell / 5, cell / 3, cell / 4, 8, 8);
+            // Kabin
+            g2.setColor(new Color(180, 225, 245));
+            g2.fillRoundRect(x + cell / 2, y + cell / 3, cell / 4, cell / 5, 6, 6);
 
-            g2.setColor(new Color(185, 230, 245));
-            g2.fillRoundRect(x + cell / 3 + 4, y + cell / 5 + 4, cell / 3 - 8, cell / 8, 5, 5);
-
-            Polygon blade = new Polygon();
-            blade.addPoint(x + cell - pad, y + cell / 3);
-            blade.addPoint(x + cell - 2, y + cell / 2);
-            blade.addPoint(x + cell - pad, y + 2 * cell / 3);
-
-            g2.setColor(new Color(235, 238, 240));
-            g2.fillPolygon(blade);
-
-            g2.setColor(new Color(110, 120, 130));
-            g2.drawPolygon(blade);
-
-            g2.setColor(new Color(28, 31, 38));
+            // Kerekek
+            g2.setColor(new Color(25, 25, 25));
             int wheel = Math.max(6, cell / 7);
-
             g2.fillOval(x + pad + 3, y + cell / 2 + 9, wheel, wheel);
             g2.fillOval(x + cell - pad - wheel - 3, y + cell / 2 + 9, wheel, wheel);
 
-            g2.setColor(Color.WHITE);
-            g2.setFont(new Font("SansSerif", Font.BOLD, Math.max(10, cell / 5)));
-            g2.drawString("P", x + cell / 2 - 4, y + cell / 2 + 6);
+            // Aktív fej lekérése
+            Head head = null;
+
+            if (GameScreen.this.role instanceof CleanerRole) {
+                Snowplow snowplow = ((CleanerRole) GameScreen.this.role).getSnowplow();
+
+                if (snowplow != null) {
+                    head = snowplow.getCurrentHead();
+                }
+            }
+            drawSnowplowHead(g2, x, y, cell, head);
+        }
+
+        private void drawSnowplowHead(Graphics2D g2, int x, int y, int cell, Head head) {
+            int frontX = x + cell - Math.max(8, cell / 6);
+            int centerY = y + cell / 2;
+
+            if (head instanceof DragonHead) {
+                // Dragon: lángszóró fej
+                g2.setColor(new Color(180, 40, 30));
+                g2.fillRoundRect(frontX - 3, centerY - 8, cell / 3, 16, 8, 8);
+
+                g2.setColor(new Color(255, 130, 20));
+                Polygon flame = new Polygon();
+                flame.addPoint(frontX + cell / 3, centerY);
+                flame.addPoint(frontX + cell / 2, centerY - 10);
+                flame.addPoint(frontX + cell / 2, centerY + 10);
+                g2.fillPolygon(flame);
+
+                g2.setColor(Color.YELLOW);
+                g2.fillOval(frontX + cell / 3, centerY - 4, 8, 8);
+                return;
+            }
+
+            if (head instanceof IcebreakerHead) {
+                // Icebreaker: hegyes, acél jégtörő
+                g2.setColor(new Color(160, 170, 180));
+                Polygon spike = new Polygon();
+                spike.addPoint(frontX - 4, centerY - 13);
+                spike.addPoint(frontX + cell / 2, centerY);
+                spike.addPoint(frontX - 4, centerY + 13);
+                g2.fillPolygon(spike);
+
+                g2.setColor(new Color(80, 90, 100));
+                g2.setStroke(new BasicStroke(3f));
+                g2.drawLine(frontX, centerY, frontX + cell / 2, centerY);
+                return;
+            }
+
+            if (head instanceof SaltSpreaderHead) {
+                // Saltspreader: szórókar + fehér pöttyök
+                g2.setColor(new Color(110, 110, 120));
+                g2.fillRoundRect(frontX - 2, centerY - 7, cell / 3, 14, 8, 8);
+
+                g2.setColor(Color.WHITE);
+                for (int i = 0; i < 5; i++) {
+                    g2.fillOval(frontX + cell / 3 + i * 5, centerY - 10 + (i % 3) * 7, 4, 4);
+                }
+                return;
+            }
+
+            if (head instanceof GravelSpreaderHead) {
+                // Gravelspreader: barna szóró + kavicsok
+                g2.setColor(new Color(120, 80, 45));
+                g2.fillRoundRect(frontX - 2, centerY - 8, cell / 3, 16, 8, 8);
+
+                g2.setColor(new Color(80, 55, 35));
+                for (int i = 0; i < 6; i++) {
+                    g2.fillOval(frontX + cell / 3 + i * 4, centerY - 9 + (i % 4) * 5, 5, 5);
+                }
+                return;
+            }
+
+            if (head instanceof SweeperHead) {
+                // Sweeper: hengeres seprő
+                g2.setColor(new Color(240, 170, 40));
+                g2.fillOval(frontX - 2, centerY - 13, cell / 3, 26);
+
+                g2.setColor(new Color(120, 80, 30));
+                g2.setStroke(new BasicStroke(2f));
+                for (int i = -10; i <= 10; i += 5) {
+                    g2.drawLine(frontX + 2, centerY + i, frontX + cell / 3, centerY + i);
+                }
+                return;
+            }
+
+            if (head instanceof ThrowerHead) {
+                // Thrower: hófúvó cső
+                g2.setColor(new Color(90, 150, 210));
+                g2.fillRoundRect(frontX - 2, centerY - 8, cell / 3, 16, 8, 8);
+
+                g2.setColor(new Color(60, 90, 130));
+                g2.setStroke(new BasicStroke(4f));
+                g2.drawArc(frontX + cell / 4, centerY - 22, cell / 2, 28, 20, 140);
+                return;
+            }
+
+            // Alapértelmezett egyszerű tolólap
+            g2.setColor(new Color(200, 200, 210));
+            Polygon blade = new Polygon();
+            blade.addPoint(frontX - 5, centerY - 14);
+            blade.addPoint(frontX + cell / 3, centerY - 8);
+            blade.addPoint(frontX + cell / 3, centerY + 8);
+            blade.addPoint(frontX - 5, centerY + 14);
+            g2.fillPolygon(blade);
         }
 
         private void drawBus(Graphics2D g2, int x, int y, int cell) {
