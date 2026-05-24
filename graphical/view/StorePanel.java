@@ -69,7 +69,6 @@ public class StorePanel extends JPanel {
         addHeadRow(headCol, controller, "ICEBREAKER");
         addHeadRow(headCol, controller, "SALTSPREAD");
         addHeadRow(headCol, controller, "GRAVELSPREAD");
-        headCol.getBuyButton().addActionListener(e -> {buy(headCol, controller);});
             
         add(headCol);
 

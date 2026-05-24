@@ -19,8 +19,23 @@ public class ItemRow extends JPanel {
         setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
         setMaximumSize(new Dimension(400, 40));
 
-        priceLabel = new JLabel(price >= 0 ? price + " $" : "");
-        add(priceLabel);
+        if (price >= 0) {
+            JPanel pricePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 3, 0));
+            pricePanel.setOpaque(false);
+
+            JLabel priceText = new JLabel(String.valueOf(price));
+            priceText.setFont(new Font("SansSerif", Font.BOLD, 14));
+            priceText.setForeground(Color.BLACK);
+
+            Image moneyImage = new ImageIcon("money.png").getImage();
+            JLabel moneyIcon = new JLabel(new ImageIcon(
+                moneyImage.getScaledInstance(28, 22, Image.SCALE_SMOOTH)
+            ));
+
+            pricePanel.add(priceText);
+            pricePanel.add(moneyIcon);
+            add(pricePanel);
+        }
 
         // Kis rózsaszín panel a névnek
         JPanel nameTag = new JPanel() {
@@ -44,13 +59,21 @@ public class ItemRow extends JPanel {
         nameLabel.setForeground(Color.decode("#EAE0D5"));
         nameTag.add(nameLabel);
 
-        // Léptető (JSpinner)
-        spinner = new JSpinner(new SpinnerNumberModel(0, 0, 99, 1));
-        spinner.setPreferredSize(new Dimension(60, 35));
-        spinner.setFont(new Font("SansSerif", Font.BOLD, 16));
-
         add(nameTag);
-        add(spinner);
+
+        if (ownBuyButton) {
+            buyButton = new StyledButton("BUY", 100, 45, Color.decode("#EAE0D5"));
+            add(buyButton);
+        } else {
+            spinner = new JSpinner(new SpinnerNumberModel(0, 0, 99, 1));
+            spinner.setPreferredSize(new Dimension(60, 35));
+            spinner.setFont(new Font("SansSerif", Font.BOLD, 16));
+            add(spinner);
+        }
+    }
+
+    public ItemRow(String name, int preferredWidth, int preferredHeight) {
+        this(name, preferredWidth, preferredHeight, -1, false);
     }
 
     public ItemRow(String name){
@@ -58,6 +81,7 @@ public class ItemRow extends JPanel {
     }
 
     public int getAmount() {
+        if (spinner == null) return 0;
         return (int) spinner.getValue();
     }
 

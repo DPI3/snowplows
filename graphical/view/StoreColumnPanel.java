@@ -38,7 +38,7 @@ public class StoreColumnPanel extends JPanel {
         }
 
         public void addItemRow(String itemName, int price) {
-            ItemRow row = new ItemRow(itemName, 130, 35, price, true);
+            ItemRow row = new ItemRow(itemName, 130, 35, price, false);
 
             if ("HEAD".equals(getTitle())) {
                 row.setMaxAmount(1);
