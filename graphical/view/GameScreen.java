@@ -784,7 +784,7 @@ public class GameScreen extends JFrame {
             g2.setColor(Color.WHITE);
             g2.setFont(new Font("SansSerif", Font.BOLD, 13));
             g2.drawString("Küldetés:", 35, 40);
-            g2.drawString("70% tisztítás + cél depó", 35, 60);
+            g2.drawString("Takaríts minél több útszakaszt", 35, 60);
         }
 
         private void drawLegend(Graphics2D g2) {
@@ -865,11 +865,13 @@ public class GameScreen extends JFrame {
             g2.setColor(Color.RED);
             g2.fillOval(px - 3, py - 3, 7, 7);
 
-            int tx = x0 + (int) Math.round(gameController.getTargetCol() * cellW);
-            int ty = y0 + (int) Math.round(gameController.getTargetRow() * cellH);
+            if (gameController.getTargetRow() >= 0 && gameController.getTargetCol() >= 0) {
+                int tx = x0 + (int) Math.round(gameController.getTargetCol() * cellW);
+                int ty = y0 + (int) Math.round(gameController.getTargetRow() * cellH);
 
-            g2.setColor(Color.GREEN);
-            g2.fillOval(tx - 3, ty - 3, 7, 7);
+                g2.setColor(Color.GREEN);
+                g2.fillOval(tx - 3, ty - 3, 7, 7);
+            }
 
             g2.setColor(Color.WHITE);
             g2.setFont(new Font("SansSerif", Font.BOLD, 11));

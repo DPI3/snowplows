@@ -28,9 +28,9 @@ public class GameController {
     private static final int BRIDGE = 6;
     private static final int GRAVEL = 7;
     private static final int BROKEN_ICE = 8;
-
     private static final int CRASHED_LANE = 9;
     private static final int DEEP_SNOW = 10;
+    private static final int SALTED = 11;
 
     private static final int SNOW_TO_ICE_PASSES = 3;
     private static final int CAR_STUCK_TICKS = 3;
@@ -38,6 +38,7 @@ public class GameController {
 
     private final int[][] roadMap = new int[ROWS][COLS];
     private final int[][] snowPressure = new int[ROWS][COLS];
+    private final int[][] saltTimers = new int[ROWS][COLS];
     private final List<RoadNode> roadNodes = new ArrayList<>();
     private final List<int[]> roadCells = new ArrayList<>();
     private final List<TrafficCar> trafficCars = new ArrayList<>();
@@ -145,7 +146,24 @@ public class GameController {
         }
 
         moveTrafficCars();
+        updateSaltedRoads();
         refreshView();
+    }
+
+    private void updateSaltedRoads() {
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+
+                if (roadMap[r][c] == SALTED) {
+                    saltTimers[r][c]--;
+
+                    if (saltTimers[r][c] <= 0) {
+                        roadMap[r][c] = ROAD;
+                        cleanedTiles++;
+                    }
+                }
+            }
+        }
     }
 
     public void handleInputAction(InputAction action) {
@@ -177,9 +195,22 @@ public class GameController {
             int r = p[0];
             int c = p[1];
 
-            if (roadMap[r][c] == ROAD) {
-                roadMap[r][c] = Math.random() < 0.85 ? SNOW : ICE;
-                roadMap[r][c] = random.nextDouble() < 0.15 ? DEEP_SNOW : SNOW;
+            if (roadMap[r][c] == ROAD || roadMap[r][c] == SALTED) {
+
+                if (roadMap[r][c] == SALTED) {
+                    continue;
+                }
+
+                double roll = random.nextDouble();
+
+                if (roll < 0.70) {
+                    roadMap[r][c] = SNOW;
+                } else if (roll < 0.85) {
+                    roadMap[r][c] = DEEP_SNOW;
+                } else {
+                    roadMap[r][c] = ICE;
+                }
+
                 totalDirtyTiles++;
             }
         }
@@ -574,6 +605,7 @@ public class GameController {
                 || tile == BRIDGE
                 || tile == SNOW
                 || tile == ICE
+                || tile == SALTED
                 || tile == GRAVEL;
     }
 
@@ -693,12 +725,26 @@ public class GameController {
         }
 
         if (head instanceof SaltSpreaderHead) {
+
             if (snowplow.getSaltStock() < 10) return 0;
 
-            if (tile == SNOW || tile == DEEP_SNOW || tile == ICE || tile == BROKEN_ICE) {
+            if (tile == SNOW || tile == BROKEN_ICE) {
+
                 snowplow.consumeSalt(10);
-                roadMap[r][c] = ROAD;
-                cleanedTiles++;
+
+                roadMap[r][c] = SALTED;
+                saltTimers[r][c] = 4;
+
+                return 1;
+            }
+
+            if (tile == DEEP_SNOW || tile == ICE) {
+
+                snowplow.consumeSalt(10);
+
+                roadMap[r][c] = SALTED;
+                saltTimers[r][c] = 8;
+
                 return 1;
             }
 
