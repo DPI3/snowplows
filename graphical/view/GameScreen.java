@@ -363,6 +363,7 @@ public class GameScreen extends JFrame {
             }
 
             int[][] map = gameController.getRoadMap();
+
             int rows = map.length;
             int cols = map[0].length;
 

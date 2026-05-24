@@ -1,10 +1,15 @@
 package controller;
 
+import java.awt.Point;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
+import java.util.Set;
 import src.*;
 import view.GameScreen;
 
@@ -21,6 +26,7 @@ public class GameController {
     private static final int ROWS = 40;
     private static final int COLS = 60;
 
+    // Csak kirajzolási kódok. Játéklogikára nem használjuk.
     private static final int FIELD = 0;
     private static final int ROAD = 1;
     private static final int SNOW = 2;
@@ -41,14 +47,20 @@ public class GameController {
     private int lastDirRow = 0;
     private int lastDirCol = 1;
 
-    private final int[][] roadMap = new int[ROWS][COLS];
-    private final int[][] snowPressure = new int[ROWS][COLS];
-    private final int[][] saltTimers = new int[ROWS][COLS];
-    private final int[][] gravelSnowTimers = new int[ROWS][COLS];
-    private final List<RoadNode> roadNodes = new ArrayList<>();
-    private final List<int[]> roadCells = new ArrayList<>();
-    private final List<TrafficCar> trafficCars = new ArrayList<>();
+    private final RoadNetwork roadNetwork = new RoadNetwork();
+    private final List<Lane> playableLanes = new ArrayList<>();
+    private final Map<Lane, Point> lanePositions = new HashMap<>();
+    private final Map<String, Lane> lanesByPosition = new HashMap<>();
+    private final Map<Lane, List<Lane>> neighbours = new HashMap<>();
+    private final Map<Lane, Integer> snowPressure = new HashMap<>();
+    private final Map<Lane, Integer> gravelSnowTimers = new HashMap<>();
+    private final Map<Lane, Integer> laneVisualType = new HashMap<>();
 
+    private Lane playerLane;
+    private Lane targetLane;
+
+    private final List<RoadNode> roadNodes = new ArrayList<>();
+    private final List<TrafficCar> trafficCars = new ArrayList<>();
     private final List<DrawableRoad> drawableRoads = new ArrayList<>();
 
     private boolean busMode = false;
@@ -59,11 +71,6 @@ public class GameController {
     private long lastSecondUpdate = System.currentTimeMillis();
 
     private int weatherCounter = 0;
-
-    private int playerRow = 5;
-    private int playerCol = 1;
-    private int targetRow = 5;
-    private int targetCol = 13;
 
     private int configuredCarCount = 5;
     private int cleanedTiles = 0;
@@ -159,17 +166,12 @@ public class GameController {
     }
 
     private void updateSaltedRoads() {
-        for (int r = 0; r < ROWS; r++) {
-            for (int c = 0; c < COLS; c++) {
+        for (Lane lane : playableLanes) {
+            boolean wasSalted = lane.isSalted();
+            lane.tickSalt();
 
-                if (roadMap[r][c] == SALTED) {
-                    saltTimers[r][c]--;
-
-                    if (saltTimers[r][c] <= 0) {
-                        roadMap[r][c] = ROAD;
-                        cleanedTiles++;
-                    }
-                }
+            if (wasSalted && !lane.isSalted()) {
+                cleanedTiles++;
             }
         }
     }
@@ -195,48 +197,6 @@ public class GameController {
         refreshView();
     }
 
-    private void randomWeatherChange() {
-        for (int i = 0; i < 10; i++) {
-            int[] p = getRandomRoadCell();
-            if (p == null) return;
-
-            int r = p[0];
-            int c = p[1];
-
-            if (roadMap[r][c] == SALTED) {
-                continue;
-            }
-
-            if (roadMap[r][c] == GRAVEL) {
-                gravelSnowTimers[r][c]++;
-
-                if (gravelSnowTimers[r][c] >= 2) {
-                    roadMap[r][c] = SNOW;
-                    gravelSnowTimers[r][c] = 0;
-                    totalDirtyTiles++;
-                }
-
-                continue;
-            }
-
-            if (roadMap[r][c] == ROAD) {
-                double roll = random.nextDouble();
-
-                if (roll < 0.70) {
-                    roadMap[r][c] = SNOW;
-                } else if (roll < 0.85) {
-                    roadMap[r][c] = DEEP_SNOW;
-                } else {
-                    roadMap[r][c] = ICE;
-                }
-
-                totalDirtyTiles++;
-            }
-        }
-
-        message = "Időjárás: új hó vagy jég jelent meg a pályán.";
-    }
-
     private void restartGameState() {
         running = false;
 
@@ -245,18 +205,13 @@ public class GameController {
         remainingSeconds = roundDurationSeconds;
         lastSecondUpdate = System.currentTimeMillis();
 
-        playerRow = 5;
-        playerCol = 1;
-
-        targetRow = -1;
-        targetCol = -1;
-
         cleanedTiles = 0;
         totalDirtyTiles = 0;
         collisions = 0;
 
         buildPlayableMap();
         resetTrafficCars();
+        syncSnowplowToPlayerLane();
 
         message = "Új játék előkészítve. Start gombbal indul.";
         refreshView();
@@ -268,31 +223,29 @@ public class GameController {
     }
 
     private void buildPlayableMap() {
-        drawableRoads.clear();
-        totalDirtyTiles = 0;
+        playableLanes.clear();
+        lanePositions.clear();
+        lanesByPosition.clear();
+        neighbours.clear();
+        snowPressure.clear();
+        gravelSnowTimers.clear();
+        laneVisualType.clear();
         roadNodes.clear();
-        roadCells.clear();
-
-        for (int r = 0; r < ROWS; r++) {
-            for (int c = 0; c < COLS; c++) {
-                roadMap[r][c] = FIELD;
-                snowPressure[r][c] = 0;
-                saltTimers[r][c] = 0;
-                gravelSnowTimers[r][c] = 0;
-            }
-        }
+        drawableRoads.clear();
+        roadNetwork.getNodes().clear();
+        roadNetwork.getRoads().clear();
+        totalDirtyTiles = 0;
 
         generateRoadGraph();
 
-        if (!roadCells.isEmpty()) {
-            int[] start = roadCells.get(0);
-            playerRow = start[0];
-            playerCol = start[1];
-            roadMap[playerRow][playerCol] = DEPOT;
+        if (!playableLanes.isEmpty()) {
+            playerLane = playableLanes.get(0);
+            laneVisualType.put(playerLane, DEPOT);
+        } else {
+            playerLane = null;
         }
 
-        targetRow = -1;
-        targetCol = -1;
+        targetLane = null;
 
         placeRandomTunnelsAndBridges();
         addInitialSnowAndIce();
@@ -329,56 +282,130 @@ public class GameController {
         a.connect(b);
 
         drawableRoads.add(new DrawableRoad(
-            a.displayRow,
-            a.displayCol,
-            b.displayRow,
-            b.displayCol
+                a.displayRow,
+                a.displayCol,
+                b.displayRow,
+                b.displayCol
         ));
 
         int r = a.displayRow;
         int c = a.displayCol;
 
-        markRoadWide(r, c);
+        Lane previousCenterLane = markRoadWide(r, c, ROAD);
 
         while (r != b.displayRow) {
             r += Integer.compare(b.displayRow, r);
-            markRoadWide(r, c);
+            Lane currentCenterLane = markRoadWide(r, c, ROAD);
+            connectLanes(previousCenterLane, currentCenterLane);
+            previousCenterLane = currentCenterLane;
         }
 
         while (c != b.displayCol) {
             c += Integer.compare(b.displayCol, c);
-            markRoadWide(r, c);
+            Lane currentCenterLane = markRoadWide(r, c, ROAD);
+            connectLanes(previousCenterLane, currentCenterLane);
+            previousCenterLane = currentCenterLane;
         }
     }
 
-    private void markRoadWide(int row, int col) {
+    private Lane markRoadWide(int row, int col, int visualType) {
+        Lane center = null;
+
         for (int dr = -1; dr <= 1; dr++) {
             for (int dc = -1; dc <= 1; dc++) {
-                int r = row + dr;
-                int c = col + dc;
+                Lane lane = getOrCreateLane(row + dr, col + dc, visualType);
 
-                if (r < 0 || r >= ROWS || c < 0 || c >= COLS) continue;
+                if (lane == null) continue;
 
-                if (roadMap[r][c] == FIELD) {
-                    roadMap[r][c] = ROAD;
-                    roadCells.add(new int[]{r, c});
+                if (dr == 0 && dc == 0) {
+                    center = lane;
                 }
+
+                Lane right = getLaneAt(row + dr, col + dc + 1);
+                Lane down = getLaneAt(row + dr + 1, col + dc);
+
+                connectLanes(lane, right);
+                connectLanes(lane, down);
             }
+        }
+
+        return center;
+    }
+
+    private Lane getOrCreateLane(int row, int col, int visualType) {
+        if (row < 0 || row >= ROWS || col < 0 || col >= COLS) return null;
+
+        String key = key(row, col);
+        Lane existing = lanesByPosition.get(key);
+
+        if (existing != null) {
+            if (!laneVisualType.containsKey(existing)) {
+                laneVisualType.put(existing, visualType);
+            }
+            return existing;
+        }
+
+        Road road = createRoadByVisualType(visualType);
+        Node source = new Intersection("S_" + row + "_" + col);
+        Node destination = new Intersection("D_" + row + "_" + col);
+
+        road.setSource(source);
+        road.setDestination(destination);
+
+        Lane lane = new Lane("lane_" + row + "_" + col, source, destination);
+        lane.setState(new Clear());
+        road.addLane(lane);
+
+        roadNetwork.addNode(source);
+        roadNetwork.addNode(destination);
+        roadNetwork.addRoad(road);
+
+        playableLanes.add(lane);
+        lanePositions.put(lane, new Point(col, row));
+        lanesByPosition.put(key, lane);
+        neighbours.put(lane, new ArrayList<>());
+        laneVisualType.put(lane, visualType);
+
+        return lane;
+    }
+
+    private Road createRoadByVisualType(int visualType) {
+        if (visualType == BRIDGE) return new Bridge();
+        if (visualType == TUNNEL) return new Tunnel();
+        return new NormalRoad();
+    }
+
+    private void connectLanes(Lane a, Lane b) {
+        if (a == null || b == null || a == b) return;
+
+        neighbours.computeIfAbsent(a, k -> new ArrayList<>());
+        neighbours.computeIfAbsent(b, k -> new ArrayList<>());
+
+        if (!neighbours.get(a).contains(b)) {
+            neighbours.get(a).add(b);
+        }
+
+        if (!neighbours.get(b).contains(a)) {
+            neighbours.get(b).add(a);
         }
     }
 
-    private int[] getRandomRoadCell() {
-        if (roadCells.isEmpty()) return null;
+    private Lane getLaneAt(int row, int col) {
+        return lanesByPosition.get(key(row, col));
+    }
 
-        int[] cell = roadCells.get(random.nextInt(roadCells.size()));
-        return new int[]{cell[0], cell[1]};
+    private String key(int row, int col) {
+        return row + ":" + col;
+    }
+
+    private Lane getRandomLane() {
+        if (playableLanes.isEmpty()) return null;
+        return playableLanes.get(random.nextInt(playableLanes.size()));
     }
 
     private static class RoadNode {
         private final String id;
         private final List<RoadNode> neighbours = new ArrayList<>();
-
-        // csak kirajzoláshoz
         private final int displayRow;
         private final int displayCol;
 
@@ -398,13 +425,6 @@ public class GameController {
         }
     }
 
-    private void addDirtyTile(int r, int c, int type) {
-        if (roadMap[r][c] == ROAD) {
-            roadMap[r][c] = type;
-            totalDirtyTiles++;
-        }
-    }
-
     private void placeRandomTunnelsAndBridges() {
         for (int i = 0; i < 6; i++) {
             placeRoadSegment(TUNNEL, 3 + random.nextInt(4));
@@ -415,70 +435,112 @@ public class GameController {
         }
     }
 
-    private void addInitialSnowAndIce() {
-        for (int i = 0; i < 35; i++) {
-            int[] p = getRandomRoadCell();
-
-            if (p != null) {
-                addDirtyTile(p[0], p[1], random.nextBoolean() ? SNOW : ICE);
-            }
-        }
-    }
-
-    private void placeRoadSegment(int type, int length) {
-        int[] start = getRandomRoadCell();
+    private void placeRoadSegment(int visualType, int length) {
+        Lane start = getRandomLane();
         if (start == null) return;
 
-        int r = start[0];
-        int c = start[1];
+        Point p = lanePositions.get(start);
+        if (p == null) return;
 
         boolean horizontal = random.nextBoolean();
 
-        for (int i = 0; i < length; i++) {
-            int rr = horizontal ? r : r + i;
-            int cc = horizontal ? c + i : c;
+        List<Lane> segment = new ArrayList<>();
 
-            if (rr < 0 || rr >= ROWS || cc < 0 || cc >= COLS) {
-                return;
+        for (int i = 0; i < length; i++) {
+            int row = horizontal ? p.y : p.y + i;
+            int col = horizontal ? p.x + i : p.x;
+
+            Lane lane = getLaneAt(row, col);
+
+            if (lane == null) return;
+            if (lane == playerLane) return;
+
+            segment.add(lane);
+        }
+
+        for (Lane lane : segment) {
+            laneVisualType.put(lane, visualType);
+        }
+    }
+
+    private void addInitialSnowAndIce() {
+        for (int i = 0; i < 35; i++) {
+            Lane lane = getRandomLane();
+
+            if (lane == null || lane == playerLane) continue;
+
+            if (random.nextBoolean()) {
+                lane.setState(new ThinSnow());
+            } else {
+                lane.setState(new IceSheet());
             }
 
-            if (roadMap[rr][cc] != ROAD) {
-                return;
+            totalDirtyTiles++;
+        }
+    }
+
+    private void randomWeatherChange() {
+        if (playableLanes.isEmpty()) return;
+
+        for (int i = 0; i < 10; i++) {
+            Lane lane = getRandomLane();
+
+            if (lane == null || lane.isSalted()) {
+                continue;
+            }
+
+            LaneState state = lane.getLaneState();
+
+            if (state instanceof Gravel) {
+                int counter = gravelSnowTimers.getOrDefault(lane, 0) + 1;
+                gravelSnowTimers.put(lane, counter);
+
+                if (counter >= 2) {
+                    lane.setState(new ThinSnow());
+                    gravelSnowTimers.put(lane, 0);
+                    totalDirtyTiles++;
+                }
+
+                continue;
+            }
+
+            if (state instanceof Clear) {
+                double roll = random.nextDouble();
+
+                if (roll < 0.70) {
+                    lane.setState(new ThinSnow());
+                } else if (roll < 0.85) {
+                    lane.setState(new DeepSnow());
+                } else {
+                    lane.setState(new IceSheet());
+                }
+
+                totalDirtyTiles++;
             }
         }
 
-        for (int i = 0; i < length; i++) {
-            int rr = horizontal ? r : r + i;
-            int cc = horizontal ? c + i : c;
-            roadMap[rr][cc] = type;
-        }
+        message = "Időjárás: új hó vagy jég jelent meg a pályán.";
     }
 
     private void resetTrafficCars() {
         trafficCars.clear();
 
         for (int i = 0; i < configuredCarCount; i++) {
-            int[] start = getRandomRoadCell();
+            Lane start = getRandomLane();
 
             if (start == null) continue;
 
-            List<int[]> route = new ArrayList<>();
-            route.add(new int[]{start[0], start[1]});
-
-            TrafficCar car = new TrafficCar(route, 0, String.valueOf((char)('A' + (i % 26))), i);
+            TrafficCar car = new TrafficCar(start, String.valueOf((char) ('A' + (i % 26))), i);
             trafficCars.add(car);
         }
 
-        if (roadCells.size() >= 2) {
-            int[] a = getRandomRoadCell();
-            int[] b = getRandomRoadCell();
+        if (playableLanes.size() >= 2) {
+            Lane a = getRandomLane();
+            Lane b = getRandomLane();
 
-            if (a != null && b != null) {
-                List<int[]> route = new ArrayList<>();
-                route.add(new int[]{a[0], a[1]});
-
-                TrafficCar bus = new TrafficCar(route, 0, "BUS", 99);
-                bus.makeBus(a[0], a[1], b[0], b[1]);
+            if (a != null && b != null && a != b) {
+                TrafficCar bus = new TrafficCar(a, "BUS", 99);
+                bus.makeBus(a, b);
                 trafficCars.add(bus);
             }
         }
@@ -491,202 +553,153 @@ public class GameController {
                 continue;
             }
 
-            int currentRow = car.getRow();
-            int currentCol = car.getCol();
-
-            if (currentRow == car.targetRow && currentCol == car.targetCol) {
+            if (car.currentLane == car.targetLane) {
                 car.chooseNewTarget();
             }
 
-            int[] target = findShortestPathNextStep(car, currentRow, currentCol, car.targetRow, car.targetCol);
+            Lane next = findShortestPathNextStep(car, car.currentLane, car.targetLane);
 
-            if (target == null) {
+            if (next == null) {
                 car.chooseNewTarget();
-                target = findShortestPathNextStep(car, currentRow, currentCol, car.targetRow, car.targetCol);
+                next = findShortestPathNextStep(car, car.currentLane, car.targetLane);
             }
 
-            int dr = 0;
-            int dc = 0;
-
-            if (target != null) {
-                dr = Integer.compare(target[0], currentRow);
-                dc = Integer.compare(target[1], currentCol);
-            }
-            if (target == null) {
+            if (next == null) {
                 car.stuckTicks = 1;
                 continue;
             }
 
-            int rr = target[0];
-            int cc = target[1];
+            int dr = getDirectionRow(car.currentLane, next);
+            int dc = getDirectionCol(car.currentLane, next);
 
-            if (roadMap[rr][cc] == ICE) {
-                int[] slideEnd = slideOnIce(car, rr, cc, dr, dc);
-                if (slideEnd == null) continue;
-                rr = slideEnd[0];
-                cc = slideEnd[1];
+            Lane destination = next;
+
+            if (destination.getLaneState() instanceof IceSheet) {
+                destination = slideOnIce(car, destination, dr, dc);
+
+                if (destination == null) {
+                    continue;
+                }
             }
 
-            TrafficCar other = getTrafficCarAt(car, rr, cc);
+            TrafficCar other = getTrafficCarAt(car, destination);
+
             if (other != null) {
-                crashCars(car, other, rr, cc);
+                crashCars(car, other, destination);
                 continue;
             }
 
-            car.moveTo(rr, cc);
+            car.moveTo(destination);
             car.checkBusTerminalReached();
 
-            handleCarTileEffect(rr, cc);
+            handleCarLaneEffect(destination);
         }
     }
 
-    public static class DrawableRoad {
-        public final int fromRow;
-        public final int fromCol;
-        public final int toRow;
-        public final int toCol;
+    private Lane findShortestPathNextStep(TrafficCar car, Lane start, Lane goal) {
+        if (start == null || goal == null) return null;
 
-        public DrawableRoad(int fromRow, int fromCol, int toRow, int toCol) {
-            this.fromRow = fromRow;
-            this.fromCol = fromCol;
-            this.toRow = toRow;
-            this.toCol = toCol;
-        }
-    }
+        Set<Lane> visited = new HashSet<>();
+        Map<Lane, Lane> previous = new HashMap<>();
+        Queue<Lane> queue = new ArrayDeque<>();
 
-    private int[] findShortestPathNextStep(TrafficCar car, int startRow, int startCol, int goalRow, int goalCol) {
-        if (goalRow < 0 || goalCol < 0) return null;
-
-        boolean[][] visited = new boolean[ROWS][COLS];
-        int[][] prevRow = new int[ROWS][COLS];
-        int[][] prevCol = new int[ROWS][COLS];
-
-        for (int r = 0; r < ROWS; r++) {
-            for (int c = 0; c < COLS; c++) {
-                prevRow[r][c] = -1;
-                prevCol[r][c] = -1;
-            }
-        }
-
-        Queue<int[]> queue = new ArrayDeque<>();
-        queue.add(new int[]{startRow, startCol});
-        visited[startRow][startCol] = true;
-
-        int[][] dirs = {
-                {1, 0},
-                {-1, 0},
-                {0, 1},
-                {0, -1}
-        };
+        visited.add(start);
+        queue.add(start);
 
         while (!queue.isEmpty()) {
-            int[] current = queue.poll();
-            int r = current[0];
-            int c = current[1];
+            Lane current = queue.poll();
 
-            if (r == goalRow && c == goalCol) {
+            if (current == goal) {
                 break;
             }
 
-            for (int[] dir : dirs) {
-                int nr = r + dir[0];
-                int nc = c + dir[1];
+            for (Lane next : neighbours.getOrDefault(current, new ArrayList<>())) {
+                if (visited.contains(next)) continue;
+                if (!canCarEnter(car, next)) continue;
 
-                if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) continue;
-                if (visited[nr][nc]) continue;
-                if (!canCarEnter(car, nr, nc)) continue;
-
-                visited[nr][nc] = true;
-                prevRow[nr][nc] = r;
-                prevCol[nr][nc] = c;
-                queue.add(new int[]{nr, nc});
+                visited.add(next);
+                previous.put(next, current);
+                queue.add(next);
             }
         }
 
-        if (!visited[goalRow][goalCol]) {
+        if (!visited.contains(goal)) {
             return null;
         }
 
-        int r = goalRow;
-        int c = goalCol;
+        Lane current = goal;
 
-        while (!(prevRow[r][c] == startRow && prevCol[r][c] == startCol)) {
-            int pr = prevRow[r][c];
-            int pc = prevCol[r][c];
-
-            if (pr == -1 || pc == -1) {
-                return null;
-            }
-
-            r = pr;
-            c = pc;
+        while (previous.containsKey(current) && previous.get(current) != start) {
+            current = previous.get(current);
         }
 
-        return new int[]{r, c};
+        if (previous.get(current) == start) {
+            return current;
+        }
+
+        return goal == start ? start : null;
     }
 
-    private boolean canCarEnter(TrafficCar self, int r, int c) {
-        if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return false;
+    private boolean canCarEnter(TrafficCar self, Lane lane) {
+        if (lane == null) return false;
+        if (lane.hasAccident()) return false;
 
-        int tile = roadMap[r][c];
+        LaneState state = lane.getLaneState();
 
-        if (tile == FIELD || tile == DEEP_SNOW || tile == CRASHED_LANE || tile == BROKEN_ICE) {
+        if (state instanceof DeepSnow || state instanceof BrokenIce) {
             return false;
         }
 
-        return getTrafficCarAt(self, r, c) == null || tile == ICE;
+        TrafficCar other = getTrafficCarAt(self, lane);
+
+        return other == null || state instanceof IceSheet;
     }
 
-    private int[] slideOnIce(TrafficCar car, int startRow, int startCol, int dr, int dc) {
-        int r = startRow;
-        int c = startCol;
+    private Lane slideOnIce(TrafficCar car, Lane start, int dr, int dc) {
+        Lane current = start;
 
         for (int i = 0; i < SLIDE_LIMIT; i++) {
-            TrafficCar other = getTrafficCarAt(car, r, c);
+            TrafficCar other = getTrafficCarAt(car, current);
+
             if (other != null) {
-                crashCars(car, other, r, c);
+                crashCars(car, other, current);
                 return null;
             }
 
-            int nr = r + dr;
-            int nc = c + dc;
+            Lane next = findNeighbourLaneByDirection(current, dr, dc);
 
-            if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) {
-                return new int[]{r, c};
+            if (next == null || !canCarEnter(car, next)) {
+                return current;
             }
 
-            int nextTile = roadMap[nr][nc];
+            current = next;
 
-            if (nextTile == FIELD || nextTile == DEEP_SNOW || nextTile == CRASHED_LANE || nextTile == BROKEN_ICE) {
-                return new int[]{r, c};
-            }
-
-            r = nr;
-            c = nc;
-
-            if (nextTile != ICE) {
-                return new int[]{r, c};
+            if (!(current.getLaneState() instanceof IceSheet)) {
+                return current;
             }
         }
 
-        return new int[]{r, c};
+        return current;
     }
 
-    private void handleCarTileEffect(int r, int c) {
-        if (roadMap[r][c] == SNOW) {
-            snowPressure[r][c]++;
+    private void handleCarLaneEffect(Lane lane) {
+        if (lane == null) return;
 
-            if (snowPressure[r][c] >= SNOW_TO_ICE_PASSES) {
-                roadMap[r][c] = ICE;
-                snowPressure[r][c] = 0;
+        if (lane.getLaneState() instanceof ThinSnow) {
+            int pressure = snowPressure.getOrDefault(lane, 0) + 1;
+            snowPressure.put(lane, pressure);
+
+            if (pressure >= SNOW_TO_ICE_PASSES) {
+                lane.setState(new IceSheet());
+                snowPressure.put(lane, 0);
                 message = "Az autók letaposták a havat, ezért jégpáncél alakult ki.";
             }
         }
     }
 
-    private TrafficCar getTrafficCarAt(TrafficCar self, int r, int c) {
+    private TrafficCar getTrafficCarAt(TrafficCar self, Lane lane) {
         for (TrafficCar car : trafficCars) {
-            if (car != self && car.getRow() == r && car.getCol() == c) {
+            if (car != self && car.currentLane == lane) {
                 return car;
             }
         }
@@ -694,32 +707,18 @@ public class GameController {
         return null;
     }
 
-    private void crashCars(TrafficCar first, TrafficCar second, int r, int c) {
+    private void crashCars(TrafficCar first, TrafficCar second, Lane lane) {
         collisions++;
+
         first.stuckTicks = CAR_STUCK_TICKS;
         second.stuckTicks = CAR_STUCK_TICKS;
 
-        roadMap[r][c] = CRASHED_LANE;
-        snowPressure[r][c] = 0;
+        if (lane != null) {
+            lane.setHasAccident(true);
+            snowPressure.put(lane, 0);
+        }
 
         message = "Autóbaleset történt, a sáv járhatatlanná vált.";
-    }
-
-    private boolean isDriveable(int r, int c) {
-        if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return false;
-
-        int tile = roadMap[r][c];
-
-        return tile == ROAD
-                || tile == DEPOT
-                || tile == TUNNEL
-                || tile == BRIDGE
-                || tile == SNOW
-                || tile == DEEP_SNOW
-                || tile == ICE
-                || tile == BROKEN_ICE
-                || tile == SALTED
-                || tile == GRAVEL;
     }
 
     private void movePlayer(int dr, int dc) {
@@ -728,36 +727,50 @@ public class GameController {
             return;
         }
 
-        int nr = playerRow + dr;
-        int nc = playerCol + dc;
+        Lane next = findNeighbourLaneByDirection(playerLane, dr, dc);
 
-        if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) {
+        if (next == null) {
             message = "Nem lehet lemenni a pályáról.";
             return;
         }
 
-        if (!isDriveable(nr, nc)) {
-            message = "Csak az úton, hídon vagy alagútban haladhatsz.";
+        if (!next.isPassable()) {
+            message = "Csak járható úton, hídon vagy alagútban haladhatsz.";
             return;
         }
 
+        playerLane = next;
         lastDirRow = dr;
         lastDirCol = dc;
 
-        Role role = gameScreen.getRole();
-
-        if (role instanceof CleanerRole) {
-            Snowplow snowplow = ((CleanerRole) role).getSnowplow();
-
-            if (snowplow != null && snowplow.getCurrentLane() != null) {
-                snowplow.setFacingLane(snowplow.getCurrentLane());
-            }
-        }
-
-        playerRow = nr;
-        playerCol = nc;
+        syncSnowplowToPlayerLane();
 
         message = "Mozgás sikeres.";
+    }
+
+    private Lane findNeighbourLaneByDirection(Lane from, int dr, int dc) {
+        if (from == null) return null;
+
+        Point p = lanePositions.get(from);
+        if (p == null) return null;
+
+        return getLaneAt(p.y + dr, p.x + dc);
+    }
+
+    private int getDirectionRow(Lane from, Lane to) {
+        Point a = lanePositions.get(from);
+        Point b = lanePositions.get(to);
+
+        if (a == null || b == null) return 0;
+        return Integer.compare(b.y, a.y);
+    }
+
+    private int getDirectionCol(Lane from, Lane to) {
+        Point a = lanePositions.get(from);
+        Point b = lanePositions.get(to);
+
+        if (a == null || b == null) return 0;
+        return Integer.compare(b.x, a.x);
     }
 
     public void cleanCurrentTile() {
@@ -770,31 +783,24 @@ public class GameController {
             return;
         }
 
-        int targetRow = playerRow + lastDirRow;
-        int targetCol = playerCol + lastDirCol;
+        Lane target = findNeighbourLaneByDirection(playerLane, lastDirRow, lastDirCol);
 
-        int cleaned = cleanTile(targetRow, targetCol);
+        int cleaned = cleanLane(target);
 
         if (cleaned > 0) {
             int reward = cleaned * 25 * plowLevel;
             rewardCleaner(reward);
             message = "Takarítás az aktuális irányba: +" + reward + " pénz.";
         } else {
-            message = "Nincs takarítható mező a hókotró előtt.";
+            message = "Nincs takarítható sáv a hókotró előtt.";
         }
 
         checkMissionEnd();
         refreshView();
     }
 
-    private int cleanTile(int r, int c) {
-        if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return 0;
-
-        int tile = roadMap[r][c];
-
-        if (tile == FIELD || tile == ROAD || tile == DEPOT || tile == TUNNEL || tile == BRIDGE) {
-            return 0;
-        }
+    private int cleanLane(Lane lane) {
+        if (lane == null) return 0;
 
         Role role = gameScreen.getRole();
         if (!(role instanceof CleanerRole)) return 0;
@@ -805,13 +811,22 @@ public class GameController {
         if (snowplow == null || snowplow.getCurrentHead() == null) return 0;
 
         Head head = snowplow.getCurrentHead();
+        LaneState before = lane.getLaneState();
+
+        if (before instanceof Clear && !lane.isSalted()) {
+            return 0;
+        }
 
         if (head instanceof DragonHead) {
             if (snowplow.getBiokeroseneStock() < 10) return 0;
 
-            if (tile == SNOW || tile == DEEP_SNOW || tile == ICE || tile == BROKEN_ICE) {
+            if (before instanceof ThinSnow ||
+                before instanceof DeepSnow ||
+                before instanceof IceSheet ||
+                before instanceof BrokenIce) {
+
                 snowplow.consumeBiokerosene(10);
-                roadMap[r][c] = ROAD;
+                lane.setState(new Clear());
                 cleanedTiles++;
                 return 1;
             }
@@ -820,8 +835,8 @@ public class GameController {
         }
 
         if (head instanceof IcebreakerHead) {
-            if (tile == ICE) {
-                roadMap[r][c] = BROKEN_ICE;
+            if (before instanceof IceSheet) {
+                lane.setState(new BrokenIce());
                 return 1;
             }
 
@@ -829,26 +844,17 @@ public class GameController {
         }
 
         if (head instanceof SaltSpreaderHead) {
-
             if (snowplow.getSaltStock() < 10) return 0;
 
-            if (tile == SNOW || tile == BROKEN_ICE) {
-
+            if (before instanceof ThinSnow || before instanceof BrokenIce) {
                 snowplow.consumeSalt(10);
-
-                roadMap[r][c] = SALTED;
-                saltTimers[r][c] = 4;
-
+                lane.applySalt(4);
                 return 1;
             }
 
-            if (tile == DEEP_SNOW || tile == ICE) {
-
+            if (before instanceof DeepSnow || before instanceof IceSheet) {
                 snowplow.consumeSalt(10);
-
-                roadMap[r][c] = SALTED;
-                saltTimers[r][c] = 8;
-
+                lane.applySalt(8);
                 return 1;
             }
 
@@ -858,9 +864,9 @@ public class GameController {
         if (head instanceof GravelSpreaderHead) {
             if (snowplow.getGravelStock() < 10) return 0;
 
-            if (tile == ICE) {
+            if (before instanceof IceSheet) {
                 snowplow.consumeGravel(10);
-                roadMap[r][c] = GRAVEL;
+                lane.setState(new Gravel());
                 return 1;
             }
 
@@ -868,55 +874,47 @@ public class GameController {
         }
 
         if (head instanceof SweeperHead) {
-            if (tile == SNOW || tile == DEEP_SNOW || tile == BROKEN_ICE || tile == GRAVEL) {
-
-                pushMaterialInArrowDirection(r, c, tile, 1);
-
-                roadMap[r][c] = ROAD;
-                cleanedTiles++;
-                return 1;
-            }
-
-            return 0;
+            return moveMaterialInArrowDirection(lane, 1);
         }
 
         if (head instanceof ThrowerHead) {
-            if (tile == SNOW || tile == DEEP_SNOW || tile == BROKEN_ICE || tile == GRAVEL) {
+            return moveMaterialInArrowDirection(lane, 3);
+        }
 
-                pushMaterialInArrowDirection(r, c, tile, 3);
+        snowplow.clean(lane);
 
-                roadMap[r][c] = ROAD;
-                cleanedTiles++;
-                return 1;
-            }
+        LaneState after = lane.getLaneState();
 
-            return 0;
+        if (after != null && before != null && after.getClass() != before.getClass()) {
+            cleanedTiles++;
+            return 1;
         }
 
         return 0;
     }
 
-    private void pushMaterialInArrowDirection(int r, int c, int material, int distance) {
-        int nr = r + lastDirRow * distance;
-        int nc = c + lastDirCol * distance;
+    private int moveMaterialInArrowDirection(Lane lane, int distance) {
+        LaneState material = lane.removeMovableMaterial();
 
-        if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) {
-            return;
+        if (material == null) return 0;
+
+        Lane target = lane;
+
+        for (int i = 0; i < distance; i++) {
+            target = findNeighbourLaneByDirection(target, lastDirRow, lastDirCol);
+
+            if (target == null) {
+                cleanedTiles++;
+                return 1;
+            }
         }
 
-        // Ha mezőre dobja/tolja, akkor az út mellé kerül, nem kell tárolni.
-        if (roadMap[nr][nc] == FIELD) {
-            return;
+        if (target.getLaneState() instanceof Clear && !target.hasAccident()) {
+            target.placeMaterial(material);
         }
 
-        // Csak járható, üres útfelületre kerüljön át.
-        if (roadMap[nr][nc] == ROAD ||
-            roadMap[nr][nc] == BRIDGE ||
-            roadMap[nr][nc] == TUNNEL ||
-            roadMap[nr][nc] == DEPOT) {
-
-            roadMap[nr][nc] = material;
-        }
+        cleanedTiles++;
+        return 1;
     }
 
     private void handleCollision() {
@@ -925,10 +923,11 @@ public class GameController {
         int penalty = 40;
         chargeCleaner(penalty);
 
-        int[] depot = getRandomRoadCell();
+        Lane depot = getRandomLane();
+
         if (depot != null) {
-            playerRow = depot[0];
-            playerCol = depot[1];
+            playerLane = depot;
+            syncSnowplowToPlayerLane();
         }
 
         message = "Ütközés történt. -" + penalty + " pénz, visszakerültél a depóba.";
@@ -937,23 +936,21 @@ public class GameController {
 
     private void checkMissionEnd() {
         if (busMode) {
-            if (playerRow == targetRow && playerCol == targetCol) {
+            if (playerLane == targetLane) {
                 completedJobs++;
 
-                int[] newPlayer = getRandomRoadCell();
-                int[] newTarget = getRandomRoadCell();
+                Lane newPlayer = getRandomLane();
+                Lane newTarget = getRandomLane();
 
                 if (newPlayer != null && newTarget != null) {
-                    playerRow = newPlayer[0];
-                    playerCol = newPlayer[1];
-
-                    if (targetRow >= 0 && targetCol >= 0 && roadMap[targetRow][targetCol] == DEPOT) {
-                        roadMap[targetRow][targetCol] = ROAD;
+                    if (targetLane != null && laneVisualType.getOrDefault(targetLane, ROAD) == DEPOT) {
+                        laneVisualType.put(targetLane, ROAD);
                     }
 
-                    targetRow = newTarget[0];
-                    targetCol = newTarget[1];
-                    roadMap[targetRow][targetCol] = DEPOT;
+                    playerLane = newPlayer;
+                    targetLane = newTarget;
+                    laneVisualType.put(targetLane, DEPOT);
+                    syncSnowplowToPlayerLane();
                 }
 
                 message = "Busz cél teljesítve. Új indulási hely és új célállomás kijelölve.";
@@ -965,6 +962,19 @@ public class GameController {
         if (getCleanPercent() >= 70) {
             completedJobs++;
             message = "Jó munka: az utak legalább 70%-a tiszta.";
+        }
+    }
+
+    private void syncSnowplowToPlayerLane() {
+        Role role = gameScreen.getRole();
+
+        if (role instanceof CleanerRole) {
+            Snowplow snowplow = ((CleanerRole) role).getSnowplow();
+
+            if (snowplow != null) {
+                snowplow.setCurrentLane(playerLane);
+                snowplow.setFacingLane(playerLane);
+            }
         }
     }
 
@@ -997,6 +1007,7 @@ public class GameController {
 
         if (role instanceof CleanerRole) {
             CleanerRole cleanerRole = (CleanerRole) role;
+
             if (cleanerRole.getMoney() < price) {
                 message = "Nincs elég pénz a fejlesztéshez. Ár: " + price;
                 refreshView();
@@ -1078,24 +1089,80 @@ public class GameController {
         return running;
     }
 
+    public List<Lane> getPlayableLanes() {
+        return playableLanes;
+    }
+
+    public Point getLanePosition(Lane lane) {
+        return lanePositions.get(lane);
+    }
+
+    public Lane getPlayerLane() {
+        return playerLane;
+    }
+
+    public Lane getTargetLane() {
+        return targetLane;
+    }
+
+    /*
+     * Csak a régi GameScreen kompatibilitása miatt marad.
+     * Nem tárolt játékállapot, hanem minden repaint előtt Lane objektumokból számolt kirajzolási másolat.
+     */
     public int[][] getRoadMap() {
-        return roadMap;
+        int[][] viewMap = new int[ROWS][COLS];
+
+        for (Lane lane : playableLanes) {
+            Point p = lanePositions.get(lane);
+            if (p == null) continue;
+
+            int visual = laneToVisualCode(lane);
+            viewMap[p.y][p.x] = visual;
+        }
+
+        return viewMap;
+    }
+
+    private int laneToVisualCode(Lane lane) {
+        if (lane == null) return FIELD;
+
+        if (lane.hasAccident()) {
+            return CRASHED_LANE;
+        }
+
+        if (lane.isSalted()) {
+            return SALTED;
+        }
+
+        LaneState state = lane.getLaneState();
+
+        if (state instanceof ThinSnow) return SNOW;
+        if (state instanceof DeepSnow) return DEEP_SNOW;
+        if (state instanceof IceSheet) return ICE;
+        if (state instanceof BrokenIce) return BROKEN_ICE;
+        if (state instanceof Gravel) return GRAVEL;
+
+        return laneVisualType.getOrDefault(lane, ROAD);
     }
 
     public int getPlayerRow() {
-        return playerRow;
+        Point p = lanePositions.get(playerLane);
+        return p == null ? -1 : p.y;
     }
 
     public int getPlayerCol() {
-        return playerCol;
+        Point p = lanePositions.get(playerLane);
+        return p == null ? -1 : p.x;
     }
 
     public int getTargetRow() {
-        return targetRow;
+        Point p = lanePositions.get(targetLane);
+        return p == null ? -1 : p.y;
     }
 
     public int getTargetCol() {
-        return targetCol;
+        Point p = lanePositions.get(targetLane);
+        return p == null ? -1 : p.x;
     }
 
     public String getMessage() {
@@ -1154,79 +1221,67 @@ public class GameController {
     }
 
     public class TrafficCar {
-        private final List<int[]> route;
-        private int index;
         private int stuckTicks = 0;
         private final String label;
         private final int colorIndex;
-        private int targetRow;
-        private int targetCol;
-        private int row;
-        private int col;
+
+        private Lane currentLane;
+        private Lane targetLane;
 
         private boolean bus;
-        private int terminalArow;
-        private int terminalAcol;
-        private int terminalBrow;
-        private int terminalBcol;
+        private Lane terminalA;
+        private Lane terminalB;
         private int busRounds;
 
-        TrafficCar(List<int[]> route, int index, String label, int colorIndex) {
-            this.route = route;
-            this.index = Math.min(index, route.size() - 1);
-            this.row = route.get(this.index)[0];
-            this.col = route.get(this.index)[1];
+        TrafficCar(Lane startLane, String label, int colorIndex) {
+            this.currentLane = startLane;
             this.label = label;
             this.colorIndex = colorIndex;
             chooseNewTarget();
         }
 
-        private void makeBus(int aRow, int aCol, int bRow, int bCol) {
+        private void makeBus(Lane a, Lane b) {
             bus = true;
-            terminalArow = aRow;
-            terminalAcol = aCol;
-            terminalBrow = bRow;
-            terminalBcol = bCol;
-            targetRow = terminalBrow;
-            targetCol = terminalBcol;
+            terminalA = a;
+            terminalB = b;
+            currentLane = a;
+            targetLane = b;
         }
 
         private void chooseNewTarget() {
-            int[] target = getRandomRoadCell();
+            Lane target = getRandomLane();
 
             if (target != null) {
-                targetRow = target[0];
-                targetCol = target[1];
+                targetLane = target;
             }
         }
 
-        public void moveTo(int row, int col) {
-            this.row = row;
-            this.col = col;
+        public void moveTo(Lane lane) {
+            this.currentLane = lane;
         }
 
         private void checkBusTerminalReached() {
             if (!bus) return;
 
-            if (row == targetRow && col == targetCol) {
+            if (currentLane == targetLane) {
                 busRounds++;
 
-                if (targetRow == terminalArow && targetCol == terminalAcol) {
-                    targetRow = terminalBrow;
-                    targetCol = terminalBcol;
+                if (targetLane == terminalA) {
+                    targetLane = terminalB;
                 } else {
-                    targetRow = terminalArow;
-                    targetCol = terminalAcol;
+                    targetLane = terminalA;
                 }
             }
         }
 
         public int getRow() {
-            return row;
+            Point p = lanePositions.get(currentLane);
+            return p == null ? -1 : p.y;
         }
 
         public int getCol() {
-            return col;
+            Point p = lanePositions.get(currentLane);
+            return p == null ? -1 : p.x;
         }
 
         public String getLabel() {
@@ -1252,7 +1307,6 @@ public class GameController {
         }
 
         CleanerRole cleaner = (CleanerRole) role;
-
         java.util.List<Head> heads = cleaner.getOwnedHeads();
 
         if (heads.isEmpty()) {
@@ -1303,21 +1357,28 @@ public class GameController {
         remainingSeconds = roundDurationSeconds;
         lastSecondUpdate = System.currentTimeMillis();
 
-        int[] start = getRandomRoadCell();
+        Lane start = getRandomLane();
+
         if (start != null) {
-            playerRow = start[0];
-            playerCol = start[1];
+            playerLane = start;
+            syncSnowplowToPlayerLane();
         }
 
         if (busMode) {
+            targetLane = getRandomLane();
+
+            if (targetLane != null) {
+                laneVisualType.put(targetLane, DEPOT);
+            }
+
             message = "BUS MODE: juss el a depóba.";
         } else {
+            targetLane = null;
             message = "SNOWPLOW MODE: takarítsd az utakat.";
         }
 
         refreshView();
     }
-
 
     public void setRoundDurationSeconds(int seconds) {
         roundDurationSeconds = Math.max(30, seconds);
@@ -1326,12 +1387,25 @@ public class GameController {
         refreshView();
     }
 
-
     public int getCurrentRoundForDisplay() {
         return game.getRound();
     }
 
     public List<DrawableRoad> getDrawableRoads() {
         return drawableRoads;
+    }
+
+    public static class DrawableRoad {
+        public final int fromRow;
+        public final int fromCol;
+        public final int toRow;
+        public final int toCol;
+
+        public DrawableRoad(int fromRow, int fromCol, int toRow, int toCol) {
+            this.fromRow = fromRow;
+            this.fromCol = fromCol;
+            this.toRow = toRow;
+            this.toCol = toCol;
+        }
     }
 }
