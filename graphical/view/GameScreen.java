@@ -506,6 +506,10 @@ public class GameScreen extends JFrame {
                         drawBrokenIce(g2, x, y, cell);
                     } else if (map[r][c] == 7) {
                         drawGravel(g2, x, y, cell);
+                    } else if (map[r][c] == 9) {
+                        drawCrashedLane(g2, x, y, cell);
+                    } else if (map[r][c] == 10) {
+                        drawDeepSnow(g2, x, y, cell);
                     }
                 }
             }
@@ -791,6 +795,25 @@ public class GameScreen extends JFrame {
                     25,
                     getHeight() - 18
             );
+        }
+
+        private void drawCrashedLane(Graphics2D g2, int x, int y, int cell) {
+            g2.setColor(new Color(90, 35, 35, 220));
+            g2.fillRoundRect(x + 7, y + 7, cell - 14, cell - 14, 10, 10);
+
+            g2.setColor(Color.RED);
+            g2.setStroke(new BasicStroke(3f));
+            g2.drawLine(x + 10, y + 10, x + cell - 10, y + cell - 10);
+            g2.drawLine(x + cell - 10, y + 10, x + 10, y + cell - 10);
+        }
+
+        private void drawDeepSnow(Graphics2D g2, int x, int y, int cell) {
+            g2.setColor(new Color(250, 250, 255, 240));
+            g2.fillRoundRect(x + 5, y + 5, cell - 10, cell - 10, 12, 12);
+
+            g2.setColor(new Color(190, 210, 230));
+            g2.setFont(new Font("SansSerif", Font.BOLD, Math.max(12, cell / 4)));
+            g2.drawString("**", x + cell / 2 - 8, y + cell / 2 + 6);
         }
 
         private void drawMiniMap(Graphics2D g2, int[][] map, int rows, int cols) {

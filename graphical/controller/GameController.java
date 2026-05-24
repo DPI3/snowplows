@@ -1,9 +1,10 @@
 package controller;
 
-import controller.GameController.TrafficCar;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import graphical.controller.GameController.TrafficCar;
 import src.*;
 import view.GameScreen;
 
@@ -30,7 +31,15 @@ public class GameController {
     private static final int GRAVEL = 7;
     private static final int BROKEN_ICE = 8;
 
+    private static final int CRASHED_LANE = 9;
+    private static final int DEEP_SNOW = 10;
+
+    private static final int SNOW_TO_ICE_PASSES = 3;
+    private static final int CAR_STUCK_TICKS = 3;
+    private static final int SLIDE_LIMIT = 4;
+
     private final int[][] roadMap = new int[ROWS][COLS];
+    private final int[][] snowPressure = new int[ROWS][COLS];
     private final List<TrafficCar> trafficCars = new ArrayList<>();
 
     private boolean busMode = false;
@@ -138,7 +147,6 @@ public class GameController {
             randomWeatherChange();
         }
 
-        randomWeatherChange();
         moveTrafficCars();
         refreshView();
     }
@@ -402,27 +410,172 @@ public class GameController {
 
     private void moveTrafficCars() {
         for (TrafficCar car : trafficCars) {
+            if (car.stuckTicks > 0) {
+                car.stuckTicks--;
+                continue;
+            }
+
             int next = (car.index + 1) % car.route.size();
-            int[] p = car.route.get(next);
+            int[] current = car.route.get(car.index);
+            int[] planned = car.route.get(next);
 
-            if (p[0] < 0 || p[0] >= ROWS || p[1] < 0 || p[1] >= COLS) {
+            int dr = Integer.compare(planned[0], current[0]);
+            int dc = Integer.compare(planned[1], current[1]);
+
+            int[] target = chooseCarTarget(car, planned[0], planned[1], dr, dc);
+            if (target == null) {
+                car.stuckTicks = 1;
                 continue;
             }
 
-            if (roadMap[p[0]][p[1]] == FIELD) {
+            int rr = target[0];
+            int cc = target[1];
+
+            if (roadMap[rr][cc] == ICE) {
+                int[] slideEnd = slideOnIce(car, rr, cc, dr, dc);
+                if (slideEnd == null) continue;
+                rr = slideEnd[0];
+                cc = slideEnd[1];
+            }
+
+            TrafficCar other = getTrafficCarAt(car, rr, cc);
+            if (other != null) {
+                crashCars(car, other, rr, cc);
                 continue;
             }
 
-            if (roadMap[p[0]][p[1]] == SNOW || roadMap[p[0]][p[1]] == ICE) {
-                continue;
+            int matchingIndex = findRouteIndex(car, rr, cc);
+            if (matchingIndex >= 0) {
+                car.index = matchingIndex;
+            } else {
+                car.route.add(car.index + 1, new int[]{rr, cc});
+                car.index++;
             }
 
-            if (occupiedByOtherCar(car, p[0], p[1])) {
-                continue;
-            }
-
-            car.index = next;
+            handleCarTileEffect(rr, cc);
         }
+    }
+
+    private int[] chooseCarTarget(TrafficCar car, int targetRow, int targetCol, int dr, int dc) {
+        if (canCarEnter(car, targetRow, targetCol)) {
+            return new int[]{targetRow, targetCol};
+        }
+
+        return findAlternativeStep(car);
+    }
+
+    private int[] findAlternativeStep(TrafficCar car) {
+        int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        int currentRow = car.getRow();
+        int currentCol = car.getCol();
+        int[] destination = car.route.get(car.route.size() - 1);
+
+        int[] best = null;
+        int bestDistance = Integer.MAX_VALUE;
+
+        for (int[] dir : dirs) {
+            int nr = currentRow + dir[0];
+            int nc = currentCol + dir[1];
+
+            if (!canCarEnter(car, nr, nc)) continue;
+
+            int distance = Math.abs(destination[0] - nr) + Math.abs(destination[1] - nc);
+            if (distance < bestDistance) {
+                bestDistance = distance;
+                best = new int[]{nr, nc};
+            }
+        }
+
+        return best;
+    }
+
+    private boolean canCarEnter(TrafficCar self, int r, int c) {
+        if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return false;
+
+        int tile = roadMap[r][c];
+
+        if (tile == FIELD || tile == DEEP_SNOW || tile == CRASHED_LANE || tile == BROKEN_ICE) {
+            return false;
+        }
+
+        return getTrafficCarAt(self, r, c) == null || tile == ICE;
+    }
+
+    private int[] slideOnIce(TrafficCar car, int startRow, int startCol, int dr, int dc) {
+        int r = startRow;
+        int c = startCol;
+
+        for (int i = 0; i < SLIDE_LIMIT; i++) {
+            TrafficCar other = getTrafficCarAt(car, r, c);
+            if (other != null) {
+                crashCars(car, other, r, c);
+                return null;
+            }
+
+            int nr = r + dr;
+            int nc = c + dc;
+
+            if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) {
+                return new int[]{r, c};
+            }
+
+            int nextTile = roadMap[nr][nc];
+
+            if (nextTile == FIELD || nextTile == DEEP_SNOW || nextTile == CRASHED_LANE || nextTile == BROKEN_ICE) {
+                return new int[]{r, c};
+            }
+
+            r = nr;
+            c = nc;
+
+            if (nextTile != ICE) {
+                return new int[]{r, c};
+            }
+        }
+
+        return new int[]{r, c};
+    }
+
+    private void handleCarTileEffect(int r, int c) {
+        if (roadMap[r][c] == SNOW) {
+            snowPressure[r][c]++;
+
+            if (snowPressure[r][c] >= SNOW_TO_ICE_PASSES) {
+                roadMap[r][c] = ICE;
+                snowPressure[r][c] = 0;
+                message = "Az autók letaposták a havat, ezért jégpáncél alakult ki.";
+            }
+        }
+    }
+
+    private TrafficCar getTrafficCarAt(TrafficCar self, int r, int c) {
+        for (TrafficCar car : trafficCars) {
+            if (car != self && car.getRow() == r && car.getCol() == c) {
+                return car;
+            }
+        }
+
+        return null;
+    }
+
+    private void crashCars(TrafficCar first, TrafficCar second, int r, int c) {
+        collisions++;
+        first.stuckTicks = CAR_STUCK_TICKS;
+        second.stuckTicks = CAR_STUCK_TICKS;
+
+        roadMap[r][c] = CRASHED_LANE;
+        snowPressure[r][c] = 0;
+
+        message = "Autóbaleset történt, a sáv járhatatlanná vált.";
+    }
+
+    private int findRouteIndex(TrafficCar car, int r, int c) {
+        for (int i = 0; i < car.route.size(); i++) {
+            int[] p = car.route.get(i);
+            if (p[0] == r && p[1] == c) return i;
+        }
+
+        return -1;
     }
 
     private boolean occupiedByOtherCar(TrafficCar self, int r, int c) {
@@ -548,7 +701,7 @@ public class GameController {
         if (head instanceof DragonHead) {
             if (snowplow.getBiokeroseneStock() < 10) return 0;
 
-            if (tile == SNOW || tile == ICE || tile == BROKEN_ICE) {
+            if (tile == SNOW || tile == DEEP_SNOW || tile == ICE || tile == BROKEN_ICE) {
                 snowplow.consumeBiokerosene(10);
                 roadMap[r][c] = ROAD;
                 cleanedTiles++;
@@ -570,7 +723,7 @@ public class GameController {
         if (head instanceof SaltSpreaderHead) {
             if (snowplow.getSaltStock() < 10) return 0;
 
-            if (tile == SNOW || tile == ICE || tile == BROKEN_ICE) {
+            if (tile == SNOW || tile == DEEP_SNOW || tile == ICE || tile == BROKEN_ICE) {
                 snowplow.consumeSalt(10);
                 roadMap[r][c] = ROAD;
                 cleanedTiles++;
@@ -842,6 +995,7 @@ public class GameController {
     public static class TrafficCar {
         private final List<int[]> route;
         private int index;
+        private int stuckTicks = 0;
         private final String label;
         private final int colorIndex;
 
