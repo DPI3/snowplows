@@ -348,32 +348,17 @@ public class GameController {
     private void resetTrafficCars() {
         trafficCars.clear();
 
-        List<int[]> routeA = route(new int[][]{
-                {5, 2}, {5, 12}, {2, 11}, {2, 3}, {5, 3}
-        });
+        for (int i = 0; i < configuredCarCount; i++) {
+            int[] start = getRandomRoadCell();
 
-        List<int[]> routeB = route(new int[][]{
-                {8, 3}, {8, 11}, {5, 11}, {2, 11}, {2, 3}, {5, 3}
-        });
+            if (start == null) continue;
 
-        List<int[]> routeC = route(new int[][]{
-                {4, 6}, {4, 9}, {6, 9}, {6, 6}, {4, 6}
-        });
+            List<int[]> route = new ArrayList<>();
+            route.add(new int[]{start[0], start[1]});
 
-        List<int[]> routeD = route(new int[][]{
-                {5, 12}, {8, 11}, {8, 3}, {5, 3}, {5, 12}
-        });
-
-        List<int[]> routeE = route(new int[][]{
-                {2, 4}, {2, 11}, {5, 11}, {8, 11}, {8, 4}, {5, 3}
-        });
-
-        if (configuredCarCount >= 1) trafficCars.add(new TrafficCar(routeA, 0, "A", 0));
-        if (configuredCarCount >= 2) trafficCars.add(new TrafficCar(routeB, 4, "B", 1));
-        if (configuredCarCount >= 3) trafficCars.add(new TrafficCar(routeC, 1, "C", 2));
-        if (configuredCarCount >= 4) trafficCars.add(new TrafficCar(routeD, 2, "D", 3));
-        if (configuredCarCount >= 5) trafficCars.add(new TrafficCar(routeE, 7, "E", 4));
-        if (configuredCarCount >= 6) trafficCars.add(new TrafficCar(routeA, 9, "F", 5));
+            TrafficCar car = new TrafficCar(route, 0, String.valueOf((char)('A' + (i % 26))), i);
+            trafficCars.add(car);
+        }
     }
 
     private List<int[]> route(int[][] points) {
@@ -413,14 +398,28 @@ public class GameController {
                 continue;
             }
 
-            int next = (car.index + 1) % car.route.size();
-            int[] current = car.route.get(car.index);
-            int[] planned = car.route.get(next);
+            int currentRow = car.getRow();
+            int currentCol = car.getCol();
 
-            int dr = Integer.compare(planned[0], current[0]);
-            int dc = Integer.compare(planned[1], current[1]);
+            if (currentRow == car.targetRow && currentCol == car.targetCol) {
+                car.chooseNewTarget();
+            }
 
-            int[] target = chooseCarTarget(car, planned[0], planned[1], dr, dc);
+            int dr = Integer.compare(car.targetRow, currentRow);
+            int dc = Integer.compare(car.targetCol, currentCol);
+
+            if (dr != 0 && dc != 0) {
+                if (random.nextBoolean()) {
+                    dc = 0;
+                } else {
+                    dr = 0;
+                }
+            }
+
+            int plannedRow = currentRow + dr;
+            int plannedCol = currentCol + dc;
+
+            int[] target = chooseCarTarget(car, plannedRow, plannedCol, dr, dc);
             if (target == null) {
                 car.stuckTicks = 1;
                 continue;
@@ -442,13 +441,7 @@ public class GameController {
                 continue;
             }
 
-            int matchingIndex = findRouteIndex(car, rr, cc);
-            if (matchingIndex >= 0) {
-                car.index = matchingIndex;
-            } else {
-                car.route.add(car.index + 1, new int[]{rr, cc});
-                car.index++;
-            }
+            car.moveTo(rr, cc);
 
             handleCarTileEffect(rr, cc);
         }
@@ -1047,26 +1040,47 @@ public class GameController {
         refreshView();
     }
 
-    public static class TrafficCar {
+    public class TrafficCar {
         private final List<int[]> route;
         private int index;
         private int stuckTicks = 0;
         private final String label;
         private final int colorIndex;
+        private int targetRow;
+        private int targetCol;
+        private int row;
+        private int col;
 
         TrafficCar(List<int[]> route, int index, String label, int colorIndex) {
             this.route = route;
             this.index = Math.min(index, route.size() - 1);
+            this.row = route.get(this.index)[0];
+            this.col = route.get(this.index)[1];
             this.label = label;
             this.colorIndex = colorIndex;
+            chooseNewTarget();
+        }
+
+        private void chooseNewTarget() {
+            int[] target = getRandomRoadCell();
+
+            if (target != null) {
+                targetRow = target[0];
+                targetCol = target[1];
+            }
+        }
+
+        public void moveTo(int row, int col) {
+            this.row = row;
+            this.col = col;
         }
 
         public int getRow() {
-            return route.get(index)[0];
+            return row;
         }
 
         public int getCol() {
-            return route.get(index)[1];
+            return col;
         }
 
         public String getLabel() {
