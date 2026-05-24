@@ -141,7 +141,7 @@ public class GameController {
 
         weatherCounter++;
 
-        if (weatherCounter >= 8) {
+        if (weatherCounter >= 3) {
             weatherCounter = 0;
             randomWeatherChange();
         }
@@ -172,12 +172,12 @@ public class GameController {
     }
 
     private void randomWeatherChange() {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 10; i++) {
             int r = (int) (Math.random() * ROWS);
             int c = (int) (Math.random() * COLS);
 
             if (roadMap[r][c] == ROAD) {
-                roadMap[r][c] = Math.random() < 0.65 ? SNOW : ICE;
+                roadMap[r][c] = Math.random() < 0.85 ? SNOW : ICE;
                 totalDirtyTiles++;
             }
         }
@@ -197,8 +197,8 @@ public class GameController {
 
         playerRow = 5;
         playerCol = 1;
-        targetRow = 5;
-        targetCol = 13;
+        targetRow = -1;
+        targetCol = -1;
 
         cleanedTiles = 0;
         totalDirtyTiles = 0;
@@ -245,11 +245,10 @@ public class GameController {
         playerRow = 6;
         playerCol = 2;
 
-        targetRow = 34;
-        targetCol = 55;
+        targetRow = -1;
+        targetCol = -1;
 
         roadMap[playerRow][playerCol] = DEPOT;
-        roadMap[targetRow][targetCol] = DEPOT;
 
         placeRandomTunnelsAndBridges();
         addInitialSnowAndIce();
@@ -627,11 +626,7 @@ public class GameController {
         playerRow = nr;
         playerCol = nc;
 
-        if (playerRow == targetRow && playerCol == targetCol) {
-            checkMissionEnd();
-        } else {
-            message = "Mozgás sikeres.";
-        }
+        message = "Mozgás sikeres.";
     }
 
     public void cleanCurrentTile() {
@@ -861,8 +856,7 @@ public class GameController {
 
         if (getCleanPercent() >= 70) {
             completedJobs++;
-            message = "Snowplow mód teljesítve. Váltás Bus módra.";
-            toggleGameMode();
+            message = "Jó munka: az utak legalább 70%-a tiszta.";
         }
     }
 
