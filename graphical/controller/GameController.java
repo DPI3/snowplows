@@ -1,7 +1,9 @@
 package controller;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 import src.*;
 import view.GameScreen;
@@ -39,6 +41,7 @@ public class GameController {
     private final int[][] roadMap = new int[ROWS][COLS];
     private final int[][] snowPressure = new int[ROWS][COLS];
     private final int[][] saltTimers = new int[ROWS][COLS];
+    private final int[][] gravelSnowTimers = new int[ROWS][COLS];
     private final List<RoadNode> roadNodes = new ArrayList<>();
     private final List<int[]> roadCells = new ArrayList<>();
     private final List<TrafficCar> trafficCars = new ArrayList<>();
@@ -195,12 +198,23 @@ public class GameController {
             int r = p[0];
             int c = p[1];
 
-            if (roadMap[r][c] == ROAD || roadMap[r][c] == SALTED) {
+            if (roadMap[r][c] == SALTED) {
+                continue;
+            }
 
-                if (roadMap[r][c] == SALTED) {
-                    continue;
+            if (roadMap[r][c] == GRAVEL) {
+                gravelSnowTimers[r][c]++;
+
+                if (gravelSnowTimers[r][c] >= 2) {
+                    roadMap[r][c] = SNOW;
+                    gravelSnowTimers[r][c] = 0;
+                    totalDirtyTiles++;
                 }
 
+                continue;
+            }
+
+            if (roadMap[r][c] == ROAD) {
                 double roll = random.nextDouble();
 
                 if (roll < 0.70) {
@@ -258,6 +272,7 @@ public class GameController {
                 roadMap[r][c] = FIELD;
                 snowPressure[r][c] = 0;
                 saltTimers[r][c] = 0;
+                gravelSnowTimers[r][c] = 0;
             }
         }
 
@@ -424,6 +439,20 @@ public class GameController {
             TrafficCar car = new TrafficCar(route, 0, String.valueOf((char)('A' + (i % 26))), i);
             trafficCars.add(car);
         }
+
+        if (roadCells.size() >= 2) {
+            int[] a = getRandomRoadCell();
+            int[] b = getRandomRoadCell();
+
+            if (a != null && b != null) {
+                List<int[]> route = new ArrayList<>();
+                route.add(new int[]{a[0], a[1]});
+
+                TrafficCar bus = new TrafficCar(route, 0, "BUS", 99);
+                bus.makeBus(a[0], a[1], b[0], b[1]);
+                trafficCars.add(bus);
+            }
+        }
     }
 
     private void moveTrafficCars() {
@@ -440,21 +469,20 @@ public class GameController {
                 car.chooseNewTarget();
             }
 
-            int dr = Integer.compare(car.targetRow, currentRow);
-            int dc = Integer.compare(car.targetCol, currentCol);
+            int[] target = findShortestPathNextStep(car, currentRow, currentCol, car.targetRow, car.targetCol);
 
-            if (dr != 0 && dc != 0) {
-                if (random.nextBoolean()) {
-                    dc = 0;
-                } else {
-                    dr = 0;
-                }
+            if (target == null) {
+                car.chooseNewTarget();
+                target = findShortestPathNextStep(car, currentRow, currentCol, car.targetRow, car.targetCol);
             }
 
-            int plannedRow = currentRow + dr;
-            int plannedCol = currentCol + dc;
+            int dr = 0;
+            int dc = 0;
 
-            int[] target = chooseCarTarget(car, plannedRow, plannedCol, dr, dc);
+            if (target != null) {
+                dr = Integer.compare(target[0], currentRow);
+                dc = Integer.compare(target[1], currentCol);
+            }
             if (target == null) {
                 car.stuckTicks = 1;
                 continue;
@@ -477,6 +505,7 @@ public class GameController {
             }
 
             car.moveTo(rr, cc);
+            car.checkBusTerminalReached();
 
             handleCarTileEffect(rr, cc);
         }
@@ -513,6 +542,77 @@ public class GameController {
         }
 
         return best;
+    }
+
+    private int[] findShortestPathNextStep(TrafficCar car, int startRow, int startCol, int goalRow, int goalCol) {
+        if (goalRow < 0 || goalCol < 0) return null;
+
+        boolean[][] visited = new boolean[ROWS][COLS];
+        int[][] prevRow = new int[ROWS][COLS];
+        int[][] prevCol = new int[ROWS][COLS];
+
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                prevRow[r][c] = -1;
+                prevCol[r][c] = -1;
+            }
+        }
+
+        Queue<int[]> queue = new ArrayDeque<>();
+        queue.add(new int[]{startRow, startCol});
+        visited[startRow][startCol] = true;
+
+        int[][] dirs = {
+                {1, 0},
+                {-1, 0},
+                {0, 1},
+                {0, -1}
+        };
+
+        while (!queue.isEmpty()) {
+            int[] current = queue.poll();
+            int r = current[0];
+            int c = current[1];
+
+            if (r == goalRow && c == goalCol) {
+                break;
+            }
+
+            for (int[] dir : dirs) {
+                int nr = r + dir[0];
+                int nc = c + dir[1];
+
+                if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) continue;
+                if (visited[nr][nc]) continue;
+                if (!canCarEnter(car, nr, nc)) continue;
+
+                visited[nr][nc] = true;
+                prevRow[nr][nc] = r;
+                prevCol[nr][nc] = c;
+                queue.add(new int[]{nr, nc});
+            }
+        }
+
+        if (!visited[goalRow][goalCol]) {
+            return null;
+        }
+
+        int r = goalRow;
+        int c = goalCol;
+
+        while (!(prevRow[r][c] == startRow && prevCol[r][c] == startCol)) {
+            int pr = prevRow[r][c];
+            int pc = prevCol[r][c];
+
+            if (pr == -1 || pc == -1) {
+                return null;
+            }
+
+            r = pr;
+            c = pc;
+        }
+
+        return new int[]{r, c};
     }
 
     private boolean canCarEnter(TrafficCar self, int r, int c) {
@@ -853,8 +953,11 @@ public class GameController {
         int penalty = 40;
         chargeCleaner(penalty);
 
-        playerRow = 5;
-        playerCol = 1;
+        int[] depot = getRandomRoadCell();
+        if (depot != null) {
+            playerRow = depot[0];
+            playerCol = depot[1];
+        }
 
         message = "Ütközés történt. -" + penalty + " pénz, visszakerültél a depóba.";
         refreshView();
@@ -1081,6 +1184,13 @@ public class GameController {
         private int row;
         private int col;
 
+        private boolean bus;
+        private int terminalArow;
+        private int terminalAcol;
+        private int terminalBrow;
+        private int terminalBcol;
+        private int busRounds;
+
         TrafficCar(List<int[]> route, int index, String label, int colorIndex) {
             this.route = route;
             this.index = Math.min(index, route.size() - 1);
@@ -1089,6 +1199,16 @@ public class GameController {
             this.label = label;
             this.colorIndex = colorIndex;
             chooseNewTarget();
+        }
+
+        private void makeBus(int aRow, int aCol, int bRow, int bCol) {
+            bus = true;
+            terminalArow = aRow;
+            terminalAcol = aCol;
+            terminalBrow = bRow;
+            terminalBcol = bCol;
+            targetRow = terminalBrow;
+            targetCol = terminalBcol;
         }
 
         private void chooseNewTarget() {
@@ -1105,6 +1225,22 @@ public class GameController {
             this.col = col;
         }
 
+        private void checkBusTerminalReached() {
+            if (!bus) return;
+
+            if (row == targetRow && col == targetCol) {
+                busRounds++;
+
+                if (targetRow == terminalArow && targetCol == terminalAcol) {
+                    targetRow = terminalBrow;
+                    targetCol = terminalBcol;
+                } else {
+                    targetRow = terminalArow;
+                    targetCol = terminalAcol;
+                }
+            }
+        }
+
         public int getRow() {
             return row;
         }
@@ -1114,6 +1250,10 @@ public class GameController {
         }
 
         public String getLabel() {
+            if (bus) {
+                return "BUS" + busRounds;
+            }
+
             return label;
         }
 
