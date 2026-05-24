@@ -138,14 +138,29 @@ public class CleanerRole extends Role {
      * @param sp a vezérelni kívánt hókotró
      */
     public void controlSnowplow(Snowplow sp) {
+        if (sp == null) return;
+
         Lane lane = sp.getCurrentLane();
         if (lane == null) return;
 
         LaneState before = lane.getLaneState();
+
+        boolean wasDirty =
+                before instanceof ThinSnow ||
+                before instanceof DeepSnow ||
+                before instanceof IceSheet ||
+                before instanceof BrokenIce ||
+                before instanceof Gravel;
+
         sp.clean(lane);
+
         LaneState after = lane.getLaneState();
 
-        if ((after instanceof Clear || after instanceof Gravel) && !(before instanceof Clear || before instanceof Gravel)) {
+        boolean becameClean =
+                after instanceof Clear ||
+                after instanceof Gravel;
+
+        if (wasDirty && becameClean && before.getClass() != after.getClass()) {
             money += 50;
         }
     }

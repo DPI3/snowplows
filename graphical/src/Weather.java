@@ -25,6 +25,17 @@ public class Weather {
      * Simulation tick for weather changes.
      */
     public void tick() {
+        if (roadNetwork == null) return;
+
+        for (Road road : roadNetwork.getRoads()) {
+            snowfallTick(road);
+        }
+
+        for (Road road : roadNetwork.getRoads()) {
+            for (Lane lane : road.getLanes()) {
+                lane.tickSalt();
+            }
+        }
     }
 
     /**
@@ -63,6 +74,18 @@ public class Weather {
      */
     public int getSnowIntensity() {
         return snowIntensity;
+    }
+
+    public Weather() {
+    }
+
+    public Weather(RoadNetwork roadNetwork, int snowIntensity) {
+        this.roadNetwork = roadNetwork;
+        this.snowIntensity = snowIntensity;
+    }
+
+    public void setRoadNetwork(RoadNetwork roadNetwork) {
+        this.roadNetwork = roadNetwork;
     }
     
 }

@@ -52,13 +52,23 @@ public abstract class Vehicle {
      */
     public void move() {
         if (currentLane == null) return;
+        if (!currentLane.isPassable()) return;
 
         positionOnLane += speed;
 
         if (positionOnLane >= currentLane.getLength()) {
-            Node target = currentLane.getDestination();
             positionOnLane = 0.0;
 
+            if (currentRoute != null) {
+                Lane nextLane = currentRoute.getNextLane(currentLane);
+
+                if (nextLane != null && nextLane.isPassable()) {
+                    currentLane = nextLane;
+                    return;
+                }
+            }
+
+            Node target = currentLane.getDestination();
             if (target != null) {
                 target.onVehicleEnter(this);
             }

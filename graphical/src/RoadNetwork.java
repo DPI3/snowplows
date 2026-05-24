@@ -101,4 +101,24 @@ public class RoadNetwork {
             this.dist = dist;
         }
     }
+
+    public void addNode(Node node) {
+        if (node != null && !nodes.contains(node)) {
+            nodes.add(node);
+        }
+    }
+
+    public void addRoad(Road road) {
+        if (road != null && !roads.contains(road)) {
+            roads.add(road);
+        }
+    }
+
+    public List<Node> getNodes() {
+        return nodes;
+    }
+
+    public List<Road> getRoads() {
+        return roads;
+    }
 }

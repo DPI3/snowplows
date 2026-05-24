@@ -39,6 +39,9 @@ public class Lane {
     /** A sáv aktuális állapotát reprezentáló objektum. */
     private LaneState currentState;
 
+    private boolean salted;
+    private int saltTimer;
+
     public Lane() {
         this.currentState = new Clear();
     }
@@ -166,6 +169,8 @@ public class Lane {
      * @return true, ha járható; false, ha járhatatlan
      */
     public boolean isPassable() {
+        if (hasAccident) return false;
+
         if (currentState != null) {
             return currentState.isPassable();
         }
@@ -199,6 +204,10 @@ public class Lane {
      * @param snowamount a hó mennyisége
      */
     public void applyWeather(int snowamount) {
+        if (salted) {
+            return;
+        }
+
         if (currentState != null) {
             this.currentState = currentState.handleWeatherChange(snowamount);
         }
@@ -296,5 +305,28 @@ public class Lane {
      */
     public void setDestination(Node destination) {
         this.destination = destination;
+    }
+
+    public void applySalt(int duration) {
+        this.salted = true;
+        this.saltTimer = duration;
+        this.currentState = new Clear();
+        this.snowThickness = 0;
+        this.iceThickness = 0;
+    }
+
+    public boolean isSalted() {
+        return salted;
+    }
+
+    public void tickSalt() {
+        if (!salted) return;
+
+        saltTimer--;
+
+        if (saltTimer <= 0) {
+            salted = false;
+            saltTimer = 0;
+        }
     }
 }

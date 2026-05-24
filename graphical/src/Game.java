@@ -65,13 +65,18 @@ public class Game {
      */
     public void tick() {
         ticksInCurrentRound++;
+
         if (ticksInCurrentRound >= TICKS_PER_ROUND) {
             ticksInCurrentRound = 0;
             currentRound++;
         }
+
         for (Vehicle v : vehicles) {
             v.tick();
         }
+
+        checkCollisions();
+
         if (weather != null) {
             weather.tick();
         }
@@ -281,5 +286,32 @@ public class Game {
 
     public void setStore(Store store) {
         this.store = store;
+    }
+
+    private void checkCollisions() {
+        for (int i = 0; i < vehicles.size(); i++) {
+            for (int j = i + 1; j < vehicles.size(); j++) {
+                Vehicle a = vehicles.get(i);
+                Vehicle b = vehicles.get(j);
+
+                if (a.getCurrentLane() == null || b.getCurrentLane() == null) continue;
+
+                if (a.getCurrentLane() == b.getCurrentLane()) {
+                    Lane lane = a.getCurrentLane();
+
+                    if (a instanceof Car && b instanceof Car) {
+                        lane.setHasAccident(true);
+                    }
+
+                    if (a instanceof Bus) {
+                        ((Bus) a).disableForTicks(3);
+                    }
+
+                    if (b instanceof Bus) {
+                        ((Bus) b).disableForTicks(3);
+                    }
+                }
+            }
+        }
     }
 }

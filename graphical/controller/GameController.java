@@ -860,9 +860,7 @@ public class GameController {
         if (head instanceof SweeperHead) {
             if (tile == SNOW || tile == DEEP_SNOW || tile == BROKEN_ICE || tile == GRAVEL) {
 
-                if (tile == SNOW || tile == DEEP_SNOW) {
-                    pushSnowNextToRoad(r, c);
-                }
+                pushMaterialInArrowDirection(r, c, tile, 1);
 
                 roadMap[r][c] = ROAD;
                 cleanedTiles++;
@@ -875,9 +873,7 @@ public class GameController {
         if (head instanceof ThrowerHead) {
             if (tile == SNOW || tile == DEEP_SNOW || tile == BROKEN_ICE || tile == GRAVEL) {
 
-                if (tile == SNOW || tile == DEEP_SNOW) {
-                    throwSnowFarAway(r, c);
-                }
+                pushMaterialInArrowDirection(r, c, tile, 3);
 
                 roadMap[r][c] = ROAD;
                 cleanedTiles++;
@@ -890,53 +886,26 @@ public class GameController {
         return 0;
     }
 
-    private void pushSnowNextToRoad(int r, int c) {
-        int[][] dirs = {
-                {0, 1},
-                {1, 0},
-                {0, -1},
-                {-1, 0}
-        };
+    private void pushMaterialInArrowDirection(int r, int c, int material, int distance) {
+        int nr = r + lastDirRow * distance;
+        int nc = c + lastDirCol * distance;
 
-        for (int[] dir : dirs) {
-            int nr = r + dir[0];
-            int nc = c + dir[1];
-
-            if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) continue;
-
-            if (roadMap[nr][nc] == ROAD) {
-                roadMap[nr][nc] = SNOW;
-                return;
-            }
-
-            if (roadMap[nr][nc] == FIELD) {
-                return;
-            }
+        if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) {
+            return;
         }
-    }
 
-    private void throwSnowFarAway(int r, int c) {
-        int[][] dirs = {
-                {0, 3},
-                {3, 0},
-                {0, -3},
-                {-3, 0}
-        };
+        // Ha mezőre dobja/tolja, akkor az út mellé kerül, nem kell tárolni.
+        if (roadMap[nr][nc] == FIELD) {
+            return;
+        }
 
-        for (int[] dir : dirs) {
-            int nr = r + dir[0];
-            int nc = c + dir[1];
+        // Csak járható, üres útfelületre kerüljön át.
+        if (roadMap[nr][nc] == ROAD ||
+            roadMap[nr][nc] == BRIDGE ||
+            roadMap[nr][nc] == TUNNEL ||
+            roadMap[nr][nc] == DEPOT) {
 
-            if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) continue;
-
-            if (roadMap[nr][nc] == ROAD) {
-                roadMap[nr][nc] = SNOW;
-                return;
-            }
-
-            if (roadMap[nr][nc] == FIELD) {
-                return;
-            }
+            roadMap[nr][nc] = material;
         }
     }
 

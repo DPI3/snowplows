@@ -21,6 +21,8 @@ public class Bus extends Vehicle {
     /** A busz jelenlegi állapota. */
     private String location = "úton";
 
+    private int disabledTicks;
+
     public Bus(String id, Lane lane, double speed, Terminal a, Terminal b) {
         super(id, lane, speed);
         this.terminalA = a;
@@ -69,12 +71,29 @@ public class Bus extends Vehicle {
      */
     @Override
     public void tick() {
-        if (currentLane == null || currentRoute == null) return;
+        if (disabledTicks > 0) {
+            disabledTicks--;
+            immobileTime++;
+
+            if (disabledTicks == 0) {
+                location = "úton";
+            }
+
+            return;
+        }
+
+        if (currentLane == null) return;
+
         if (currentLane.isPassable()) {
             immobileTime = 0;
             move();
         } else {
             immobileTime++;
         }
+    }
+
+    public void disableForTicks(int ticks) {
+        this.disabledTicks = Math.max(this.disabledTicks, ticks);
+        this.location = "mozgásképtelen";
     }
 }

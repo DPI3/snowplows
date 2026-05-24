@@ -24,7 +24,8 @@ public class Car extends Vehicle {
     /** Az autó állapota. */
     private String location = "úton";
 
-    ;
+    private RoadNetwork roadNetwork;
+    private Node currentTarget;
 
     /**
      * Létrehozza a Car objektumot a megadott paraméterekkel.
@@ -100,4 +101,67 @@ public class Car extends Vehicle {
      * @param location az új állapot
      */
     public void setLocation(String location) { this.location = location; }
+
+    public void setRoadNetwork(RoadNetwork roadNetwork) {
+        this.roadNetwork = roadNetwork;
+    }
+
+    public void setCurrentTarget(Node currentTarget) {
+        this.currentTarget = currentTarget;
+    }
+
+    @Override
+    public void tick() {
+        if (currentLane == null) return;
+
+        if (!currentLane.isPassable()) {
+            if (tryAdjacentLane()) {
+                resume();
+            } else {
+                stopAndWait();
+            }
+            return;
+        }
+
+        resume();
+        move();
+
+        if (currentRoute != null) {
+            Lane next = currentRoute.getNextLane(currentLane);
+
+            if (next != null && !next.isPassable()) {
+                replanRoute();
+            }
+        }
+    }
+
+    private boolean tryAdjacentLane() {
+        Road road = currentLane.getParentRoad();
+        if (road == null) return false;
+
+        Lane left = road.getAdjacentLane(currentLane, -1);
+        Lane right = road.getAdjacentLane(currentLane, 1);
+
+        if (left != null && left.isPassable()) {
+            return changeLane(left);
+        }
+
+        if (right != null && right.isPassable()) {
+            return changeLane(right);
+        }
+
+        return false;
+    }
+
+    private void replanRoute() {
+        if (roadNetwork == null || currentTarget == null || currentLane.getDestination() == null) {
+            return;
+        }
+
+        Route newRoute = roadNetwork.getShortestPath(currentLane.getDestination(), currentTarget);
+
+        if (newRoute != null && !newRoute.getLanes().isEmpty()) {
+            setCurrentRoute(newRoute);
+        }
+    }
 }

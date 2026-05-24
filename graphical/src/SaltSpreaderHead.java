@@ -15,13 +15,16 @@ public class SaltSpreaderHead extends Head {
      */
     @Override
     public void clean(Lane lane, Snowplow snowplow) {
+        if (lane == null || snowplow == null) return;
         if (lane.getLaneState() instanceof Gravel) return;
         if (snowplow.getSaltStock() <= 0) return;
         if (snowplow.getFuel() < 5) return;
 
         snowplow.consumeSalt(1);
         snowplow.consumeFuel(5);
-        lane.setState(new Clear());
+
+        // A só letakarítja a havat/jeget, és ideiglenesen megakadályozza az új hó megmaradását.
+        lane.applySalt(5);
     }
 
     /**
