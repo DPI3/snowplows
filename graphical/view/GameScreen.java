@@ -669,6 +669,7 @@ public class GameScreen extends JFrame {
                 }
             }
             drawSnowplowHead(g2, x, y, cell, head);
+            drawDirectionArrow(g2, x, y, cell);
         }
 
         private void drawSnowplowHead(Graphics2D g2, int x, int y, int cell, Head head) {
@@ -763,6 +764,45 @@ public class GameScreen extends JFrame {
             blade.addPoint(frontX + cell / 3, centerY + 8);
             blade.addPoint(frontX - 5, centerY + 14);
             g2.fillPolygon(blade);
+        }
+
+        private void drawDirectionArrow(Graphics2D g2, int x, int y, int cell) {
+            if (gameController == null) return;
+
+            int dr = gameController.getLastDirRow();
+            int dc = gameController.getLastDirCol();
+
+            int cx = x + cell / 2;
+            int cy = y + cell / 2;
+
+            int endX = cx + dc * cell / 3;
+            int endY = cy + dr * cell / 3;
+
+            g2.setColor(Color.YELLOW);
+            g2.setStroke(new BasicStroke(3f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            g2.drawLine(cx, cy, endX, endY);
+
+            Polygon arrow = new Polygon();
+
+            if (dc > 0) {
+                arrow.addPoint(endX, endY);
+                arrow.addPoint(endX - 8, endY - 5);
+                arrow.addPoint(endX - 8, endY + 5);
+            } else if (dc < 0) {
+                arrow.addPoint(endX, endY);
+                arrow.addPoint(endX + 8, endY - 5);
+                arrow.addPoint(endX + 8, endY + 5);
+            } else if (dr > 0) {
+                arrow.addPoint(endX, endY);
+                arrow.addPoint(endX - 5, endY - 8);
+                arrow.addPoint(endX + 5, endY - 8);
+            } else {
+                arrow.addPoint(endX, endY);
+                arrow.addPoint(endX - 5, endY + 8);
+                arrow.addPoint(endX + 5, endY + 8);
+            }
+
+            g2.fillPolygon(arrow);
         }
 
         private void drawBus(Graphics2D g2, int x, int y, int cell) {

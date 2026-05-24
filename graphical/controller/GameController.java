@@ -38,6 +38,9 @@ public class GameController {
     private static final int CAR_STUCK_TICKS = 3;
     private static final int SLIDE_LIMIT = 4;
 
+    private int lastDirRow = 0;
+    private int lastDirCol = 1;
+
     private final int[][] roadMap = new int[ROWS][COLS];
     private final int[][] snowPressure = new int[ROWS][COLS];
     private final int[][] saltTimers = new int[ROWS][COLS];
@@ -45,6 +48,8 @@ public class GameController {
     private final List<RoadNode> roadNodes = new ArrayList<>();
     private final List<int[]> roadCells = new ArrayList<>();
     private final List<TrafficCar> trafficCars = new ArrayList<>();
+
+    private final List<DrawableRoad> drawableRoads = new ArrayList<>();
 
     private boolean busMode = false;
     private final Random random = new Random();
@@ -263,6 +268,7 @@ public class GameController {
     }
 
     private void buildPlayableMap() {
+        drawableRoads.clear();
         totalDirtyTiles = 0;
         roadNodes.clear();
         roadCells.clear();
@@ -321,6 +327,14 @@ public class GameController {
 
     private void connectRoadNodes(RoadNode a, RoadNode b) {
         a.connect(b);
+
+        drawableRoads.add(new DrawableRoad(
+            a.displayRow,
+            a.displayCol,
+            b.displayRow,
+            b.displayCol
+        ));
+
         int r = a.displayRow;
         int c = a.displayCol;
 
@@ -526,6 +540,20 @@ public class GameController {
         }
     }
 
+    public static class DrawableRoad {
+        public final int fromRow;
+        public final int fromCol;
+        public final int toRow;
+        public final int toCol;
+
+        public DrawableRoad(int fromRow, int fromCol, int toRow, int toCol) {
+            this.fromRow = fromRow;
+            this.fromCol = fromCol;
+            this.toRow = toRow;
+            this.toCol = toCol;
+        }
+    }
+
     private int[] findShortestPathNextStep(TrafficCar car, int startRow, int startCol, int goalRow, int goalCol) {
         if (goalRow < 0 || goalCol < 0) return null;
 
@@ -687,7 +715,9 @@ public class GameController {
                 || tile == TUNNEL
                 || tile == BRIDGE
                 || tile == SNOW
+                || tile == DEEP_SNOW
                 || tile == ICE
+                || tile == BROKEN_ICE
                 || tile == SALTED
                 || tile == GRAVEL;
     }
@@ -711,10 +741,8 @@ public class GameController {
             return;
         }
 
-        if (roadMap[nr][nc] == SNOW || roadMap[nr][nc] == ICE) {
-            message = "Akadályos útszakasz. Takarítsd le C/CLEAN gombbal.";
-            return;
-        }
+        lastDirRow = dr;
+        lastDirCol = dc;
 
         playerRow = nr;
         playerCol = nc;
@@ -732,34 +760,17 @@ public class GameController {
             return;
         }
 
-        int cleaned = 0;
+        int targetRow = playerRow + lastDirRow;
+        int targetCol = playerCol + lastDirCol;
 
-        cleaned += cleanTile(playerRow, playerCol);
-        cleaned += cleanTile(playerRow - 1, playerCol);
-        cleaned += cleanTile(playerRow + 1, playerCol);
-        cleaned += cleanTile(playerRow, playerCol - 1);
-        cleaned += cleanTile(playerRow, playerCol + 1);
-
-        if (plowLevel >= 2) {
-            cleaned += cleanTile(playerRow - 1, playerCol - 1);
-            cleaned += cleanTile(playerRow - 1, playerCol + 1);
-            cleaned += cleanTile(playerRow + 1, playerCol - 1);
-            cleaned += cleanTile(playerRow + 1, playerCol + 1);
-        }
-
-        if (plowLevel >= 3) {
-            cleaned += cleanTile(playerRow - 2, playerCol);
-            cleaned += cleanTile(playerRow + 2, playerCol);
-            cleaned += cleanTile(playerRow, playerCol - 2);
-            cleaned += cleanTile(playerRow, playerCol + 2);
-        }
+        int cleaned = cleanTile(targetRow, targetCol);
 
         if (cleaned > 0) {
             int reward = cleaned * 25 * plowLevel;
             rewardCleaner(reward);
-            message = "Takarítás kész: " + cleaned + " mező, +" + reward + " pénz.";
+            message = "Takarítás az aktuális irányba: +" + reward + " pénz.";
         } else {
-            message = "Nincs a közeledben takarítható havas/jeges mező.";
+            message = "Nincs takarítható mező a hókotró előtt.";
         }
 
         checkMissionEnd();
@@ -1137,6 +1148,14 @@ public class GameController {
         return completedJobs;
     }
 
+    public int getLastDirRow() {
+        return lastDirRow;
+    }
+
+    public int getLastDirCol() {
+        return lastDirCol;
+    }
+
     public void setPlayerCount(int count) {
         message = "Játékosszám beállítva: " + Math.max(1, count);
         refreshView();
@@ -1331,5 +1350,9 @@ public class GameController {
 
     public int getCurrentRoundForDisplay() {
         return game.getRound();
+    }
+
+    public List<DrawableRoad> getDrawableRoads() {
+        return drawableRoads;
     }
 }
