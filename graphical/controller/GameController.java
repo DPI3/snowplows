@@ -299,11 +299,11 @@ public class GameController {
             int row = 4 + random.nextInt(ROWS - 8);
             int col = 4 + random.nextInt(COLS - 8);
 
-            RoadNode node = new RoadNode(row, col);
+            RoadNode node = new RoadNode("N" + i, row, col);
             roadNodes.add(node);
         }
 
-        roadNodes.sort((a, b) -> Integer.compare(a.row, b.row));
+        roadNodes.sort((a, b) -> Integer.compare(a.displayRow, b.displayRow));
 
         for (int i = 0; i < roadNodes.size() - 1; i++) {
             connectRoadNodes(roadNodes.get(i), roadNodes.get(i + 1));
@@ -320,18 +320,19 @@ public class GameController {
     }
 
     private void connectRoadNodes(RoadNode a, RoadNode b) {
-        int r = a.row;
-        int c = a.col;
+        a.connect(b);
+        int r = a.displayRow;
+        int c = a.displayCol;
 
         markRoadWide(r, c);
 
-        while (r != b.row) {
-            r += Integer.compare(b.row, r);
+        while (r != b.displayRow) {
+            r += Integer.compare(b.displayRow, r);
             markRoadWide(r, c);
         }
 
-        while (c != b.col) {
-            c += Integer.compare(b.col, c);
+        while (c != b.displayCol) {
+            c += Integer.compare(b.displayCol, c);
             markRoadWide(r, c);
         }
     }
@@ -360,12 +361,26 @@ public class GameController {
     }
 
     private static class RoadNode {
-        private final int row;
-        private final int col;
+        private final String id;
+        private final List<RoadNode> neighbours = new ArrayList<>();
 
-        private RoadNode(int row, int col) {
-            this.row = row;
-            this.col = col;
+        // csak kirajzoláshoz
+        private final int displayRow;
+        private final int displayCol;
+
+        private RoadNode(String id, int displayRow, int displayCol) {
+            this.id = id;
+            this.displayRow = displayRow;
+            this.displayCol = displayCol;
+        }
+
+        private void connect(RoadNode other) {
+            if (!neighbours.contains(other)) {
+                neighbours.add(other);
+            }
+            if (!other.neighbours.contains(this)) {
+                other.neighbours.add(this);
+            }
         }
     }
 
@@ -509,39 +524,6 @@ public class GameController {
 
             handleCarTileEffect(rr, cc);
         }
-    }
-
-    private int[] chooseCarTarget(TrafficCar car, int targetRow, int targetCol, int dr, int dc) {
-        if (canCarEnter(car, targetRow, targetCol)) {
-            return new int[]{targetRow, targetCol};
-        }
-
-        return findAlternativeStep(car);
-    }
-
-    private int[] findAlternativeStep(TrafficCar car) {
-        int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-        int currentRow = car.getRow();
-        int currentCol = car.getCol();
-        int destinationRow = car.targetRow;
-        int destinationCol = car.targetCol;
-        int[] best = null;
-        int bestDistance = Integer.MAX_VALUE;
-
-        for (int[] dir : dirs) {
-            int nr = currentRow + dir[0];
-            int nc = currentCol + dir[1];
-
-            if (!canCarEnter(car, nr, nc)) continue;
-
-            int distance = Math.abs(destinationRow - nr) + Math.abs(destinationCol - nc);
-            if (distance < bestDistance) {
-                bestDistance = distance;
-                best = new int[]{nr, nc};
-            }
-        }
-
-        return best;
     }
 
     private int[] findShortestPathNextStep(TrafficCar car, int startRow, int startCol, int goalRow, int goalCol) {
