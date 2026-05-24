@@ -3,8 +3,6 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import graphical.controller.GameController.TrafficCar;
 import src.*;
 import view.GameScreen;
 
@@ -181,6 +179,7 @@ public class GameController {
 
             if (roadMap[r][c] == ROAD) {
                 roadMap[r][c] = Math.random() < 0.85 ? SNOW : ICE;
+                roadMap[r][c] = random.nextDouble() < 0.15 ? DEEP_SNOW : SNOW;
                 totalDirtyTiles++;
             }
         }
@@ -720,7 +719,11 @@ public class GameController {
 
         if (head instanceof SweeperHead) {
             if (tile == SNOW || tile == DEEP_SNOW || tile == BROKEN_ICE || tile == GRAVEL) {
-                pushSnowNextToRoad(r, c);
+
+                if (tile == SNOW || tile == DEEP_SNOW) {
+                    pushSnowNextToRoad(r, c);
+                }
+
                 roadMap[r][c] = ROAD;
                 cleanedTiles++;
                 return 1;
@@ -731,7 +734,11 @@ public class GameController {
 
         if (head instanceof ThrowerHead) {
             if (tile == SNOW || tile == DEEP_SNOW || tile == BROKEN_ICE || tile == GRAVEL) {
-                throwSnowFarAway(r, c);
+
+                if (tile == SNOW || tile == DEEP_SNOW) {
+                    throwSnowFarAway(r, c);
+                }
+
                 roadMap[r][c] = ROAD;
                 cleanedTiles++;
                 return 1;
