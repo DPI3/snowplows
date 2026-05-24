@@ -16,15 +16,26 @@ public class SweeperHead extends Head {
      */
     @Override
     public void clean(Lane lane, Snowplow snowplow) {
+        if (lane == null || snowplow == null) return;
         if (snowplow.getFuel() < 5) return;
 
-        if (lane.getLaneState() instanceof Gravel ||
-            lane.getLaneState() instanceof BrokenIce ||
-            lane.getLaneState() instanceof ThinSnow ||
-            lane.getLaneState() instanceof DeepSnow) {
+        LaneState material = lane.removeMovableMaterial();
 
-            snowplow.consumeFuel(5);
-            lane.setState(new Clear());
+        if (material == null) return;
+
+        snowplow.consumeFuel(5);
+
+        Lane target = null;
+
+        if (snowplow.getFacingLane() != null) {
+            Road road = snowplow.getFacingLane().getParentRoad();
+            if (road != null) {
+                target = road.getLaneAfter(snowplow.getFacingLane(), 1);
+            }
+        }
+
+        if (target != null) {
+            target.placeMaterial(material);
         }
     }
 

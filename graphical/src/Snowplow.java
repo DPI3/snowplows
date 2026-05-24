@@ -18,6 +18,7 @@ public class Snowplow extends Vehicle {
     private int gravelStock;
     private int fuel;
     private PlowState state;
+    private Lane facingLane;
 
     /**
      * Fuel getter
@@ -60,6 +61,14 @@ public class Snowplow extends Vehicle {
         if (currentHead == null || lane == null) return;
 
         currentHead.clean(lane, this);
+    }
+
+    public Lane getFacingLane() {
+        return facingLane;
+    }
+
+    public void setFacingLane(Lane facingLane) {
+        this.facingLane = facingLane;
     }
 
     /** Készletkezelés */

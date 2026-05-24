@@ -137,4 +137,17 @@ public abstract class Road {
     public void setDestination(Node destination) {
         this.destination = destination;
     }
+
+    public Lane getLaneAfter(Lane lane, int distance) {
+        int pos = lanes.indexOf(lane);
+        if (pos == -1) return null;
+
+        int newPos = pos + distance;
+
+        if (newPos < 0 || newPos >= lanes.size()) {
+            return null;
+        }
+
+        return lanes.get(newPos);
+    }
 }

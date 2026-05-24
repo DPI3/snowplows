@@ -744,6 +744,16 @@ public class GameController {
         lastDirRow = dr;
         lastDirCol = dc;
 
+        Role role = gameScreen.getRole();
+
+        if (role instanceof CleanerRole) {
+            Snowplow snowplow = ((CleanerRole) role).getSnowplow();
+
+            if (snowplow != null && snowplow.getCurrentLane() != null) {
+                snowplow.setFacingLane(snowplow.getCurrentLane());
+            }
+        }
+
         playerRow = nr;
         playerCol = nc;
 

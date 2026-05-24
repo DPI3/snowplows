@@ -329,4 +329,29 @@ public class Lane {
             saltTimer = 0;
         }
     }
+
+    public LaneState removeMovableMaterial() {
+        if (currentState instanceof ThinSnow ||
+            currentState instanceof DeepSnow ||
+            currentState instanceof BrokenIce ||
+            currentState instanceof Gravel) {
+
+            LaneState removed = currentState;
+            currentState = new Clear();
+            snowThickness = 0;
+            iceThickness = 0;
+            gravelThickness = 0;
+            return removed;
+        }
+
+        return null;
+    }
+
+    public void placeMaterial(LaneState material) {
+        if (material == null) return;
+
+        if (currentState instanceof Clear) {
+            currentState = material;
+        }
+    }
 }
