@@ -1,10 +1,9 @@
 package controller;
 
+import controller.GameController.TrafficCar;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import graphical.controller.GameController.TrafficCar;
 import src.*;
 import view.GameScreen;
 
