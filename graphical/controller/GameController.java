@@ -257,6 +257,7 @@ public class GameController {
             for (int c = 0; c < COLS; c++) {
                 roadMap[r][c] = FIELD;
                 snowPressure[r][c] = 0;
+                saltTimers[r][c] = 0;
             }
         }
 

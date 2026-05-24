@@ -510,9 +510,19 @@ public class GameScreen extends JFrame {
                         drawCrashedLane(g2, x, y, cell);
                     } else if (map[r][c] == 10) {
                         drawDeepSnow(g2, x, y, cell);
+                    } else if (map[r][c] == 11) {
+                        drawSalted(g2, x, y, cell);
                     }
                 }
             }
+        }
+
+        private void drawSalted(Graphics2D g2, int x, int y, int cell) {
+            g2.setColor(new Color(230, 230, 255, 170));
+            g2.fillRoundRect(x + 7, y + 7, cell - 14, cell - 14, 10, 10);
+
+            g2.setColor(Color.WHITE);
+            g2.drawString("S", x + cell / 2 - 4, y + cell / 2 + 5);
         }
 
         private void drawDepot(Graphics2D g2, int x, int y, int cell) {
