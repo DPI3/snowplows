@@ -37,8 +37,8 @@ public class StoreColumnPanel extends JPanel {
             add(buyButton, BorderLayout.SOUTH);
         }
 
-        public void addItemRow(String itemName) {
-            ItemRow row = new ItemRow(itemName);
+        public void addItemRow(String itemName, int price) {
+            ItemRow row = new ItemRow(itemName, 130, 35, price, true);
 
             if ("HEAD".equals(getTitle())) {
                 row.setMaxAmount(1);
@@ -46,6 +46,12 @@ public class StoreColumnPanel extends JPanel {
 
             itemsContainer.add(row);
             itemsContainer.add(Box.createRigidArea(new Dimension(0, 20)));
+        }
+
+        public ItemRow addHeadItemRow(String itemName, int price) {
+            ItemRow row = ItemRow.headRow(itemName, price);
+            itemsContainer.add(row);
+            return row;
         }
 
         @Override
@@ -60,5 +66,9 @@ public class StoreColumnPanel extends JPanel {
 
         public String getTitle() {
             return titleLabel.getText();
+        }
+
+        public void hideMainBuyButton() {
+            buyButton.setVisible(false);
         }
 }

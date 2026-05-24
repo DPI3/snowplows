@@ -47,31 +47,42 @@ public class StorePanel extends JPanel {
 
         // 1. Oszlop: MATERIAL
         StoreColumnPanel materialCol = new StoreColumnPanel("MATERIAL");
-        materialCol.addItemRow("SALT");
-        materialCol.addItemRow("BIOKEROZIN");
-        materialCol.addItemRow("GRAVEL");
+        materialCol.addItemRow("SALT", controller.getItemPrice("SALT"));
+        materialCol.addItemRow("BIOKEROZIN", controller.getItemPrice("BIOKEROZIN"));
+        materialCol.addItemRow("GRAVEL", controller.getItemPrice("GRAVEL"));
         materialCol.getBuyButton().addActionListener(e -> {buy(materialCol, controller);});
 
         add(materialCol);
 
         // 2. Oszlop: VEHICLE
         StoreColumnPanel vehicleCol = new StoreColumnPanel("VEHICLE");
-        vehicleCol.addItemRow("SNOWPLOW");
+        vehicleCol.addItemRow("SNOWPLOW", controller.getItemPrice("SNOWPLOW"));
         vehicleCol.getBuyButton().addActionListener(e -> {buy(vehicleCol, controller);});
         add(vehicleCol);
 
         // 3. Oszlop: HEAD
         StoreColumnPanel headCol = new StoreColumnPanel("HEAD");
-        headCol.addItemRow("DRAGON");
-        headCol.addItemRow("SWEEPER");
-        headCol.addItemRow("THROWER");
-        headCol.addItemRow("ICEBREAKER");
-        headCol.addItemRow("SALTSPREAD");
-        headCol.addItemRow("GRAVELSPREAD");
+        headCol.hideMainBuyButton();
+        addHeadRow(headCol, controller, "DRAGON");
+        addHeadRow(headCol, controller, "SWEEPER");
+        addHeadRow(headCol, controller, "THROWER");
+        addHeadRow(headCol, controller, "ICEBREAKER");
+        addHeadRow(headCol, controller, "SALTSPREAD");
+        addHeadRow(headCol, controller, "GRAVELSPREAD");
         headCol.getBuyButton().addActionListener(e -> {buy(headCol, controller);});
             
         add(headCol);
 
         
+    }
+
+    private void addHeadRow(StoreColumnPanel headCol, StoreController controller, String itemId) {
+        ItemRow row = headCol.addHeadItemRow(itemId, controller.getItemPrice(itemId));
+
+        row.getBuyButton().addActionListener(e -> {
+            if (controller.buyItem(itemId)) {
+                row.markBought();
+            }
+        });
     }
 }

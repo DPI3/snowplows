@@ -117,4 +117,14 @@ public class StoreController {
     public CleanerRole getCleanerRole() {
         return c;
     }
+
+    public int getItemPrice(String item) {
+        if (item.equals("BIOKEROZIN")) return 10;
+        if (item.equals("SALT")) return 10;
+        if (item.equals("GRAVEL")) return 10;
+        if (item.equals("SNOWPLOW")) return 150;
+
+        Buyable buyable = ConvertToBuyable(item);
+        return buyable != null ? buyable.getPrice() : 0;
+    }
 }

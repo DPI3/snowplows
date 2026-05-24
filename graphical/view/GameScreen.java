@@ -502,6 +502,10 @@ public class GameScreen extends JFrame {
                         drawSnow(g2, x, y, cell);
                     } else if (map[r][c] == 3) {
                         drawIce(g2, x, y, cell);
+                    } else if (map[r][c] == 8) {
+                        drawBrokenIce(g2, x, y, cell);
+                    } else if (map[r][c] == 7) {
+                        drawGravel(g2, x, y, cell);
                     }
                 }
             }
@@ -559,6 +563,32 @@ public class GameScreen extends JFrame {
             g2.setColor(Color.WHITE);
             g2.setFont(new Font("SansSerif", Font.BOLD, Math.max(11, cell / 4)));
             g2.drawString("H", x + cell / 2 - 5, y + cell / 2 + 6);
+        }
+
+        private void drawBrokenIce(Graphics2D g2, int x, int y, int cell) {
+            g2.setColor(new Color(105, 185, 215, 190));
+            g2.fillRoundRect(x + 7, y + 7, cell - 14, cell - 14, 10, 10);
+
+            g2.setColor(new Color(235, 252, 255, 220));
+            g2.setStroke(new BasicStroke(2f));
+
+            g2.drawLine(x + 11, y + 12, x + cell / 2, y + cell / 2);
+            g2.drawLine(x + cell / 2, y + cell / 2, x + cell - 12, y + 14);
+            g2.drawLine(x + cell / 2, y + cell / 2, x + 14, y + cell - 13);
+            g2.drawLine(x + cell / 2, y + cell / 2, x + cell - 13, y + cell - 12);
+
+            g2.setColor(Color.WHITE);
+            g2.drawString("X", x + cell / 2 - 4, y + cell / 2 + 5);
+        }
+
+        private void drawGravel(Graphics2D g2, int x, int y, int cell) {
+            g2.setColor(new Color(135, 105, 75, 190));
+            g2.fillRoundRect(x + 7, y + 7, cell - 14, cell - 14, 10, 10);
+
+            g2.setColor(new Color(95, 70, 50));
+            g2.fillOval(x + 14, y + 15, 5, 5);
+            g2.fillOval(x + 26, y + 24, 4, 4);
+            g2.fillOval(x + 38, y + 18, 5, 5);
         }
 
         private void drawTrafficCars(Graphics2D g2, int cell, int startX, int startY) {
