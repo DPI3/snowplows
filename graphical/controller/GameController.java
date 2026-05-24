@@ -744,8 +744,20 @@ public class GameController {
             return 0;
         }
 
-        if (head instanceof SweeperHead || head instanceof ThrowerHead) {
-            if (tile == SNOW || tile == BROKEN_ICE || tile == GRAVEL) {
+        if (head instanceof SweeperHead) {
+            if (tile == SNOW || tile == DEEP_SNOW || tile == BROKEN_ICE || tile == GRAVEL) {
+                pushSnowNextToRoad(r, c);
+                roadMap[r][c] = ROAD;
+                cleanedTiles++;
+                return 1;
+            }
+
+            return 0;
+        }
+
+        if (head instanceof ThrowerHead) {
+            if (tile == SNOW || tile == DEEP_SNOW || tile == BROKEN_ICE || tile == GRAVEL) {
+                throwSnowFarAway(r, c);
                 roadMap[r][c] = ROAD;
                 cleanedTiles++;
                 return 1;
@@ -755,6 +767,56 @@ public class GameController {
         }
 
         return 0;
+    }
+
+    private void pushSnowNextToRoad(int r, int c) {
+        int[][] dirs = {
+                {0, 1},
+                {1, 0},
+                {0, -1},
+                {-1, 0}
+        };
+
+        for (int[] dir : dirs) {
+            int nr = r + dir[0];
+            int nc = c + dir[1];
+
+            if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) continue;
+
+            if (roadMap[nr][nc] == ROAD) {
+                roadMap[nr][nc] = SNOW;
+                return;
+            }
+
+            if (roadMap[nr][nc] == FIELD) {
+                return;
+            }
+        }
+    }
+
+    private void throwSnowFarAway(int r, int c) {
+        int[][] dirs = {
+                {0, 3},
+                {3, 0},
+                {0, -3},
+                {-3, 0}
+        };
+
+        for (int[] dir : dirs) {
+            int nr = r + dir[0];
+            int nc = c + dir[1];
+
+            if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) continue;
+
+            if (roadMap[nr][nc] == ROAD) {
+                roadMap[nr][nc] = SNOW;
+                return;
+            }
+
+            if (roadMap[nr][nc] == FIELD) {
+                return;
+            }
+        }
     }
 
     private void handleCollision() {
