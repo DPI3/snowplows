@@ -35,6 +35,6 @@ public class DragonHead extends Head {
      */
     @Override
     public int getPrice() {
-        return 120;
+        return 130;
     }
 }

@@ -44,7 +44,7 @@ public class StoreController {
         store= new Store(null);
         List<Role> roles = new ArrayList<>();
         
-        c= new CleanerRole("Cleaner", 300, new Snowplow("snowplow",null,0, new SweeperHead()));
+        c= new CleanerRole("Cleaner", 300, new Snowplow("snowplow",null,0, new ThrowerHead()));
         roles.add(c);
         player= new Player(1, "Player", roles);
     }

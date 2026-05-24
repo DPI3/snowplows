@@ -16,14 +16,13 @@ public class IcebreakerHead extends Head {
      */
     @Override
     public void clean(Lane lane, Snowplow snowplow) {
+        if (lane.getLaneState() instanceof Gravel) return;
+
+        if (snowplow.getFuel() < 5) return;
 
         if (lane.getLaneState() instanceof IceSheet) {
-            lane.setState(new BrokenIce());
-            return;
-        }
-        if (snowplow.getFuel() >= 5) {
             snowplow.consumeFuel(5);
-            lane.change(1);
+            lane.setState(new BrokenIce());
         }
     }
 

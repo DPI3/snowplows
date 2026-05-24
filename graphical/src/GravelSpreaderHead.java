@@ -35,6 +35,6 @@ public class GravelSpreaderHead extends Head {
      */
     @Override
     public int getPrice() {
-        return 70;
+        return 100;
     }
 }

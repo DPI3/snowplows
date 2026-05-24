@@ -13,9 +13,15 @@ public class ThrowerHead extends Head {
      */
     @Override
     public void clean(Lane lane, Snowplow snowplow) {
-        if (snowplow.getFuel() >= 5) {
+        if (snowplow.getFuel() < 5) return;
+
+        if (lane.getLaneState() instanceof Gravel ||
+            lane.getLaneState() instanceof BrokenIce ||
+            lane.getLaneState() instanceof ThinSnow ||
+            lane.getLaneState() instanceof DeepSnow) {
+
             snowplow.consumeFuel(5);
-            lane.change(5);
+            lane.setState(new Clear());
         }
     }
 

@@ -244,7 +244,7 @@ public class Lane {
             double newThickness = Math.max(0, g.getThickness() - amount);
 
             if (newThickness <= 0) {
-                setState(new IceSheet());
+                setState(new Clear());
             } else {
                 setState(new Gravel(newThickness));
             }

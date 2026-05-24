@@ -15,13 +15,13 @@ public class SaltSpreaderHead extends Head {
      */
     @Override
     public void clean(Lane lane, Snowplow snowplow) {
+        if (lane.getLaneState() instanceof Gravel) return;
         if (snowplow.getSaltStock() <= 0) return;
+        if (snowplow.getFuel() < 5) return;
 
         snowplow.consumeSalt(1);
-        if (snowplow.getFuel() >= 5) {
-            snowplow.consumeFuel(5);
-            lane.change(5);
-        }
+        snowplow.consumeFuel(5);
+        lane.setState(new Clear());
     }
 
     /**
@@ -31,6 +31,6 @@ public class SaltSpreaderHead extends Head {
      */
     @Override
     public int getPrice() {
-        return 50;
+        return 110;
     }
 }

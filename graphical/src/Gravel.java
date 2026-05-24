@@ -61,7 +61,15 @@ public class Gravel implements LaneState {
      * @return az uj lane state az idojaras valtozasa utan
      */
     @Override
-    public LaneState handleWeatherChange(int snowamount) {
+    public LaneState handleWeatherChange(int snowAmount) {
+        if (snowAmount >= 10) {
+            return new DeepSnow();
+        }
+
+        if (snowAmount > 0) {
+            return new ThinSnow();
+        }
+
         return this;
     }
 }
