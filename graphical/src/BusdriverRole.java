@@ -174,4 +174,12 @@ public class BusdriverRole extends Role {
     public void decreaseScore(int amount) {
         this.score = Math.max(0, this.score - amount);
     }
+
+    public void changeMoney(int amount) {
+        this.money += amount;
+
+        if (this.money < 0) {
+            this.money = 0;
+        }
+    }
 }

@@ -148,8 +148,7 @@ public class GameController {
             remainingSeconds--;
 
             if (remainingSeconds <= 0) {
-                game.setCurrentRound(game.getRound() + 1);
-                remainingSeconds = roundDurationSeconds;
+                nextRound();
             }
         }
 
@@ -163,6 +162,41 @@ public class GameController {
         moveTrafficCars();
         updateSaltedRoads();
         refreshView();
+    }
+
+    private void nextRound() {
+        game.setCurrentRound(game.getRound() + 1);
+        remainingSeconds = roundDurationSeconds;
+        lastSecondUpdate = System.currentTimeMillis();
+
+        busMode = !busMode;
+
+        Lane start = getRandomLane();
+
+        if (start != null) {
+            playerLane = start;
+            syncSnowplowToPlayerLane();
+        }
+
+        if (busMode) {
+            targetLane = getRandomLane();
+
+            if (targetLane != null) {
+                laneVisualType.put(targetLane, DEPOT);
+            }
+
+            message = "Új kör: BUS MODE következik.";
+        } else {
+            if (targetLane != null) {
+                laneVisualType.put(targetLane, ROAD);
+            }
+
+            targetLane = null;
+            message = "Új kör: SNOWPLOW MODE következik.";
+        }
+
+        gameScreen.setModeText(busMode ? "BUS MODE" : "SNOWPLOW MODE");
+        gameScreen.moneyChanged();
     }
 
     private void updateSaltedRoads() {
@@ -746,6 +780,41 @@ public class GameController {
         syncSnowplowToPlayerLane();
 
         message = "Mozgás sikeres.";
+
+        checkPlayerTrafficCollision();
+        checkMissionEnd();
+        refreshView();
+    }
+
+    private void checkPlayerTrafficCollision() {
+        if (!busMode || playerLane == null) return;
+
+        for (TrafficCar car : trafficCars) {
+            if (car.currentLane == playerLane) {
+                collisions++;
+                car.stuckTicks = CAR_STUCK_TICKS;
+
+                playerLane.setHasAccident(true);
+
+                int penalty = 30;
+                chargeCurrentRole(penalty);
+
+                message = "A busz ütközött egy járművel. -" + penalty + " pénz.";
+                return;
+            }
+        }
+    }
+
+    private void chargeCurrentRole(int amount) {
+        Role role = gameScreen.getRole();
+
+        if (role instanceof CleanerRole) {
+            ((CleanerRole) role).changeMoney(-amount);
+        }
+
+        if (role instanceof BusdriverRole) {
+            ((BusdriverRole) role).changeMoney(-amount);
+        }
     }
 
     private Lane findNeighbourLaneByDirection(Lane from, int dr, int dc) {
@@ -939,21 +1008,25 @@ public class GameController {
             if (playerLane == targetLane) {
                 completedJobs++;
 
-                Lane newPlayer = getRandomLane();
-                Lane newTarget = getRandomLane();
+                Role role = gameScreen.getRole();
 
-                if (newPlayer != null && newTarget != null) {
-                    if (targetLane != null && laneVisualType.getOrDefault(targetLane, ROAD) == DEPOT) {
-                        laneVisualType.put(targetLane, ROAD);
-                    }
-
-                    playerLane = newPlayer;
-                    targetLane = newTarget;
-                    laneVisualType.put(targetLane, DEPOT);
-                    syncSnowplowToPlayerLane();
+                if (role instanceof BusdriverRole) {
+                    ((BusdriverRole) role).changeMoney(100);
                 }
 
-                message = "Busz cél teljesítve. Új indulási hely és új célállomás kijelölve.";
+                Lane oldTarget = targetLane;
+                Lane newTarget = getRandomLane();
+
+                if (oldTarget != null) {
+                    laneVisualType.put(oldTarget, ROAD);
+                }
+
+                if (newTarget != null) {
+                    targetLane = newTarget;
+                    laneVisualType.put(targetLane, DEPOT);
+                }
+
+                message = "Busz cél teljesítve: +100 pénz. Új célállomás kijelölve.";
             }
 
             return;
@@ -961,7 +1034,14 @@ public class GameController {
 
         if (getCleanPercent() >= 70) {
             completedJobs++;
-            message = "Jó munka: az utak legalább 70%-a tiszta.";
+
+            Role role = gameScreen.getRole();
+
+            if (role instanceof CleanerRole) {
+                ((CleanerRole) role).changeMoney(100);
+            }
+
+            message = "Jó munka: az utak legalább 70%-a tiszta. +100 pénz.";
         }
     }
 
@@ -1351,8 +1431,6 @@ public class GameController {
 
     public void toggleGameMode() {
         busMode = !busMode;
-
-        game.setCurrentRound(game.getRound() + 1);
 
         remainingSeconds = roundDurationSeconds;
         lastSecondUpdate = System.currentTimeMillis();
