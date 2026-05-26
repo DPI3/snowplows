@@ -1,8 +1,7 @@
+import java.util.ArrayList;
+import java.util.List;
+
 import controller.*;
-import controller.AssetManager;
-import controller.ScreenController;
-import controller.SoundManager;
-import controller.StoreController;
 import view.GameScreen;
 import view.StoreScreen;
 import src.*;
@@ -32,24 +31,27 @@ public class Main {
 
         // SoundManager inicializálása
         soundManager = new SoundManager();
-
+        CleanerRole cleanerRole1 = new CleanerRole("Cleaner1", 2000, new Snowplow("snowplow1",null,0, new ThrowerHead()));
+        CleanerRole cleanerRole2 = new CleanerRole("Cleaner2", 2000, new Snowplow("snowplow2",null,0, new ThrowerHead()));
+        BusdriverRole busdriverRole1= new BusdriverRole("Busdriver1", new Bus("bus1", null, 0, null, null), 1000,0);
+        BusdriverRole busdriverRole2= new BusdriverRole("Busdriver2", new Bus("bus2", null, 0, null, null), 1000,0);
+       
+        Player player1 = new Player(1, "Player1", cleanerRole1, busdriverRole1);
+        Player player2 = new Player(2, "Player2", cleanerRole2, busdriverRole2);
+        List<Player> players = new ArrayList<>();
+        players.add(player1);
+        players.add(player2);
+        java.util.List<Vehicle> vehicles = new java.util.ArrayList<>();
+        vehicles.add(cleanerRole1.getSnowplow());
+        vehicles.add(cleanerRole2.getSnowplow());
+        Game game = new Game(0, 30, vehicles, players);
         // StoreController inicializálása
         storeController = new StoreController();
 
-        Role role = storeController.getRole();
         Store store = storeController.getStore();
-        GameScreen gameScreen = new GameScreen(role, store);
-        StoreScreen storeScreen = new StoreScreen(storeController);
-
-        java.util.List<Vehicle> vehicles = new java.util.ArrayList<>();
-        java.util.List<Player> players = new java.util.ArrayList<>();
-
-        if (role instanceof CleanerRole) {
-            vehicles.add(((CleanerRole) role).getSnowplow());
-        }
-        players.add(new Player(1, "Player", role));
-
-        Game game = new Game(0, 30, vehicles, players);
+        GameScreen gameScreen = new GameScreen(cleanerRole1, store);
+        StoreScreen storeScreen = new StoreScreen(storeController, cleanerRole1);
+        
         GameController gameController = new GameController(game, gameScreen);
 
         screenController = new ScreenController(gameScreen, gameController, storeScreen);
@@ -57,6 +59,7 @@ public class Main {
         gameScreen.setGameController(gameController);
 
         storeController.setStoreScreen(storeScreen);
+        storeController.setGameController(gameController);
         storeScreen.setScreenController(screenController);
 
         // Kezdeti képernyő megjelenítése

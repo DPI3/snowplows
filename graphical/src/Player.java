@@ -21,6 +21,9 @@ public class Player {
     /** A játékos pontszáma. */
     private int score;
 
+    private BusdriverRole busdriverRole;
+
+    private CleanerRole cleanerRole;
     /**
      * Player példány létrehozása.
      *
@@ -42,10 +45,44 @@ public class Player {
      * @param name a játékos neve
      * @param roles a játékos szerepkörei
      */
-    public Player(int id, String name, List<Role> roles) {
-        this(id, name, roles == null || roles.isEmpty() ? null : roles.get(0));
+    public Player(int id, String name, CleanerRole cleanerRole, BusdriverRole busdriverRole) {
+        this.id= id;
+        this.name = name;
+        this.busdriverRole = busdriverRole;
+        this.cleanerRole = cleanerRole;
+        currentRole = cleanerRole;
     }
 
+
+    public int getMoney() {
+        if(busdriverRole != null && cleanerRole != null) {
+            return busdriverRole.getMoney()+cleanerRole.getMoney();
+        }
+        if(busdriverRole != null) {
+            return busdriverRole.getMoney();
+        } else if (cleanerRole != null) {
+            return cleanerRole.getMoney();
+        } else {
+            return 0;
+        }
+     }
+
+     public void setBusdriverRole(BusdriverRole busdriverRole) {
+        this.busdriverRole = busdriverRole;
+     }
+
+     public void setCleanerRole(CleanerRole cleanerRole) {
+        this.cleanerRole = cleanerRole;
+     }
+
+     public BusdriverRole getBusdriverRole() {
+        return busdriverRole;
+     }
+
+     public CleanerRole getCleanerRole() {
+        return cleanerRole;
+     }
+     
 
     /**
      * Visszaadja a játékos nevét.

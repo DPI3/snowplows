@@ -3,6 +3,7 @@ package view;
 import controller.AssetManager;
 import controller.ScreenController;
 import controller.StoreController;
+import src.CleanerRole;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,7 +22,7 @@ public class StoreScreen extends JFrame{
     private TopPill bioStockPill;
     private TopPill gravelStockPill;
 
-    public StoreScreen(StoreController storeController){
+    public StoreScreen(StoreController storeController, CleanerRole role) {
         setTitle("Snowplow - Store");
         setSize(1300, 760); // Kicsit szélesebb ablak a három oszlop miatt
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,7 +48,7 @@ public class StoreScreen extends JFrame{
         playerMoneyLabel = new JPanel(new FlowLayout(FlowLayout.CENTER, 18, 0));
         playerMoneyLabel.setOpaque(false);
 
-        moneyTopPill = new TopPill(Integer.toString(storeController.getMoney()), 160, moneyIcon);
+        moneyTopPill = new TopPill(Integer.toString(2000), 160, moneyIcon);
         TopPill storeTitlePill = new TopPill("STORE", 260, null);
 
         saltStockPill = new TopPill("SALT: 0%", 130, null);
@@ -77,7 +78,7 @@ public class StoreScreen extends JFrame{
 
         setContentPane(mainPanel);
 
-        updateStock(storeController.getCleanerRole().getSnowplow());
+        updateStock(role.getSnowplow());
     }
 
     public void setScreenController(ScreenController screenController){

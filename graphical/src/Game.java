@@ -29,6 +29,8 @@ public class Game {
     /** A játékban résztvevő játékosok listája. */
     private List<Player> players;
 
+    private int currentPlayerId=0;
+
     /** Az aktuális időjárás. */
     private Weather weather;
 
@@ -80,6 +82,8 @@ public class Game {
         if (weather != null) {
             weather.tick();
         }
+
+
     }
 
     /**
@@ -179,7 +183,22 @@ public class Game {
             return null;
         }
 
-        return players.get(0);
+        return players.get(currentPlayerId);
+    }
+
+    public void setPlayerCount(int count) {
+        if(count < 1 || count > 5) return;
+        
+        while (players.size() < count) {
+            CleanerRole cleanerRole = new CleanerRole("Cleaner"+players.size()+1, 2000, new Snowplow("snowplow"+players.size()+1,null,0, new ThrowerHead()));
+            BusdriverRole busdriverRole= new BusdriverRole("Busdriver"+players.size()+1, new Bus("bus"+players.size()+1, null, 0, null, null), 1000,0);
+            Player player1 = new Player(1, "Player1", cleanerRole, busdriverRole);
+            players.add(player1);
+            vehicles.add(cleanerRole.getSnowplow());
+        }
+        while (players.size() > count) {
+            players.remove(players.size() - 1);
+        }
     }
 
     /**
@@ -253,24 +272,16 @@ public class Game {
     /**
      * Ellenőrzi és végrehajtja a szerepváltást a játékosok között.
      */
-    public void checkRoleSwitch() {
-        if (players.size() < 2) return;
-
-        for (Player p : players) {
-            Role current = p.getCurrentRole();
-            if (current instanceof CleanerRole) {
-                Bus bus = getBus();
-                if (bus != null) {
-                    p.setCurrentRole(new BusdriverRole(p.getName(), bus, roadNetwork));
-                }
-            } else if (current instanceof BusdriverRole) {
-                Snowplow sp = getSnowplow();
-                if (sp != null) {
-                    p.setCurrentRole(new CleanerRole(p.getName(), 0, sp));
-                }
-            }
+    public void checkRoleSwitch(){
+        if(players.size() < 2) return;
+        if(players.get(currentPlayerId).getCurrentRole() instanceof CleanerRole){
+            players.get(currentPlayerId).setCurrentRole(players.get(currentPlayerId).getBusdriverRole());
+        } else {
+             currentPlayerId = (currentPlayerId + 1) % players.size();
+            players.get(currentPlayerId).setCurrentRole(players.get(currentPlayerId).getCleanerRole());
         }
     }
+    
 
     public Weather getWeather() {
         return weather;

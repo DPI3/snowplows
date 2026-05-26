@@ -168,8 +168,8 @@ public class GameController {
         game.setCurrentRound(game.getRound() + 1);
         remainingSeconds = roundDurationSeconds;
         lastSecondUpdate = System.currentTimeMillis();
-
-        busMode = !busMode;
+        game.checkRoleSwitch();   
+        busMode = getRole() instanceof BusdriverRole;
 
         Lane start = getRandomLane();
 
@@ -806,7 +806,7 @@ public class GameController {
     }
 
     private void chargeCurrentRole(int amount) {
-        Role role = gameScreen.getRole();
+        Role role = getRole();
 
         if (role instanceof CleanerRole) {
             ((CleanerRole) role).changeMoney(-amount);
@@ -871,7 +871,7 @@ public class GameController {
     private int cleanLane(Lane lane) {
         if (lane == null) return 0;
 
-        Role role = gameScreen.getRole();
+        Role role = getRole();
         if (!(role instanceof CleanerRole)) return 0;
 
         CleanerRole cleaner = (CleanerRole) role;
@@ -1003,15 +1003,20 @@ public class GameController {
         refreshView();
     }
 
+    public Role getRole() {
+        return game.getPlayer() != null ? game.getPlayer().getCurrentRole() : null;
+    }
+
     private void checkMissionEnd() {
         if (busMode) {
             if (playerLane == targetLane) {
                 completedJobs++;
 
-                Role role = gameScreen.getRole();
+                Role role = getRole();
 
                 if (role instanceof BusdriverRole) {
                     ((BusdriverRole) role).changeMoney(100);
+                    
                 }
 
                 Lane oldTarget = targetLane;
@@ -1028,25 +1033,25 @@ public class GameController {
 
                 message = "Busz cél teljesítve: +100 pénz. Új célállomás kijelölve.";
             }
-
+            gameScreen.moneyChanged();
             return;
         }
 
         if (getCleanPercent() >= 70) {
             completedJobs++;
 
-            Role role = gameScreen.getRole();
+            Role role = getRole();
 
             if (role instanceof CleanerRole) {
                 ((CleanerRole) role).changeMoney(100);
             }
-
+            gameScreen.moneyChanged();
             message = "Jó munka: az utak legalább 70%-a tiszta. +100 pénz.";
         }
     }
 
     private void syncSnowplowToPlayerLane() {
-        Role role = gameScreen.getRole();
+        Role role = getRole();
 
         if (role instanceof CleanerRole) {
             Snowplow snowplow = ((CleanerRole) role).getSnowplow();
@@ -1059,18 +1064,20 @@ public class GameController {
     }
 
     private void rewardCleaner(int amount) {
-        Role role = gameScreen.getRole();
+        Role role = getRole();
 
         if (role instanceof CleanerRole) {
             ((CleanerRole) role).changeMoney(amount);
+            gameScreen.moneyChanged();
         }
     }
 
     private void chargeCleaner(int amount) {
-        Role role = gameScreen.getRole();
+        Role role = getRole();
 
         if (role instanceof CleanerRole) {
             ((CleanerRole) role).changeMoney(-amount);
+            gameScreen.moneyChanged();
         }
     }
 
@@ -1083,7 +1090,7 @@ public class GameController {
             return;
         }
 
-        Role role = gameScreen.getRole();
+        Role role = getRole();
 
         if (role instanceof CleanerRole) {
             CleanerRole cleanerRole = (CleanerRole) role;
@@ -1142,11 +1149,7 @@ public class GameController {
     private void refreshView() {
         gameScreen.timeChanged(remainingSeconds);
         gameScreen.moneyChanged();
-
-        if (game.getPlayer() != null) {
-            gameScreen.roleChanged(game.getPlayer().getCurrentRole());
-        }
-
+        gameScreen.roleChanged();
         gameScreen.headChanged();
         gameScreen.updateHud(
                 getCleanPercent(),
@@ -1284,6 +1287,7 @@ public class GameController {
 
     public void setPlayerCount(int count) {
         message = "Játékosszám beállítva: " + Math.max(1, count);
+        game.setPlayerCount(Math.max(1, count));
         refreshView();
     }
 

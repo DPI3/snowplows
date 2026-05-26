@@ -2,6 +2,8 @@ package controller;
 
 import javax.swing.JFrame;
 import view.*;
+import src.CleanerRole;
+import src.BusdriverRole;
 
 public class ScreenController {
     private final SnowplowMenu menuScreen;
@@ -58,6 +60,14 @@ public class ScreenController {
     public void showStore(){
         currentScreen.setVisible(false);
         storeScreen.setVisible(true);
+        int money=0;
+        if(gameController.getRole() instanceof CleanerRole){
+            money = ((CleanerRole) gameController.getRole()).getMoney();
+        }
+        if(gameController.getRole() instanceof BusdriverRole){
+            money = ((BusdriverRole) gameController.getRole()).getMoney();
+        }
+        storeScreen.updateMoney(money);
         currentScreen=storeScreen;
     }
 

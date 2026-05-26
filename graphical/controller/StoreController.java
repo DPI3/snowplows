@@ -9,21 +9,22 @@ import view.StoreScreen;
 
 public class StoreController {
     private Store store;
-    private Player player;
     private StoreScreen storeScreen;
-    private CleanerRole c;
     private java.util.Set<String> boughtHeads = new java.util.HashSet<>();
+    private GameController gameController;
 
     public int getMoney(){
-        return c.getMoney();
+        if(gameController.getRole() instanceof CleanerRole){
+            return ((CleanerRole) gameController.getRole()).getMoney();
+        }
+        if(gameController.getRole() instanceof BusdriverRole){
+            return ((BusdriverRole) gameController.getRole()).getMoney();
+        }
+        return 0;
     }
 
     public void setStoreScreen(StoreScreen s){
         storeScreen=s;
-    }
-
-    public Role getRole() {
-        return c;
     }
 
     public Store getStore() {
@@ -40,44 +41,46 @@ public class StoreController {
         return getMoney() >= price;
     }
 
-    public StoreController(){
-        store= new Store(null);
-        List<Role> roles = new ArrayList<>();
-
-        c= new CleanerRole("Cleaner", 2000, new Snowplow("snowplow",null,0, new ThrowerHead()));
-        roles.add(c);
-        player= new Player(1, "Player", roles);
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
     }
 
+    public StoreController() {
+        store= new Store(null);
+    }
+
+
     public boolean buyItem(String item){
+        if(gameController.getRole() == null || !(gameController.getRole() instanceof CleanerRole)) return false;
+        CleanerRole role = (CleanerRole) gameController.getRole();
         if(item.equals("BIOKEROZIN")){
-            if(store.buyBiokerosene(c)){
+            if(store.buyBiokerosene(role)){
                 storeScreen.updateMoney(getMoney());
-                storeScreen.updateStock(c.getSnowplow());
+                storeScreen.updateStock(role.getSnowplow());
                 return true;
             }
             return false;
         }
 
         if(item.equals("SALT")){
-            if(store.buySalt(c)){
+            if(store.buySalt(role)){
                 storeScreen.updateMoney(getMoney());
-                storeScreen.updateStock(c.getSnowplow());
+                storeScreen.updateStock(role.getSnowplow());
                 return true;
             }
             return false;
         }
 
         if(item.equals("GRAVEL")){
-            if(store.buyGravel(c)){
+            if(store.buyGravel(role)){
                 storeScreen.updateMoney(getMoney());
-                storeScreen.updateStock(c.getSnowplow());
+                storeScreen.updateStock(role.getSnowplow());
                 return true;
             }
             return false;
         }
         if(item.equals("SNOWPLOW")){
-            if(store.buySnowplow(c)){
+            if(store.buySnowplow(role)){
                 storeScreen.updateMoney(getMoney());
                 return true;
             }
@@ -92,10 +95,10 @@ public class StoreController {
                 return false;
             }
 
-            if (store.buy(c, buyable)) {
+            if (store.buy(role, buyable)) {
                 boughtHeads.add(headName);
                 storeScreen.updateMoney(getMoney());
-                storeScreen.updateStock(c.getSnowplow());
+                storeScreen.updateStock(role.getSnowplow());
                 return true;
             }
 
@@ -115,7 +118,7 @@ public class StoreController {
     }
 
     public CleanerRole getCleanerRole() {
-        return c;
+        return (CleanerRole) gameController.getRole();
     }
 
     public int getItemPrice(String item) {

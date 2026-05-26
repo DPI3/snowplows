@@ -20,7 +20,6 @@ public class GameScreen extends JFrame {
     private GrayInfoBox infoBox;
     private BoardPanel boardPanel;
 
-    private Role role;
     private GameController gameController;
     private String TEXT_COLOR = "#E2E874";
 
@@ -29,7 +28,6 @@ public class GameScreen extends JFrame {
     private JLabel gravelStockLabel;
 
     public GameScreen(Role role, Store store) {
-        this.role = role;
 
         setTitle("Snowplow - Game Screen");
         setSize(1400, 850);
@@ -169,7 +167,8 @@ public class GameScreen extends JFrame {
         setContentPane(mainBg);
 
         moneyChanged();
-        headChanged();
+        infoBox.setCurrentHeadLabel(((CleanerRole)role).getSnowplow().getCurrentHead().getClass().getSimpleName());
+        
     }
 
     private JPanel createHudPanel() {
@@ -224,22 +223,25 @@ public class GameScreen extends JFrame {
     }
 
     public void moneyChanged() {
-        if (moneyTopPill == null || role == null) return;
+        if (moneyTopPill == null || gameController == null) return;
 
-        if (role instanceof CleanerRole) {
-            moneyTopPill.setText(Integer.toString(((CleanerRole) role).getMoney()));
+        if (gameController.getRole() instanceof CleanerRole) {
+            moneyTopPill.setText(Integer.toString(((CleanerRole) gameController.getRole()).getMoney()));
         }
 
-        if (role instanceof BusdriverRole) {
-            moneyTopPill.setText(Integer.toString(((BusdriverRole) role).getMoney()));
+        if (gameController.getRole() instanceof BusdriverRole) {
+            moneyTopPill.setText(Integer.toString(((BusdriverRole) gameController.getRole()).getMoney()));
         }
     }
 
     public void headChanged() {
         if (infoBox == null) return;
-
-        if (role instanceof CleanerRole) {
-            CleanerRole c = (CleanerRole) role;
+        if(gameController == null) {
+            infoBox.setCurrentHeadLabel("DEFAULT");
+            return;
+        }
+        if (gameController.getRole() instanceof CleanerRole) {
+            CleanerRole c = (CleanerRole) gameController.getRole();
             if (c.getSnowplow() != null && c.getSnowplow().getCurrentHead() != null) {
                 infoBox.setCurrentHeadLabel(c.getSnowplow().getCurrentHead().getClass().getSimpleName());
             } else {
@@ -250,8 +252,7 @@ public class GameScreen extends JFrame {
         }
     }
 
-    public void roleChanged(Role role) {
-        this.role = role;
+    public void roleChanged() {
 
         if (modeTopPill == null || gameController == null) return;
 
@@ -265,7 +266,7 @@ public class GameScreen extends JFrame {
     }
 
     public Role getRole() {
-        return role;
+        return gameController.getRole();
     }
 
     @Override
@@ -302,9 +303,10 @@ public class GameScreen extends JFrame {
     }
 
     public void updateStockHud() {
-        if (!(role instanceof CleanerRole)) return;
-
-        Snowplow snowplow = ((CleanerRole) role).getSnowplow();
+        if(gameController == null) return;
+        if (!(getRole() instanceof CleanerRole)) return;
+        
+        Snowplow snowplow = ((CleanerRole) getRole()).getSnowplow();
         if (snowplow == null) return;
 
         if (saltStockLabel != null) {
@@ -662,8 +664,8 @@ public class GameScreen extends JFrame {
             // Aktív fej lekérése
             Head head = null;
 
-            if (GameScreen.this.role instanceof CleanerRole) {
-                Snowplow snowplow = ((CleanerRole) GameScreen.this.role).getSnowplow();
+            if (gameController.getRole() instanceof CleanerRole) {
+                Snowplow snowplow = ((CleanerRole) gameController.getRole()).getSnowplow();
 
                 if (snowplow != null) {
                     head = snowplow.getCurrentHead();
