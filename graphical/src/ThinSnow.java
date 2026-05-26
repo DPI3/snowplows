@@ -1,25 +1,27 @@
 package src;
+
 /**
- * A ThinSnow osztaly a vekony ho utallapotat reprezentalja.
+ * A ThinSnow osztály a vékony hó útállapotot reprezentálja.
  *
- * Vekony ho eseten az ut alapvetoen meg jarhato, de a felulet
- * kezelesevel javithato a kozlekedes biztonsaga es hatekonysaga.
+ * Vékony hó esetén az út alapvetően még járható, de a felület
+ * kezelésével javítható a közlekedés biztonsága és hatékonysága.
  */
 public class ThinSnow implements LaneState{
+
     /**
-     * Meghatarozza, hogy a vekony hovel boritott sav jarhato-e.
+     * Meghatározza, hogy a vékony hóval borított sáv járható-e.
      *
-     * @return true, mert ez az allapot meg jarhato
+     * @return true, mert ez az állapot még járható
      */
     @Override
     public boolean isPassable() {
-        return true; 
+        return true;
     }
 
     /**
-     * Visszaadja a vekony ho dinamikus sulyat.
+     * Visszaadja a vékony hó dinamikus súlyát.
      *
-     * @return a dinamikus suly erteke
+     * @return a dinamikus súly értéke
      */
     @Override
     public double getDynamicWeight() {
@@ -27,20 +29,20 @@ public class ThinSnow implements LaneState{
     }
 
     /**
-     * Kezeli az idojaras valtozasait vekony ho allapotban.
+     * Kezeli az időjárás változásait vékony hó állapotban.
      *
-     * @param snowAmount a ho mennyisege tick-ekben merve
-     * @return az uj lane state az idojaras valtozasa utan
+     * @param snowAmount a hó mennyisége tick-ekben mérve
+     * @return az új sávállapot az időjárás változása után
      */
     @Override
     public LaneState handleWeatherChange(int snowAmount) {
         if (snowAmount >= 10) {
-            return new DeepSnow(); 
-        } 
-        else if (snowAmount <= 0) {
-            return new Clear(); 
+            return new DeepSnow();
         }
-        
+        else if (snowAmount <= 0) {
+            return new Clear();
+        }
+
         return this;
     }
 }

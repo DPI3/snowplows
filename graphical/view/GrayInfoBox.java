@@ -5,17 +5,34 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
+/**
+ * Szürke, lekerekített sarkú információs doboz, amely a hókotró aktuális fejét mutatja
+ * és egy váltó gombot tartalmaz.
+ */
 class GrayInfoBox extends JPanel {
+    /** Az árnyék mérete pixelben. */
     private final int shadowSize = 4;
+    /** Az aktuális fej nevét megjelenítő címke. */
     JLabel currentHeadLabel;
+    /** A fej váltását indító gomb. */
     private StyledButton changeBtn;
 
+    /**
+     * Beállítja az aktuális fej feliratát.
+     *
+     * @param head az új fej neve
+     */
     public void setCurrentHeadLabel(String head) {
         currentHeadLabel.setText(head);
         repaint();
         revalidate();
     }
 
+    /**
+     * Beállítja a váltó gomb eseménykezelőjét, az előző kezelőket eltávolítva.
+     *
+     * @param listener az új eseménykezelő
+     */
     public void setChangeAction(ActionListener listener) {
         if (changeBtn != null) {
             for (ActionListener old : changeBtn.getActionListeners()) {
@@ -25,6 +42,9 @@ class GrayInfoBox extends JPanel {
         }
     }
 
+    /**
+     * Létrehoz egy új GrayInfoBox panelt a fej címkével és a váltó gombbal.
+     */
     public GrayInfoBox() {
         setOpaque(false);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -47,8 +67,20 @@ class GrayInfoBox extends JPanel {
         add(Box.createRigidArea(new Dimension(0, 10)));
     }
 
+    /**
+     * Létrehoz egy árnyékolt szöveges címkét.
+     *
+     * @param text a címke szövege
+     * @param font a használt betűtípus
+     * @return az elkészített árnyékolt címke
+     */
     private JLabel createShadowedLabel(String text, Font font) {
         JLabel label = new JLabel(text) {
+            /**
+             * Kirajzolja a címkét árnyékkal.
+             *
+             * @param g a grafikus kontextus
+             */
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -71,6 +103,11 @@ class GrayInfoBox extends JPanel {
         return label;
     }
 
+    /**
+     * Kirajzolja a panel hátterét lekerekített sarkokkal és árnyékkal.
+     *
+     * @param g a grafikus kontextus
+     */
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();

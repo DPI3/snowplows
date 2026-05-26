@@ -9,7 +9,7 @@ public class DragonHead extends Head {
     /**
      * Bio-kerozint használva megtisztítja a sávot. Ha van elegendő készlet, a hó- vagy jégréteget megszünteti
      * vagy jelentősen csökkenti.
-     * 
+     *
      * @param lane a tisztítandó szakasz
      * @param snowplow a tisztítást végző hókotró
      */
@@ -30,7 +30,7 @@ public class DragonHead extends Head {
 
     /**
      * Visszaadja a DragonHead árát.
-     * 
+     *
      * @return az ár
      */
     @Override

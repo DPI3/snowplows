@@ -5,12 +5,17 @@ package src;
  */
 public class Bridge extends Road {
 
+    /**
+     * Új Bridge objektum létrehozása alapértelmezett értékekkel.
+     */
     public Bridge() {
         super();
     }
 
     /**
-     * Az időjárás hatásának alkalmazása.
+     * Az időjárás hatásának alkalmazása a hídra.
+     *
+     * @param weather az aktuális időjárás
      */
     @Override
     public void applyWeatherEffects(Weather weather) {

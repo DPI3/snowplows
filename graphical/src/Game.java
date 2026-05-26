@@ -29,6 +29,7 @@ public class Game {
     /** A játékban résztvevő játékosok listája. */
     private List<Player> players;
 
+    /** Az aktuálisan aktív játékos indexe. */
     private int currentPlayerId=0;
 
     /** Az aktuális időjárás. */
@@ -41,7 +42,12 @@ public class Game {
     private Store store;
 
     /**
-     * Létrehoz egy Game objektumot a szükséges kapcsolatokkal és kezdőértékekkel.
+     * Létrehoz egy Game objektumot a megadott kezdőértékekkel.
+     *
+     * @param currentRound az aktuális kör sorszáma
+     * @param maxRound a maximális körök száma
+     * @param vehicles a szimulációban résztvevő járművek listája
+     * @param players a játékban résztvevő játékosok listája
      */
     public Game(int currentRound, int maxRound, List<Vehicle> vehicles, List<Player> players) {
         this.currentRound = currentRound;
@@ -64,6 +70,7 @@ public class Game {
 
     /**
      * Egy egységgel előre lépteti a játékállapotot és frissíti a belső logikát.
+     * Végrehajtja az összes jármű tick-jét, ellenőrzi az ütközéseket, és frissíti az időjárást.
      */
     public void tick() {
         ticksInCurrentRound++;
@@ -88,11 +95,11 @@ public class Game {
 
     /**
      * Megvizsgálja, hogy a szimuláció elérte-e a maximális kört, vagy véget ért-e.
-     * 
+     *
      * @return true, ha a játék véget ért; false, ha a játék nem ért véget
      */
     public boolean isOver() {
-        return currentRound >= maxRound; 
+        return currentRound >= maxRound;
     }
 
     /**
@@ -102,18 +109,18 @@ public class Game {
     }
 
     /**
-     * Az aktuális kör számát adja vissza, teszteléshez szükséges.
-     * 
-     * @return aktuális kör száma
+     * Visszaadja az aktuális kör számát.
+     *
+     * @return az aktuális kör száma
      */
     public int getCurrentRound(){
         return currentRound;
     }
 
     /**
-     * A játékosok listáját adja vissza, teszteléshez szükséges.
-     * 
-     * @return játékosok listája
+     * Visszaadja a játékosok listáját.
+     *
+     * @return a játékosok listája
      */
     public List<Player> getPlayers(){
         return players;
@@ -121,24 +128,34 @@ public class Game {
 
     /**
      * Visszaadja a maximális körök számát.
-     * 
+     *
      * @return a maximális körök száma
      */
     public int getMaxRound() {
         return maxRound;
     }
 
+    /**
+     * Beállítja az aktuális kör sorszámát.
+     *
+     * @param currentRound az új aktuális kör sorszáma
+     */
     public void setCurrentRound(int currentRound) {
         this.currentRound = currentRound;
     }
 
+    /**
+     * Beállítja a maximális körök számát.
+     *
+     * @param maxRound az új maximális körök száma
+     */
     public void setMaxRound(int maxRound) {
         this.maxRound = maxRound;
     }
 
     /**
      * Visszaadja a szimulációban résztvevő járművek listáját.
-     * 
+     *
      * @return a szimulációban résztvevő járművek listája
      */
     public List<Vehicle> getVehicles() {
@@ -146,9 +163,9 @@ public class Game {
     }
 
     /**
-     * Visszaadja az első Snowplow típusú járművet.
+     * Visszaadja az első Snowplow típusú járművet a járművek listájából.
      *
-     * @return Snowplow objektum vagy null
+     * @return Snowplow objektum vagy null, ha nincs ilyen
      */
     public Snowplow getSnowplow() {
         for (Vehicle v : vehicles) {
@@ -160,9 +177,9 @@ public class Game {
     }
 
     /**
-     * Visszaadja az első Bus típusú járművet.
+     * Visszaadja az első Bus típusú járművet a járművek listájából.
      *
-     * @return Bus objektum vagy null
+     * @return Bus objektum vagy null, ha nincs ilyen
      */
     public Bus getBus() {
         for (Vehicle v : vehicles) {
@@ -174,9 +191,9 @@ public class Game {
     }
 
     /**
-     * Visszaadja az első játékost.
+     * Visszaadja az aktuálisan aktív játékost.
      *
-     * @return Player objektum vagy null
+     * @return Player objektum vagy null, ha nincs játékos
      */
     public Player getPlayer() {
         if (players.isEmpty()) {
@@ -186,9 +203,15 @@ public class Game {
         return players.get(currentPlayerId);
     }
 
+    /**
+     * Beállítja a játékosok számát, szükség esetén új játékosokat hoz létre
+     * vagy eltávolítja a feleslegeseket.
+     *
+     * @param count a kívánt játékosszám (1-5 között)
+     */
     public void setPlayerCount(int count) {
         if(count < 1 || count > 5) return;
-        
+
         while (players.size() < count) {
             CleanerRole cleanerRole = new CleanerRole("Cleaner"+players.size()+1, 2000, new Snowplow("snowplow"+players.size()+1,null,0, new ThrowerHead()));
             BusdriverRole busdriverRole= new BusdriverRole("Busdriver"+players.size()+1, new Bus("bus"+players.size()+1, null, 0, null, null), 1000,0);
@@ -204,16 +227,16 @@ public class Game {
     /**
      * Visszaadja az aktuális kör számát.
      *
-     * @return aktuális kör
+     * @return az aktuális kör
      */
     public int getRound() {
         return currentRound;
     }
 
     /**
-     * Visszaadja az összes Car típusú járművet.
+     * Visszaadja az összes Car típusú járművet a járművek listájából.
      *
-     * @return autók listája
+     * @return az autók listája
      */
     public List<Car> getCars() {
         return vehicles.stream()
@@ -250,9 +273,9 @@ public class Game {
     }
 
     /**
-     * Visszaadja az aktuálisan vezérelt jármű nevét.
+     * Visszaadja az aktuálisan vezérelt jármű nevét a játékos szerepkörétől függően.
      *
-     * @return a jármű neve vagy üres szöveg
+     * @return a jármű neve vagy üres szöveg, ha nincs aktív jármű
      */
     public String getCurrentControlledVehicleName() {
         Player player = getPlayer();
@@ -271,6 +294,7 @@ public class Game {
 
     /**
      * Ellenőrzi és végrehajtja a szerepváltást a játékosok között.
+     * Két vagy több játékos esetén váltogatja a takarító és buszvezető szerepköröket.
      */
     public void checkRoleSwitch(){
         if(players.size() < 2) return;
@@ -281,24 +305,47 @@ public class Game {
             players.get(currentPlayerId).setCurrentRole(players.get(currentPlayerId).getCleanerRole());
         }
     }
-    
 
+    /**
+     * Visszaadja az aktuális időjárás objektumot.
+     *
+     * @return az időjárás
+     */
     public Weather getWeather() {
         return weather;
     }
 
+    /**
+     * Beállítja az aktuális időjárást.
+     *
+     * @param weather az új időjárás objektum
+     */
     public void setWeather(Weather weather) {
         this.weather = weather;
     }
 
+    /**
+     * Beállítja az úthálózatot.
+     *
+     * @param roadNetwork az új úthálózat objektum
+     */
     public void setRoadNetwork(RoadNetwork roadNetwork) {
         this.roadNetwork = roadNetwork;
     }
 
+    /**
+     * Beállítja a bolt objektumot.
+     *
+     * @param store az új bolt objektum
+     */
     public void setStore(Store store) {
         this.store = store;
     }
 
+    /**
+     * Ellenőrzi az összes jármű közötti ütközéseket. Ha két autó azonos sávon van,
+     * balesetet jelez; ha busz érintett, akkor azt ideiglenesen letiltja.
+     */
     private void checkCollisions() {
         for (int i = 0; i < vehicles.size(); i++) {
             for (int j = i + 1; j < vehicles.size(); j++) {

@@ -1,13 +1,13 @@
 package src;
 import java.util.List;
+
 /**
- * A Store osztaly a jatek boltjat reprezentalja.
- *
- * A bolt tarolja a megvasarolhato elemeket (pl. fejek, jarmuvek, anyagok),
- * es kezeli a vasarlasi muveleteket a szerepkorok szamara.
+ * A Store osztály a játék boltját reprezentálja.
+ * A bolt tárolja a megvásárolható elemeket (pl. fejek, járművek, anyagok),
+ * és kezeli a vásárlási műveleteket a szerepkörök számára.
  */
 public class Store{
-    /** A bolt aktualis keszlete. */
+    /** A bolt aktuális készlete. */
     private List<Buyable> inventory;
 
     /** Nyitva van-e a bolt. */
@@ -23,65 +23,66 @@ public class Store{
 
     /**
      * Megadja, hogy a bolt nyitva van-e.
-     * 
+     *
      * @return true, ha a bolt nyitva van; false ha a bolt zárva van
      */
     public boolean isOpen()              { return open; }
 
     /**
      * Visszaadja a kiválasztott elemet.
-     * 
-     * @return a kiválasztott elem
+     *
+     * @return a kiválasztott elem neve
      */
     public String getSelectedItem()      { return selectedItem; }
 
     /**
-     * Új kiválasztott elem beállítása
-     * 
-     * @param s az új kiválasztott elem
+     * Új kiválasztott elem beállítása.
+     *
+     * @param s az új kiválasztott elem neve
      */
     public void setSelectedItem(String s){ this.selectedItem = s; }
 
     /**
-     * Store peldany letrehozasa megadott keszlettel.
+     * Store példány létrehozása megadott készlettel.
      *
-     * @param inventory a bolt indulokeszlete
+     * @param inventory a bolt indulókészlete
      */
     public Store(List<Buyable> inventory) {
         this.inventory = inventory;
     }
 
     /**
-     * Megprobalja megvasarolni a kivant elemet a boltbol.
+     * Megpróbálja megvásárolni a kívánt elemet a boltból.
+     * Ha a takarító szerepkörnek elegendő pénze van, az elem megvásárlásra kerül.
      *
-     * @param cleanerRole a vasarlast vegzo takarito szerepkor
-     * @param item a megvasarolni kivant elem
-     * @return true, ha a vasarlas sikeres volt
+     * @param cleanerRole a vásárlást végző takarító szerepkör
+     * @param item a megvásárolni kívánt elem
+     * @return true, ha a vásárlás sikeres volt; false egyébként
      */
     public boolean buy(CleanerRole cleanerRole, Buyable item) {
-        /*if (!inventory.contains(item)) {
-            return false; 
-        }*/
-
         int price = item.getPrice();
 
         if (cleanerRole.getMoney() >= price) {
-            
+
             cleanerRole.decreaseMoney(price);
-            
+
             if (item instanceof Head) {
                 cleanerRole.addOwnedHead((Head) item);
                 cleanerRole.getSnowplow().changeHead((Head) item);
             }
 
-            //inventory.remove(item);
-            
-            return true; 
+            return true;
         }
 
         return false;
     }
 
+    /**
+     * Biokerozin vásárlása a boltból a megadott takarító szerepkör számára.
+     *
+     * @param cleanerRole a vásárlást végző takarító szerepkör
+     * @return true, ha a vásárlás sikeres volt; false egyébként
+     */
     public boolean buyBiokerosene(CleanerRole cleanerRole){
         int price = 10;
 
@@ -94,6 +95,12 @@ public class Store{
         return false;
     }
 
+    /**
+     * Só vásárlása a boltból a megadott takarító szerepkör számára.
+     *
+     * @param cleanerRole a vásárlást végző takarító szerepkör
+     * @return true, ha a vásárlás sikeres volt; false egyébként
+     */
     public boolean buySalt(CleanerRole cleanerRole){
         int price = 10;
 
@@ -106,6 +113,12 @@ public class Store{
         return false;
     }
 
+    /**
+     * Zúzottkő vásárlása a boltból a megadott takarító szerepkör számára.
+     *
+     * @param cleanerRole a vásárlást végző takarító szerepkör
+     * @return true, ha a vásárlás sikeres volt; false egyébként
+     */
     public boolean buyGravel(CleanerRole cleanerRole){
         int price = 10;
 
@@ -118,6 +131,12 @@ public class Store{
         return false;
     }
 
+    /**
+     * Hókotró vásárlása a boltból a megadott takarító szerepkör számára.
+     *
+     * @param cleanerRole a vásárlást végző takarító szerepkör
+     * @return true, ha a vásárlás sikeres volt; false egyébként
+     */
     public boolean buySnowplow(CleanerRole cleanerRole){
         int price=150;
         if(cleanerRole.getMoney() >= price){

@@ -27,6 +27,8 @@ public class Intersection extends Node {
     /**
      * Felüldefiniált metódus a jármű érkezésére.
      * Hozzáadja a járművet a vehiclesInside listához, és kezeli az áthaladást a következő útszakaszra.
+     *
+     * @param vehicle a belépő jármű
      */
     @Override
     public void onVehicleEnter(Vehicle vehicle) {

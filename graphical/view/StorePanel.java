@@ -4,16 +4,26 @@ import controller.StoreController;
 import java.awt.*;
 import javax.swing.*;
 
-
+/**
+ * A bolt fő panele, amely három oszlopban jeleníti meg az anyagokat,
+ * járműveket és fejeket vásárlási lehetőséggel.
+ */
 public class StorePanel extends JPanel {
 
-    //private TopPill moneyTopPill;
-
-
+    /**
+     * Frissíti a pénz kijelzőt.
+     */
     public void updateMoney(){
-        
+
     }
 
+    /**
+     * Megvásárolja az adott oszlopban kiválasztott elemeket a vezérlőn keresztül,
+     * majd törli a léptetők értékeit.
+     *
+     * @param itemCol    a bolt oszlop panel, amelyből a kiválasztott elemeket olvassa
+     * @param controller a bolt vezérlő, amelyen keresztül a vásárlás történik
+     */
     private void buy(StoreColumnPanel itemCol, StoreController controller){
         java.util.List<String> selectedItems = new java.util.ArrayList<>();
                 for (Component c : itemCol.getItemsContainer().getComponents()) {
@@ -40,12 +50,17 @@ public class StorePanel extends JPanel {
                 }
     }
 
+    /**
+     * Létrehozza a bolt panelt három oszloppal: anyagok, járművek és fejek.
+     *
+     * @param controller a bolt vezérlő
+     * @param parent     a szülő bolt képernyő
+     */
     public StorePanel(StoreController controller, StoreScreen parent) {
-        
+
         setLayout(new GridLayout(1, 3, 30, 0));
         setOpaque(false);
 
-        // 1. Oszlop: MATERIAL
         StoreColumnPanel materialCol = new StoreColumnPanel("MATERIAL");
         materialCol.addItemRow("SALT", controller.getItemPrice("SALT"));
         materialCol.addItemRow("BIOKEROZIN", controller.getItemPrice("BIOKEROZIN"));
@@ -54,13 +69,11 @@ public class StorePanel extends JPanel {
 
         add(materialCol);
 
-        // 2. Oszlop: VEHICLE
         StoreColumnPanel vehicleCol = new StoreColumnPanel("VEHICLE");
         vehicleCol.addItemRow("SNOWPLOW", controller.getItemPrice("SNOWPLOW"));
         vehicleCol.getBuyButton().addActionListener(e -> {buy(vehicleCol, controller);});
         add(vehicleCol);
 
-        // 3. Oszlop: HEAD
         StoreColumnPanel headCol = new StoreColumnPanel("HEAD");
         headCol.hideMainBuyButton();
         addHeadRow(headCol, controller, "DRAGON");
@@ -69,12 +82,19 @@ public class StorePanel extends JPanel {
         addHeadRow(headCol, controller, "ICEBREAKER");
         addHeadRow(headCol, controller, "SALTSPREAD");
         addHeadRow(headCol, controller, "GRAVELSPREAD");
-            
+
         add(headCol);
 
-        
+
     }
 
+    /**
+     * Hozzáad egy fej elemsort az adott oszlophoz a vásárlás kezelésével.
+     *
+     * @param headCol    a fejek oszlopa
+     * @param controller a bolt vezérlő
+     * @param itemId     a fej azonosítója
+     */
     private void addHeadRow(StoreColumnPanel headCol, StoreController controller, String itemId) {
         ItemRow row = headCol.addHeadItemRow(itemId, controller.getItemPrice(itemId));
 

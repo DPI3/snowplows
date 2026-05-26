@@ -21,11 +21,14 @@ public class Player {
     /** A játékos pontszáma. */
     private int score;
 
+    /** A játékos buszvezető szerepköre. */
     private BusdriverRole busdriverRole;
 
+    /** A játékos takarító szerepköre. */
     private CleanerRole cleanerRole;
+
     /**
-     * Player példány létrehozása.
+     * Player példány létrehozása egyetlen szerepkörrel.
      *
      * @param id a játékos egyedi azonosítója
      * @param name a játékos neve
@@ -38,12 +41,13 @@ public class Player {
     }
 
     /**
-     * Kompatibilitási konstruktor a korábbi több-szerepkörös hívásokhoz.
-     * Az első szerepkört állítja be aktuális szerepkörnek.
+     * Player példány létrehozása takarító és buszvezető szerepkörrel.
+     * Az alapértelmezett aktív szerepkör a takarító.
      *
      * @param id a játékos egyedi azonosítója
      * @param name a játékos neve
-     * @param roles a játékos szerepkörei
+     * @param cleanerRole a játékos takarító szerepköre
+     * @param busdriverRole a játékos buszvezető szerepköre
      */
     public Player(int id, String name, CleanerRole cleanerRole, BusdriverRole busdriverRole) {
         this.id= id;
@@ -53,7 +57,11 @@ public class Player {
         currentRole = cleanerRole;
     }
 
-
+    /**
+     * Visszaadja a játékos összes pénzét mindkét szerepkör összegéből.
+     *
+     * @return a játékos összesített pénzmennyisége
+     */
     public int getMoney() {
         if(busdriverRole != null && cleanerRole != null) {
             return busdriverRole.getMoney()+cleanerRole.getMoney();
@@ -67,22 +75,41 @@ public class Player {
         }
      }
 
+    /**
+     * Beállítja a játékos buszvezető szerepkörét.
+     *
+     * @param busdriverRole az új buszvezető szerepkör
+     */
      public void setBusdriverRole(BusdriverRole busdriverRole) {
         this.busdriverRole = busdriverRole;
      }
 
+    /**
+     * Beállítja a játékos takarító szerepkörét.
+     *
+     * @param cleanerRole az új takarító szerepkör
+     */
      public void setCleanerRole(CleanerRole cleanerRole) {
         this.cleanerRole = cleanerRole;
      }
 
+    /**
+     * Visszaadja a játékos buszvezető szerepkörét.
+     *
+     * @return a buszvezető szerepkör
+     */
      public BusdriverRole getBusdriverRole() {
         return busdriverRole;
      }
 
+    /**
+     * Visszaadja a játékos takarító szerepkörét.
+     *
+     * @return a takarító szerepkör
+     */
      public CleanerRole getCleanerRole() {
         return cleanerRole;
      }
-     
 
     /**
      * Visszaadja a játékos nevét.
@@ -94,7 +121,7 @@ public class Player {
     }
 
     /**
-     * Visszaadja a játékos összesített pontszámát.
+     * Visszaadja a játékos összesített pontszámát, amely megegyezik a pénzmennyiséggel.
      *
      * @return a játékos összesített pontszáma
      */
@@ -121,7 +148,7 @@ public class Player {
     }
 
     /**
-     * Visszaadja a játékos pontszámát.
+     * Visszaadja a játékos pontszámát, amely megegyezik a pénzmennyiséggel.
      *
      * @return a játékos pontszáma
      */

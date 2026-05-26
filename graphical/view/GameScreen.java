@@ -7,26 +7,51 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import src.*;
 
+/**
+ * A játék fő képernyője, amely tartalmazza a játékteret, a felső információs sávot,
+ * a jobb oldali vezérlőpanelt és a HUD elemeket.
+ */
 public class GameScreen extends JFrame {
+    /** A kör és idő információt megjelenítő kapszula. */
     private TopPill roundTopPill;
+    /** A játékmódot megjelenítő kapszula. */
     private TopPill modeTopPill;
+    /** A pénzösszeget megjelenítő kapszula. */
     private TopPill moneyTopPill;
 
+    /** Az állapotüzenetet megjelenítő címke. */
     private JLabel statusLabel;
+    /** A tisztítási százalékot megjelenítő HUD címke. */
     private JLabel cleanLabel;
+    /** Az ütközések számát megjelenítő HUD címke. */
     private JLabel collisionLabel;
+    /** A teljesített küldetések számát megjelenítő HUD címke. */
     private JLabel completedLabel;
 
+    /** A fej információkat és váltó gombot tartalmazó doboz. */
     private GrayInfoBox infoBox;
+    /** A játékteret megjelenítő panel. */
     private BoardPanel boardPanel;
 
+    /** A játékvezérlő hivatkozása. */
     private GameController gameController;
+    /** A szöveg színének hexadecimális kódja. */
     private String TEXT_COLOR = "#E2E874";
 
+    /** A só készletet megjelenítő HUD címke. */
     private JLabel saltStockLabel;
+    /** A biokerozin készletet megjelenítő HUD címke. */
     private JLabel bioStockLabel;
+    /** A kavics készletet megjelenítő HUD címke. */
     private JLabel gravelStockLabel;
 
+    /**
+     * Létrehozza a játék képernyőt a megadott szereppel és bolttal,
+     * felépíti a teljes felhasználói felületet.
+     *
+     * @param role  a játékos szerepe
+     * @param store a bolt objektum
+     */
     public GameScreen(Role role, Store store) {
 
         setTitle("Snowplow - Game Screen");
@@ -168,9 +193,14 @@ public class GameScreen extends JFrame {
 
         moneyChanged();
         infoBox.setCurrentHeadLabel(((CleanerRole)role).getSnowplow().getCurrentHead().getClass().getSimpleName());
-        
+
     }
 
+    /**
+     * Létrehozza a HUD panelt a tisztítás, ütközés, küldetés és készlet címkékkel.
+     *
+     * @return a HUD elemeket tartalmazó panel
+     */
     private JPanel createHudPanel() {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
@@ -200,6 +230,12 @@ public class GameScreen extends JFrame {
         return panel;
     }
 
+    /**
+     * Létrehoz egy fehér, félkövér HUD címkét a megadott szöveggel.
+     *
+     * @param text a címke szövege
+     * @return az elkészített HUD címke
+     */
     private JLabel createHudLabel(String text) {
         JLabel label = new JLabel(text);
         label.setForeground(Color.WHITE);
@@ -208,6 +244,11 @@ public class GameScreen extends JFrame {
         return label;
     }
 
+    /**
+     * Beállítja a játékvezérlőt és átadja a tábla panelnek is.
+     *
+     * @param gameController a játékvezérlő
+     */
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
 
@@ -216,12 +257,20 @@ public class GameScreen extends JFrame {
         }
     }
 
+    /**
+     * Frissíti a kör kijelzőt az új körszámmal.
+     *
+     * @param round az aktuális kör száma
+     */
     public void roundChanged(int round) {
         if (roundTopPill != null) {
             roundTopPill.setText("Kör: " + round);
         }
     }
 
+    /**
+     * Frissíti a pénz kijelzőt a játékos aktuális egyenlegével.
+     */
     public void moneyChanged() {
         if (moneyTopPill == null || gameController == null) return;
 
@@ -234,6 +283,9 @@ public class GameScreen extends JFrame {
         }
     }
 
+    /**
+     * Frissíti a fej információs dobozt az aktuális hókotró fejének nevével.
+     */
     public void headChanged() {
         if (infoBox == null) return;
         if(gameController == null) {
@@ -252,6 +304,9 @@ public class GameScreen extends JFrame {
         }
     }
 
+    /**
+     * Frissíti a játékmód kijelzőt a vezérlő aktuális módjának megfelelően.
+     */
     public void roleChanged() {
 
         if (modeTopPill == null || gameController == null) return;
@@ -259,16 +314,31 @@ public class GameScreen extends JFrame {
         modeTopPill.setText(gameController.isBusMode() ? "BUS MODE" : "SNOWPLOW MODE");
     }
 
+    /**
+     * Frissíti a HUD elemeket a tisztítási százalékkal, ütközések és teljesített küldetések számával.
+     *
+     * @param cleanPercent   a tisztított terület százaléka
+     * @param collisions     az ütközések száma
+     * @param completedJobs  a teljesített küldetések száma
+     */
     public void updateHud(int cleanPercent, int collisions, int completedJobs) {
         if (cleanLabel != null) cleanLabel.setText("Tisztítás: " + cleanPercent + "% / 70%");
         if (collisionLabel != null) collisionLabel.setText("Ütközés: " + collisions);
         if (completedLabel != null) completedLabel.setText("Küldetés: " + completedJobs);
     }
 
+    /**
+     * Visszaadja a játékos aktuális szerepét.
+     *
+     * @return a játékos szerepe
+     */
     public Role getRole() {
         return gameController.getRole();
     }
 
+    /**
+     * Újrarajzolja a képernyőt és frissíti az állapotüzenetet.
+     */
     @Override
     public void repaint() {
         super.repaint();
@@ -278,6 +348,11 @@ public class GameScreen extends JFrame {
         }
     }
 
+    /**
+     * Frissíti az idő kijelzőt a megadott másodpercértékkel.
+     *
+     * @param seconds a hátralévő idő másodpercben
+     */
     public void timeChanged(int seconds) {
         int min = seconds / 60;
         int sec = seconds % 60;
@@ -296,16 +371,24 @@ public class GameScreen extends JFrame {
         }
     }
 
+    /**
+     * Beállítja a mód kapszula szövegét.
+     *
+     * @param text a megjelenítendő szöveg
+     */
     public void setModeText(String text) {
         if (modeTopPill != null) {
             modeTopPill.setText(text);
         }
     }
 
+    /**
+     * Frissíti a készlet HUD címkéit a hókotró aktuális só, biokerozin és kavics készletével.
+     */
     public void updateStockHud() {
         if(gameController == null) return;
         if (!(getRole() instanceof CleanerRole)) return;
-        
+
         Snowplow snowplow = ((CleanerRole) getRole()).getSnowplow();
         if (snowplow == null) return;
 
@@ -322,18 +405,37 @@ public class GameScreen extends JFrame {
         }
     }
 
+    /**
+     * A játékteret megjelenítő belső panel, amely kirajzolja a térképet,
+     * a hókotrót, a forgalmi autókat, a minitérképet és a jelmagyarázatot.
+     */
     private class BoardPanel extends JPanel {
+        /** A játékvezérlő hivatkozása. */
         private GameController gameController;
 
+        /**
+         * Létrehoz egy új játéktér panelt alapértelmezett mérettel.
+         */
         public BoardPanel() {
             setOpaque(false);
             setPreferredSize(new Dimension(700, 520));
         }
 
+        /**
+         * Beállítja a játékvezérlőt a panelhez.
+         *
+         * @param gameController a játékvezérlő
+         */
         public void setGameController(GameController gameController) {
             this.gameController = gameController;
         }
 
+        /**
+         * Kirajzolja a teljes játékteret: háttér, térkép, utak, járművek,
+         * minitérkép és jelmagyarázat.
+         *
+         * @param g a grafikus kontextus
+         */
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -410,6 +512,11 @@ public class GameScreen extends JFrame {
             g2.dispose();
         }
 
+        /**
+         * Kirajzolja a havas háttér dekorációs elemeit.
+         *
+         * @param g2 a grafikus kontextus
+         */
         private void drawSnowyBackground(Graphics2D g2) {
             g2.setColor(new Color(235, 247, 255, 22));
 
@@ -422,6 +529,17 @@ public class GameScreen extends JFrame {
             }
         }
 
+        /**
+         * Kirajzolja a térkép csempéit a megadott paraméterek alapján.
+         *
+         * @param g2     a grafikus kontextus
+         * @param map    a térkép mátrix
+         * @param rows   a sorok száma
+         * @param cols   az oszlopok száma
+         * @param cell   a cella mérete pixelben
+         * @param startX a kirajzolás kezdő X koordinátája
+         * @param startY a kirajzolás kezdő Y koordinátája
+         */
         private void drawMapTiles(Graphics2D g2, int[][] map, int rows, int cols, int cell, int startX, int startY) {
             Rectangle clip = g2.getClipBounds();
 
@@ -450,6 +568,17 @@ public class GameScreen extends JFrame {
             }
         }
 
+        /**
+         * Kirajzolja az út részleteit: aszfalt, sáv jelölések és speciális felületek.
+         *
+         * @param g2     a grafikus kontextus
+         * @param map    a térkép mátrix
+         * @param rows   a sorok száma
+         * @param cols   az oszlopok száma
+         * @param cell   a cella mérete pixelben
+         * @param startX a kirajzolás kezdő X koordinátája
+         * @param startY a kirajzolás kezdő Y koordinátája
+         */
         private void drawRoadDetails(Graphics2D g2, int[][] map, int rows, int cols, int cell, int startX, int startY) {
             for (int r = 0; r < rows; r++) {
                 for (int c = 0; c < cols; c++) {
@@ -520,6 +649,14 @@ public class GameScreen extends JFrame {
             }
         }
 
+        /**
+         * Kirajzol egy sózott útfelületet a megadott cellába.
+         *
+         * @param g2   a grafikus kontextus
+         * @param x    a cella bal felső sarkának X koordinátája
+         * @param y    a cella bal felső sarkának Y koordinátája
+         * @param cell a cella mérete pixelben
+         */
         private void drawSalted(Graphics2D g2, int x, int y, int cell) {
             g2.setColor(new Color(230, 230, 255, 170));
             g2.fillRoundRect(x + 7, y + 7, cell - 14, cell - 14, 10, 10);
@@ -528,6 +665,14 @@ public class GameScreen extends JFrame {
             g2.drawString("S", x + cell / 2 - 4, y + cell / 2 + 5);
         }
 
+        /**
+         * Kirajzol egy depó cellát sárga háttérrel és "D" jelöléssel.
+         *
+         * @param g2   a grafikus kontextus
+         * @param x    a cella bal felső sarkának X koordinátája
+         * @param y    a cella bal felső sarkának Y koordinátája
+         * @param cell a cella mérete pixelben
+         */
         private void drawDepot(Graphics2D g2, int x, int y, int cell) {
             g2.setColor(new Color(218, 223, 88));
             g2.fillRoundRect(x + 4, y + 4, cell - 8, cell - 8, 14, 14);
@@ -540,6 +685,14 @@ public class GameScreen extends JFrame {
             g2.drawString("D", x + cell / 2 - 5, y + cell / 2 + 5);
         }
 
+        /**
+         * Kirajzol egy havas útfelületet fehér háttérrel és hópehely jelöléssel.
+         *
+         * @param g2   a grafikus kontextus
+         * @param x    a cella bal felső sarkának X koordinátája
+         * @param y    a cella bal felső sarkának Y koordinátája
+         * @param cell a cella mérete pixelben
+         */
         private void drawSnow(Graphics2D g2, int x, int y, int cell) {
             g2.setColor(new Color(245, 251, 255, 220));
             g2.fillRoundRect(x + 7, y + 7, cell - 14, cell - 14, 10, 10);
@@ -549,6 +702,14 @@ public class GameScreen extends JFrame {
             g2.drawString("*", x + cell / 2 - 4, y + cell / 2 + 6);
         }
 
+        /**
+         * Kirajzol egy jeges útfelületet kék háttérrel és jégrepedés mintával.
+         *
+         * @param g2   a grafikus kontextus
+         * @param x    a cella bal felső sarkának X koordinátája
+         * @param y    a cella bal felső sarkának Y koordinátája
+         * @param cell a cella mérete pixelben
+         */
         private void drawIce(Graphics2D g2, int x, int y, int cell) {
             g2.setColor(new Color(125, 204, 232, 185));
             g2.fillRoundRect(x + 7, y + 7, cell - 14, cell - 14, 10, 10);
@@ -559,6 +720,14 @@ public class GameScreen extends JFrame {
             g2.drawLine(x + 14, y + 12, x + cell - 14, y + cell - 12);
         }
 
+        /**
+         * Kirajzol egy alagút cellát sötét háttérrel és "T" jelöléssel.
+         *
+         * @param g2   a grafikus kontextus
+         * @param x    a cella bal felső sarkának X koordinátája
+         * @param y    a cella bal felső sarkának Y koordinátája
+         * @param cell a cella mérete pixelben
+         */
         private void drawTunnel(Graphics2D g2, int x, int y, int cell) {
             g2.setColor(new Color(35, 35, 45));
             g2.fillRoundRect(x + 3, y + 3, cell - 6, cell - 6, 12, 12);
@@ -568,6 +737,14 @@ public class GameScreen extends JFrame {
             g2.drawString("T", x + cell / 2 - 5, y + cell / 2 + 6);
         }
 
+        /**
+         * Kirajzol egy híd cellát barna háttérrel és "H" jelöléssel.
+         *
+         * @param g2   a grafikus kontextus
+         * @param x    a cella bal felső sarkának X koordinátája
+         * @param y    a cella bal felső sarkának Y koordinátája
+         * @param cell a cella mérete pixelben
+         */
         private void drawBridge(Graphics2D g2, int x, int y, int cell) {
             g2.setColor(new Color(135, 95, 55));
             g2.fillRoundRect(x + 3, y + 3, cell - 6, cell - 6, 12, 12);
@@ -582,6 +759,14 @@ public class GameScreen extends JFrame {
             g2.drawString("H", x + cell / 2 - 5, y + cell / 2 + 6);
         }
 
+        /**
+         * Kirajzol egy törött jég felületet repedés mintával és "X" jelöléssel.
+         *
+         * @param g2   a grafikus kontextus
+         * @param x    a cella bal felső sarkának X koordinátája
+         * @param y    a cella bal felső sarkának Y koordinátája
+         * @param cell a cella mérete pixelben
+         */
         private void drawBrokenIce(Graphics2D g2, int x, int y, int cell) {
             g2.setColor(new Color(105, 185, 215, 190));
             g2.fillRoundRect(x + 7, y + 7, cell - 14, cell - 14, 10, 10);
@@ -598,6 +783,14 @@ public class GameScreen extends JFrame {
             g2.drawString("X", x + cell / 2 - 4, y + cell / 2 + 5);
         }
 
+        /**
+         * Kirajzol egy kavicsos útfelületet barna háttérrel és kavics pöttyökkel.
+         *
+         * @param g2   a grafikus kontextus
+         * @param x    a cella bal felső sarkának X koordinátája
+         * @param y    a cella bal felső sarkának Y koordinátája
+         * @param cell a cella mérete pixelben
+         */
         private void drawGravel(Graphics2D g2, int x, int y, int cell) {
             g2.setColor(new Color(135, 105, 75, 190));
             g2.fillRoundRect(x + 7, y + 7, cell - 14, cell - 14, 10, 10);
@@ -608,6 +801,14 @@ public class GameScreen extends JFrame {
             g2.fillOval(x + 38, y + 18, 5, 5);
         }
 
+        /**
+         * Kirajzolja a forgalmi autókat a térképen különböző színekkel.
+         *
+         * @param g2     a grafikus kontextus
+         * @param cell   a cella mérete pixelben
+         * @param startX a térkép kirajzolásának kezdő X koordinátája
+         * @param startY a térkép kirajzolásának kezdő Y koordinátája
+         */
         private void drawTrafficCars(Graphics2D g2, int cell, int startX, int startY) {
             if (gameController.getTrafficCars() == null) return;
 
@@ -640,28 +841,32 @@ public class GameScreen extends JFrame {
             }
         }
 
+        /**
+         * Kirajzolja a hókotrót a megadott pozícióba árnyékkal, testtel,
+         * kabinnal, kerekekkel, fejjel és iránynyíllal.
+         *
+         * @param g2   a grafikus kontextus
+         * @param x    a hókotró cellájának bal felső X koordinátája
+         * @param y    a hókotró cellájának bal felső Y koordinátája
+         * @param cell a cella mérete pixelben
+         */
         private void drawSnowplow(Graphics2D g2, int x, int y, int cell) {
             int pad = Math.max(5, cell / 8);
 
-            // Árnyék
             g2.setColor(new Color(30, 35, 45, 120));
             g2.fillOval(x + pad, y + cell - pad, cell - 2 * pad, Math.max(6, cell / 7));
 
-            // Hókotró teste
             g2.setColor(new Color(70, 120, 190));
             g2.fillRoundRect(x + pad, y + cell / 4, cell - 2 * pad, cell / 2, 12, 12);
 
-            // Kabin
             g2.setColor(new Color(180, 225, 245));
             g2.fillRoundRect(x + cell / 2, y + cell / 3, cell / 4, cell / 5, 6, 6);
 
-            // Kerekek
             g2.setColor(new Color(25, 25, 25));
             int wheel = Math.max(6, cell / 7);
             g2.fillOval(x + pad + 3, y + cell / 2 + 9, wheel, wheel);
             g2.fillOval(x + cell - pad - wheel - 3, y + cell / 2 + 9, wheel, wheel);
 
-            // Aktív fej lekérése
             Head head = null;
 
             if (gameController.getRole() instanceof CleanerRole) {
@@ -675,12 +880,20 @@ public class GameScreen extends JFrame {
             drawDirectionArrow(g2, x, y, cell);
         }
 
+        /**
+         * Kirajzolja a hókotró fejét a típusának megfelelő megjelenéssel.
+         *
+         * @param g2   a grafikus kontextus
+         * @param x    a hókotró cellájának bal felső X koordinátája
+         * @param y    a hókotró cellájának bal felső Y koordinátája
+         * @param cell a cella mérete pixelben
+         * @param head az aktuális fej, lehet {@code null} az alapértelmezett tolólaphoz
+         */
         private void drawSnowplowHead(Graphics2D g2, int x, int y, int cell, Head head) {
             int frontX = x + cell - Math.max(8, cell / 6);
             int centerY = y + cell / 2;
 
             if (head instanceof DragonHead) {
-                // Dragon: lángszóró fej
                 g2.setColor(new Color(180, 40, 30));
                 g2.fillRoundRect(frontX - 3, centerY - 8, cell / 3, 16, 8, 8);
 
@@ -697,7 +910,6 @@ public class GameScreen extends JFrame {
             }
 
             if (head instanceof IcebreakerHead) {
-                // Icebreaker: hegyes, acél jégtörő
                 g2.setColor(new Color(160, 170, 180));
                 Polygon spike = new Polygon();
                 spike.addPoint(frontX - 4, centerY - 13);
@@ -712,7 +924,6 @@ public class GameScreen extends JFrame {
             }
 
             if (head instanceof SaltSpreaderHead) {
-                // Saltspreader: szórókar + fehér pöttyök
                 g2.setColor(new Color(110, 110, 120));
                 g2.fillRoundRect(frontX - 2, centerY - 7, cell / 3, 14, 8, 8);
 
@@ -724,7 +935,6 @@ public class GameScreen extends JFrame {
             }
 
             if (head instanceof GravelSpreaderHead) {
-                // Gravelspreader: barna szóró + kavicsok
                 g2.setColor(new Color(120, 80, 45));
                 g2.fillRoundRect(frontX - 2, centerY - 8, cell / 3, 16, 8, 8);
 
@@ -736,7 +946,6 @@ public class GameScreen extends JFrame {
             }
 
             if (head instanceof SweeperHead) {
-                // Sweeper: hengeres seprő
                 g2.setColor(new Color(240, 170, 40));
                 g2.fillOval(frontX - 2, centerY - 13, cell / 3, 26);
 
@@ -749,7 +958,6 @@ public class GameScreen extends JFrame {
             }
 
             if (head instanceof ThrowerHead) {
-                // Thrower: hófúvó cső
                 g2.setColor(new Color(90, 150, 210));
                 g2.fillRoundRect(frontX - 2, centerY - 8, cell / 3, 16, 8, 8);
 
@@ -759,7 +967,6 @@ public class GameScreen extends JFrame {
                 return;
             }
 
-            // Alapértelmezett egyszerű tolólap
             g2.setColor(new Color(200, 200, 210));
             Polygon blade = new Polygon();
             blade.addPoint(frontX - 5, centerY - 14);
@@ -769,6 +976,14 @@ public class GameScreen extends JFrame {
             g2.fillPolygon(blade);
         }
 
+        /**
+         * Kirajzolja a mozgásirány nyilat a hókotró pozíciójában.
+         *
+         * @param g2   a grafikus kontextus
+         * @param x    a hókotró cellájának bal felső X koordinátája
+         * @param y    a hókotró cellájának bal felső Y koordinátája
+         * @param cell a cella mérete pixelben
+         */
         private void drawDirectionArrow(Graphics2D g2, int x, int y, int cell) {
             if (gameController == null) return;
 
@@ -808,6 +1023,14 @@ public class GameScreen extends JFrame {
             g2.fillPolygon(arrow);
         }
 
+        /**
+         * Kirajzolja a buszt a megadott pozícióba sárga karosszériával.
+         *
+         * @param g2   a grafikus kontextus
+         * @param x    a busz cellájának bal felső X koordinátája
+         * @param y    a busz cellájának bal felső Y koordinátája
+         * @param cell a cella mérete pixelben
+         */
         private void drawBus(Graphics2D g2, int x, int y, int cell) {
             int pad = Math.max(5, cell / 8);
 
@@ -830,6 +1053,11 @@ public class GameScreen extends JFrame {
             g2.drawString("B", x + cell / 2 - 4, y + cell / 2 + 7);
         }
 
+        /**
+         * Kirajzolja a küldetés információs panelt a játéktér bal felső sarkába.
+         *
+         * @param g2 a grafikus kontextus
+         */
         private void drawMissionOverlay(Graphics2D g2) {
             g2.setColor(new Color(0, 0, 0, 90));
             g2.fillRoundRect(18, 18, 250, 55, 16, 16);
@@ -840,6 +1068,11 @@ public class GameScreen extends JFrame {
             g2.drawString("Takaríts minél több útszakaszt", 35, 60);
         }
 
+        /**
+         * Kirajzolja a jelmagyarázatot a játéktér aljára.
+         *
+         * @param g2 a grafikus kontextus
+         */
         private void drawLegend(Graphics2D g2) {
             g2.setColor(new Color(255, 255, 255, 215));
             g2.setFont(new Font("SansSerif", Font.BOLD, 13));
@@ -850,6 +1083,14 @@ public class GameScreen extends JFrame {
             );
         }
 
+        /**
+         * Kirajzol egy ütközött sávot piros X jelöléssel.
+         *
+         * @param g2   a grafikus kontextus
+         * @param x    a cella bal felső sarkának X koordinátája
+         * @param y    a cella bal felső sarkának Y koordinátája
+         * @param cell a cella mérete pixelben
+         */
         private void drawCrashedLane(Graphics2D g2, int x, int y, int cell) {
             g2.setColor(new Color(90, 35, 35, 220));
             g2.fillRoundRect(x + 7, y + 7, cell - 14, cell - 14, 10, 10);
@@ -860,6 +1101,14 @@ public class GameScreen extends JFrame {
             g2.drawLine(x + cell - 10, y + 10, x + 10, y + cell - 10);
         }
 
+        /**
+         * Kirajzol egy mély hóval borított útfelületet dupla hópehely jelöléssel.
+         *
+         * @param g2   a grafikus kontextus
+         * @param x    a cella bal felső sarkának X koordinátája
+         * @param y    a cella bal felső sarkának Y koordinátája
+         * @param cell a cella mérete pixelben
+         */
         private void drawDeepSnow(Graphics2D g2, int x, int y, int cell) {
             g2.setColor(new Color(250, 250, 255, 240));
             g2.fillRoundRect(x + 5, y + 5, cell - 10, cell - 10, 12, 12);
@@ -869,6 +1118,14 @@ public class GameScreen extends JFrame {
             g2.drawString("**", x + cell / 2 - 8, y + cell / 2 + 6);
         }
 
+        /**
+         * Kirajzolja a minitérképet a játéktér bal alsó sarkába a játékos és célpont pozíciójával.
+         *
+         * @param g2   a grafikus kontextus
+         * @param map  a térkép mátrix
+         * @param rows a sorok száma
+         * @param cols az oszlopok száma
+         */
         private void drawMiniMap(Graphics2D g2, int[][] map, int rows, int cols) {
             int miniW = 210;
             int miniH = 140;

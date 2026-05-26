@@ -6,12 +6,18 @@ package src;
  */
 public class NormalRoad extends Road {
 
+    /**
+     * Új NormalRoad objektum létrehozása alapértelmezett beállításokkal.
+     */
     public NormalRoad() {
         super();
     }
 
     /**
-     * Az időjárás hatásának alkalmazása.
+     * Az időjárás hatásának alkalmazása a normál útszakaszra.
+     * Minden sávon végrehajtja a havazási tick-et és alkalmazza az aktuális hószintet.
+     *
+     * @param weather az aktuális időjárás objektum
      */
     @Override
     public void applyWeatherEffects(Weather weather) {

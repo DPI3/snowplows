@@ -7,22 +7,20 @@ import src.RoadNetwork;
 import src.Tunnel;
 
 /**
- * Represents the weather conditions in the simulation.
+ * A Weather osztály a szimuláció időjárási viszonyait reprezentálja.
+ * Felelős a havazás szimulálásáért és az utak állapotának befolyásolásáért.
  */
 public class Weather {
-    
-    /** * Through this, the weather accesses the road network to query 
-     * the roads/lanes where snow falls.
-     */
+
+    /** Az úthálózat, amelyen az időjárás hatásait alkalmazza. */
     private RoadNetwork roadNetwork;
 
-    /** * Stores the intensity of the snowfall. This determines how much 
-     * snow falls on the lanes in a single round.
-     */
+    /** A havazás intenzitása. Meghatározza, mennyi hó esik a sávokra egyetlen körben. */
     private int snowIntensity;
-    
+
     /**
-     * Simulation tick for weather changes.
+     * Szimulációs lépés végrehajtása az időjárás-változásokhoz.
+     * Minden útra alkalmazza a havazást, majd frissíti a sósávok állapotát.
      */
     public void tick() {
         if (roadNetwork == null) return;
@@ -39,7 +37,10 @@ public class Weather {
     }
 
     /**
-     * Applies snowfall effect to a road.
+     * A havazás hatásának alkalmazása egy adott útra.
+     * Hidak esetén az intenzitás növekszik, alagutak esetén nincs havazás.
+     *
+     * @param road az út, amelyre a havazás hat
      */
     public void snowfallTick(Road road) {
         if (road != null) {
@@ -61,31 +62,47 @@ public class Weather {
     }
 
     /**
-     * Sets the new snowfall intensity.
-     * @param intensity the new value
+     * Beállítja a havazás új intenzitását. Az érték nem lehet negatív.
+     *
+     * @param intensity az új intenzitás értéke
      */
     public void setSnowIntensity(int intensity) {
         this.snowIntensity = Math.max(0, intensity);
     }
 
     /**
-     * Returns the current snow intensity.
-     * @return the current value
+     * Visszaadja a havazás aktuális intenzitását.
+     *
+     * @return az aktuális intenzitás értéke
      */
     public int getSnowIntensity() {
         return snowIntensity;
     }
 
+    /**
+     * Alapértelmezett Weather konstruktor.
+     */
     public Weather() {
     }
 
+    /**
+     * Weather példány létrehozása megadott úthálózattal és havazási intenzitással.
+     *
+     * @param roadNetwork az úthálózat
+     * @param snowIntensity a havazás kezdő intenzitása
+     */
     public Weather(RoadNetwork roadNetwork, int snowIntensity) {
         this.roadNetwork = roadNetwork;
         this.snowIntensity = snowIntensity;
     }
 
+    /**
+     * Beállítja az úthálózatot, amelyen az időjárás hatásait alkalmazza.
+     *
+     * @param roadNetwork az új úthálózat
+     */
     public void setRoadNetwork(RoadNetwork roadNetwork) {
         this.roadNetwork = roadNetwork;
     }
-    
+
 }

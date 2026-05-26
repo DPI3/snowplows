@@ -2,8 +2,8 @@ package src;
 
 /**
  * A BusdriverRole a buszvezető szerepkört reprezentálja.
- * A buszvezető felelős a buszok mozgatásáért, útvonalak megtervezéséért és a 
- * fordulók teljesítéséért két végállomás között. 
+ * A buszvezető felelős a buszok mozgatásáért, útvonalak megtervezéséért és a
+ * fordulók teljesítéséért két végállomás között.
  * A szerepkör pontszáma a sikeresen teljesített fordulókból adódik.
  */
 public class BusdriverRole extends Role {
@@ -14,7 +14,7 @@ public class BusdriverRole extends Role {
     /** A buszvezető által irányított busz. */
     private Bus bus;
 
-    /** A buszvezető által irányított busz. */
+    /** A buszvezető neve. */
     private String name;
 
     /** A buszvezető által használt úthálózat. */
@@ -27,8 +27,8 @@ public class BusdriverRole extends Role {
     private int score;
 
     /**
-     * Buszvezető objektum inicializálása úthálózat megadásával
-     * 
+     * Buszvezető objektum inicializálása úthálózat megadásával.
+     *
      * @param name a buszvezető neve
      * @param bus a buszvezető által irányított busz
      * @param roadNetwork a buszvezető által használt úthálózat
@@ -43,8 +43,8 @@ public class BusdriverRole extends Role {
     }
 
     /**
-     * Buszvezető objektum inicializálása
-     * 
+     * Buszvezető objektum inicializálása úthálózat nélkül.
+     *
      * @param name a buszvezető neve
      * @param bus a buszvezető által irányított busz
      */
@@ -52,13 +52,26 @@ public class BusdriverRole extends Role {
         this(name, bus, null);
     }
 
-    /** Tesztkörnyezethez: pénzzel inicializált konstruktor. */
+    /**
+     * Buszvezető objektum inicializálása pénzzel.
+     *
+     * @param name a buszvezető neve
+     * @param bus a buszvezető által irányított busz
+     * @param money a buszvezető kezdő pénze
+     */
     public BusdriverRole(String name, Bus bus, int money) {
         this(name, bus, null);
         this.money = money;
     }
 
-    /** Tesztkörnyezethez: pénzzel és pontszámmal inicializált konstruktor. */
+    /**
+     * Buszvezető objektum inicializálása pénzzel és pontszámmal.
+     *
+     * @param name a buszvezető neve
+     * @param bus a buszvezető által irányított busz
+     * @param money a buszvezető kezdő pénze
+     * @param score a buszvezető kezdő pontszáma
+     */
     public BusdriverRole(String name, Bus bus, int money, int score) {
         this(name, bus, null);
         this.money = money;
@@ -69,12 +82,10 @@ public class BusdriverRole extends Role {
      * A busz aktuális állapotából a cél csomópontba megtalálja a legrövidebb útvonalat.
      * A metódus a RoadNetwork osztály getShortestPath() függvényét használja.
      * Az útvonal kiszámítása után a metódus beállítja a busz currentRoute attribútumát, hogy a jármű a
-     * következő szimulációs ciklusban ezen az útvonalon haladhasson tovább. 
-     * A metódus visszatérési értéke a megtalált útvonal teljes hossza (összegzett súly), vagy 0, ha nem 
-     * található járható útvonal.
-     * 
-     * @param bus
-     * @param destination
+     * következő szimulációs ciklusban ezen az útvonalon haladhasson tovább.
+     *
+     * @param bus a busz, amelyhez az útvonalat hozzárendeljük
+     * @param destination a cél csomópont
      * @return az összegzett súly, vagy 0, ha nem található járható útvonal
      */
     public int assignRoute(Bus bus, Node destination) {
@@ -94,7 +105,7 @@ public class BusdriverRole extends Role {
     }
 
     /**
-     * Növeli a teljesített fordulók és a pont számát.
+     * Növeli a teljesített fordulók számát és a pontszámot 50-nel.
      */
     public void incrementCompletedRounds() {
         this.completedRounds++;
@@ -102,9 +113,9 @@ public class BusdriverRole extends Role {
     }
 
     /**
-     * Megadja a teljesített fordulók számát.
-     * 
-     * @return teljesített fordulók száma
+     * Visszaadja a teljesített fordulók számát.
+     *
+     * @return a teljesített fordulók száma
      */
     public int getCompletedRounds() {
         return completedRounds;
@@ -112,69 +123,75 @@ public class BusdriverRole extends Role {
 
     /**
      * Visszaadja a buszvezető nevét.
-     * 
-     * @return  buszvezető neve
+     *
+     * @return a buszvezető neve
      */
     public String getName() {
         return name;
     }
 
-     /**
+    /**
      * Visszaadja a buszvezető pénzét.
-     * 
-     * @return  buszvezető pénze
+     *
+     * @return a buszvezető pénze
      */
     public int getMoney() {
         return money;
     }
 
-     /**
-     * Növeli a buszvezető pénzét.
-     * 
+    /**
+     * Növeli a buszvezető pénzét a megadott összeggel.
+     *
      * @param amount a növelés mennyisége
      */
     public void increaseMoney(int amount) {
         this.money += amount;
     }
 
-     /**
-     * Csökkenti a buszvezető pénzét.
-     * 
+    /**
+     * Csökkenti a buszvezető pénzét a megadott összeggel.
+     *
      * @param amount a csökkenés mennyisége
      */
     public void decreaseMoney(int amount) {
         this.money -= amount;
     }
 
-     /**
+    /**
      * Visszaadja a buszvezető pontszámát.
-     * 
-     * @return  buszvezető pontszáma
+     *
+     * @return a buszvezető pontszáma
      */
     @Override
     public int getScore() {
         return score;
     }
 
-     /**
+    /**
      * Beállítja a buszvezető pontszámát.
-     * 
+     *
      * @param score a buszvezető új pontszáma
      */
     public void setScore(int score) {
         this.score = score;
     }
 
-    
-     /**
-     * Csökkenti a buszvezető pontszámát.
-     * 
+    /**
+     * Csökkenti a buszvezető pontszámát a megadott összeggel.
+     * A pontszám nem csökkenhet 0 alá.
+     *
      * @param amount a csökkenés mennyisége
      */
     public void decreaseScore(int amount) {
         this.score = Math.max(0, this.score - amount);
     }
 
+    /**
+     * Módosítja a buszvezető pénzét a megadott összeggel.
+     * A pénz nem csökkenhet 0 alá.
+     *
+     * @param amount a módosítás mennyisége (pozitív vagy negatív)
+     */
     public void changeMoney(int amount) {
         this.money += amount;
 

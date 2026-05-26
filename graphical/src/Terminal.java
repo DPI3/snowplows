@@ -5,26 +5,25 @@ package src;
  */
 public class Terminal extends Node {
 
-    /** 
-     * Új Residence objektum létrehozása egyedi azonosítóval.
-     * 
+    /**
+     * Új Terminal objektum létrehozása egyedi azonosítóval.
+     *
      * @param id az egyedi azonosító
      */
     public Terminal(String id) {
         super(id);
     }
 
-     /** 
+    /**
      * Új Terminal objektum létrehozása alapértelmezett azonosítóval.
-     * 
      */
     public Terminal() {
         super("default_terminal");
     }
 
     /**
-     * Kezeli azt az eseményt, amikor egy jármű belép.
-     * 
+     * Kezeli azt az eseményt, amikor egy jármű belép a végállomásra.
+     *
      * @param vehicle a belépő jármű
      */
     @Override

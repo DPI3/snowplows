@@ -13,6 +13,11 @@ import java.util.Set;
 import src.*;
 import view.GameScreen;
 
+/**
+ * A játék fő vezérlője, amely összekapcsolja a játékmodellt, a nézetet és a bemeneti vezérlőket.
+ * Kezeli a pálya generálását, a játékos mozgatását, a forgalmi autókat, az időjárásváltozásokat,
+ * a takarítási logikát, a pontszámítást és a körváltásokat.
+ */
 public class GameController {
     private final Game game;
     private final GameScreen gameScreen;
@@ -26,7 +31,6 @@ public class GameController {
     private static final int ROWS = 40;
     private static final int COLS = 60;
 
-    // Csak kirajzolási kódok. Játéklogikára nem használjuk.
     private static final int FIELD = 0;
     private static final int ROAD = 1;
     private static final int SNOW = 2;
@@ -81,6 +85,13 @@ public class GameController {
 
     private String message = "Cél: takaríts minél több havas és jeges útszakaszt.";
 
+    /**
+     * Létrehozza a játékvezérlőt a megadott játékmodellel és játék képernyővel.
+     * Inicializálja a jármű-, billentyűzet- és ciklusvezérlőket, majd előkészíti a játékállapotot.
+     *
+     * @param game a játékmodell
+     * @param gameScreen a játék képernyő
+     */
     public GameController(Game game, GameScreen gameScreen) {
         this.game = game;
         this.gameScreen = gameScreen;
@@ -94,10 +105,18 @@ public class GameController {
         gameScreen.setFocusable(true);
     }
 
+    /**
+     * Beállítja a képernyővezérlő referenciáját.
+     *
+     * @param screenController a képernyővezérlő
+     */
     public void setScreenController(ScreenController screenController) {
         this.screenController = screenController;
     }
 
+    /**
+     * Elindítja a játékot: engedélyezi a billentyűzetet, indítja a játékciklust és frissíti a nézetet.
+     */
     public void startGame() {
         running = true;
         keyboardController.setEnabled(true);
@@ -107,12 +126,18 @@ public class GameController {
         gameScreen.requestFocusInWindow();
     }
 
+    /**
+     * Szünetelteti a játékot: leállítja a játékciklust és frissíti a nézetet.
+     */
     public void pauseGame() {
         running = false;
         gameLoop.stop();
         refreshView();
     }
 
+    /**
+     * Folytatja a szüneteltetett játékot: újraindítja a ciklust és engedélyezi a billentyűzetet.
+     */
     public void resumeGame() {
         running = true;
         keyboardController.setEnabled(true);
@@ -121,6 +146,9 @@ public class GameController {
         gameScreen.requestFocusInWindow();
     }
 
+    /**
+     * Megállítja a játékot véglegesen: letiltja a billentyűzetet és leállítja a ciklust.
+     */
     public void stopGame() {
         running = false;
         keyboardController.setEnabled(false);
@@ -128,6 +156,9 @@ public class GameController {
         refreshView();
     }
 
+    /**
+     * Váltogat a szünet és a folytatás között.
+     */
     public void togglePause() {
         if (running) {
             pauseGame();
@@ -138,12 +169,16 @@ public class GameController {
         }
     }
 
+    /**
+     * A játékciklus egy lépése. Kezeli a játék végét, az idő múlását, az időjárásváltozásokat,
+     * a forgalmi autók mozgatását és a sózott utak frissítését.
+     */
     public void tick() {
         if (!running) return;
 
         if (game.isOver()) {
             stopGame();
-            
+
             List<Player> players = game.getPlayers();
             Player first = null;
             Player second = null;
@@ -163,7 +198,7 @@ public class GameController {
                 else if (third == null || s > third.getScore()) {
                     third = p;
                 }
-                
+
             }
             String str="A játék véget ért! Helyezettek: ";
             if(first!=null)
@@ -199,11 +234,15 @@ public class GameController {
         refreshView();
     }
 
+    /**
+     * Következő körre lép: növeli a körszámot, ellenőrzi a szerepváltást,
+     * és beállítja az új kör módját (busz vagy hókotró).
+     */
     private void nextRound() {
         game.setCurrentRound(game.getRound() + 1);
         remainingSeconds = roundDurationSeconds;
         lastSecondUpdate = System.currentTimeMillis();
-        game.checkRoleSwitch();   
+        game.checkRoleSwitch();
         busMode = getRole() instanceof BusdriverRole;
 
         Lane start = getRandomLane();
@@ -234,6 +273,9 @@ public class GameController {
         gameScreen.moneyChanged();
     }
 
+    /**
+     * Frissíti a sózott utak állapotát: csökkenti a só időzítőjét és növeli a tisztított csempék számát.
+     */
     private void updateSaltedRoads() {
         for (Lane lane : playableLanes) {
             boolean wasSalted = lane.isSalted();
@@ -245,6 +287,11 @@ public class GameController {
         }
     }
 
+    /**
+     * Feldolgozza a bemeneti műveletet és végrehajtja a megfelelő játéklogikát.
+     *
+     * @param action a végrehajtandó bemeneti művelet
+     */
     public void handleInputAction(InputAction action) {
         if (action == null) return;
 
@@ -266,6 +313,10 @@ public class GameController {
         refreshView();
     }
 
+    /**
+     * Visszaállítja a játékállapotot az alapértékekre: nullázza a köröket, a statisztikákat,
+     * újragenerálja a pályát és a forgalmi autókat.
+     */
     private void restartGameState() {
         running = false;
 
@@ -286,11 +337,18 @@ public class GameController {
         refreshView();
     }
 
+    /**
+     * Újraindítja a játékot: leállítja az aktuális játékot és visszaállítja az állapotot.
+     */
     public void restartGame() {
         stopGame();
         restartGameState();
     }
 
+    /**
+     * Felépíti a játszható pályát: generálja az úthálózatot, elhelyezi az alagutakat,
+     * hidakat, valamint a kezdeti havat és jeget.
+     */
     private void buildPlayableMap() {
         playableLanes.clear();
         lanePositions.clear();
@@ -320,6 +378,9 @@ public class GameController {
         addInitialSnowAndIce();
     }
 
+    /**
+     * Generálja az úthálózat gráfját véletlenszerű csomópontokkal és összeköttetésekkel.
+     */
     private void generateRoadGraph() {
         int nodeCount = 10 + random.nextInt(5);
 
@@ -347,6 +408,12 @@ public class GameController {
         }
     }
 
+    /**
+     * Összeköt két útcsomópontot: létrehozza a kirajzolható utat és a köztes sávokat.
+     *
+     * @param a az első csomópont
+     * @param b a második csomópont
+     */
     private void connectRoadNodes(RoadNode a, RoadNode b) {
         a.connect(b);
 
@@ -377,6 +444,14 @@ public class GameController {
         }
     }
 
+    /**
+     * Széles utat jelöl ki a megadott pozíció körül (3x3 blokkban) és összeköttetéseket hoz létre.
+     *
+     * @param row a középpont sora
+     * @param col a középpont oszlopa
+     * @param visualType a vizuális típus kódja
+     * @return a középponti sáv
+     */
     private Lane markRoadWide(int row, int col, int visualType) {
         Lane center = null;
 
@@ -401,6 +476,14 @@ public class GameController {
         return center;
     }
 
+    /**
+     * Visszaad egy meglévő sávot a megadott pozícióban, vagy létrehoz egy újat ha nem létezik.
+     *
+     * @param row a sor indexe
+     * @param col az oszlop indexe
+     * @param visualType a vizuális típus kódja
+     * @return a sáv, vagy {@code null} ha a pozíció kívül esik a pályán
+     */
     private Lane getOrCreateLane(int row, int col, int visualType) {
         if (row < 0 || row >= ROWS || col < 0 || col >= COLS) return null;
 
@@ -438,12 +521,24 @@ public class GameController {
         return lane;
     }
 
+    /**
+     * Létrehozza a vizuális típusnak megfelelő út objektumot.
+     *
+     * @param visualType a vizuális típus kódja
+     * @return a létrehozott út (Bridge, Tunnel vagy NormalRoad)
+     */
     private Road createRoadByVisualType(int visualType) {
         if (visualType == BRIDGE) return new Bridge();
         if (visualType == TUNNEL) return new Tunnel();
         return new NormalRoad();
     }
 
+    /**
+     * Összeköti két sávot szomszédossági kapcsolattal (kétirányú).
+     *
+     * @param a az első sáv
+     * @param b a második sáv
+     */
     private void connectLanes(Lane a, Lane b) {
         if (a == null || b == null || a == b) return;
 
@@ -459,31 +554,66 @@ public class GameController {
         }
     }
 
+    /**
+     * Visszaadja a megadott pozícióban lévő sávot.
+     *
+     * @param row a sor indexe
+     * @param col az oszlop indexe
+     * @return a sáv, vagy {@code null} ha nem létezik
+     */
     private Lane getLaneAt(int row, int col) {
         return lanesByPosition.get(key(row, col));
     }
 
+    /**
+     * Pozíciókulcsot generál a sor és oszlop alapján.
+     *
+     * @param row a sor indexe
+     * @param col az oszlop indexe
+     * @return a kulcs szöveg formátumban ("sor:oszlop")
+     */
     private String key(int row, int col) {
         return row + ":" + col;
     }
 
+    /**
+     * Visszaad egy véletlenszerű sávot a játszható sávok közül.
+     *
+     * @return egy véletlenszerű sáv, vagy {@code null} ha nincs játszható sáv
+     */
     private Lane getRandomLane() {
         if (playableLanes.isEmpty()) return null;
         return playableLanes.get(random.nextInt(playableLanes.size()));
     }
 
+    /**
+     * Belső osztály, amely egy útcsomópontot reprezentál a pályageneráláshoz.
+     * Tartalmazza a csomópont azonosítóját, kirajzolási pozícióját és szomszédjait.
+     */
     private static class RoadNode {
         private final String id;
         private final List<RoadNode> neighbours = new ArrayList<>();
         private final int displayRow;
         private final int displayCol;
 
+        /**
+         * Létrehozza az útcsomópontot a megadott azonosítóval és pozícióval.
+         *
+         * @param id a csomópont egyedi azonosítója
+         * @param displayRow a kirajzolási sor
+         * @param displayCol a kirajzolási oszlop
+         */
         private RoadNode(String id, int displayRow, int displayCol) {
             this.id = id;
             this.displayRow = displayRow;
             this.displayCol = displayCol;
         }
 
+        /**
+         * Összeköti ezt a csomópontot egy másikkal (kétirányú kapcsolat).
+         *
+         * @param other a másik csomópont
+         */
         private void connect(RoadNode other) {
             if (!neighbours.contains(other)) {
                 neighbours.add(other);
@@ -494,6 +624,9 @@ public class GameController {
         }
     }
 
+    /**
+     * Véletlenszerűen elhelyez alagutakat és hidakat a pályán.
+     */
     private void placeRandomTunnelsAndBridges() {
         for (int i = 0; i < 6; i++) {
             placeRoadSegment(TUNNEL, 3 + random.nextInt(4));
@@ -504,6 +637,12 @@ public class GameController {
         }
     }
 
+    /**
+     * Elhelyez egy adott típusú és hosszúságú útszakaszt a pályán.
+     *
+     * @param visualType a vizuális típus kódja
+     * @param length a szakasz hossza csempékben
+     */
     private void placeRoadSegment(int visualType, int length) {
         Lane start = getRandomLane();
         if (start == null) return;
@@ -532,6 +671,9 @@ public class GameController {
         }
     }
 
+    /**
+     * Véletlenszerűen havat és jeget helyez el a pályán a játék kezdetén.
+     */
     private void addInitialSnowAndIce() {
         for (int i = 0; i < 35; i++) {
             Lane lane = getRandomLane();
@@ -548,6 +690,10 @@ public class GameController {
         }
     }
 
+    /**
+     * Véletlenszerű időjárásváltozást hajt végre: havat, mély havat vagy jeget helyez el
+     * a pálya véletlenszerű sávjaira.
+     */
     private void randomWeatherChange() {
         if (playableLanes.isEmpty()) return;
 
@@ -591,6 +737,9 @@ public class GameController {
         message = "Időjárás: új hó vagy jég jelent meg a pályán.";
     }
 
+    /**
+     * Visszaállítja és újra létrehozza a forgalmi autókat, beleértve a buszt is.
+     */
     private void resetTrafficCars() {
         trafficCars.clear();
 
@@ -615,6 +764,10 @@ public class GameController {
         }
     }
 
+    /**
+     * Mozgatja az összes forgalmi autót a legrövidebb út alapján, kezelve a jégen csúszást
+     * és az ütközéseket.
+     */
     private void moveTrafficCars() {
         for (TrafficCar car : trafficCars) {
             if (car.stuckTicks > 0) {
@@ -665,6 +818,14 @@ public class GameController {
         }
     }
 
+    /**
+     * Megkeresi a legrövidebb utat BFS algoritmussal és visszaadja a következő lépést.
+     *
+     * @param car a forgalmi autó
+     * @param start a kiindulási sáv
+     * @param goal a célsáv
+     * @return a következő sáv a legrövidebb úton, vagy {@code null} ha nem elérhető
+     */
     private Lane findShortestPathNextStep(TrafficCar car, Lane start, Lane goal) {
         if (start == null || goal == null) return null;
 
@@ -709,6 +870,13 @@ public class GameController {
         return goal == start ? start : null;
     }
 
+    /**
+     * Megvizsgálja, hogy egy forgalmi autó beléphet-e a megadott sávba.
+     *
+     * @param self a vizsgált forgalmi autó
+     * @param lane a célsáv
+     * @return {@code true}, ha a sáv elérhető és beléphet
+     */
     private boolean canCarEnter(TrafficCar self, Lane lane) {
         if (lane == null) return false;
         if (lane.hasAccident()) return false;
@@ -724,6 +892,15 @@ public class GameController {
         return other == null || state instanceof IceSheet;
     }
 
+    /**
+     * Szimulálja a jégen való csúszást a megadott irányban.
+     *
+     * @param car a csúszó forgalmi autó
+     * @param start a kezdő sáv
+     * @param dr a sor irány (-1, 0, 1)
+     * @param dc az oszlop irány (-1, 0, 1)
+     * @return a végső sáv a csúszás után, vagy {@code null} ha ütközés történt
+     */
     private Lane slideOnIce(TrafficCar car, Lane start, int dr, int dc) {
         Lane current = start;
 
@@ -751,6 +928,11 @@ public class GameController {
         return current;
     }
 
+    /**
+     * Kezeli az autó által a sávra gyakorolt hatást (hó letaposása jéggé).
+     *
+     * @param lane az érintett sáv
+     */
     private void handleCarLaneEffect(Lane lane) {
         if (lane == null) return;
 
@@ -766,6 +948,13 @@ public class GameController {
         }
     }
 
+    /**
+     * Visszaadja az adott sávban álló forgalmi autót (a megadott autón kívül).
+     *
+     * @param self a kizárandó autó
+     * @param lane a vizsgálandó sáv
+     * @return a sávban álló forgalmi autó, vagy {@code null} ha nincs
+     */
     private TrafficCar getTrafficCarAt(TrafficCar self, Lane lane) {
         for (TrafficCar car : trafficCars) {
             if (car != self && car.currentLane == lane) {
@@ -776,6 +965,13 @@ public class GameController {
         return null;
     }
 
+    /**
+     * Ütközést kezel két forgalmi autó között: elakasztja őket és balesetet jelöl a sávon.
+     *
+     * @param first az első autó
+     * @param second a második autó
+     * @param lane az ütközés helye
+     */
     private void crashCars(TrafficCar first, TrafficCar second, Lane lane) {
         collisions++;
 
@@ -790,6 +986,13 @@ public class GameController {
         message = "Autóbaleset történt, a sáv járhatatlanná vált.";
     }
 
+    /**
+     * Mozgatja a játékost a megadott irányba. Ellenőrzi a pálya határait,
+     * az út járhatóságát, és kezeli az ütközéseket.
+     *
+     * @param dr a sor irány (-1, 0, 1)
+     * @param dc az oszlop irány (-1, 0, 1)
+     */
     private void movePlayer(int dr, int dc) {
         if (!running) {
             message = "A játék nem fut. Nyomd meg a START gombot.";
@@ -821,6 +1024,9 @@ public class GameController {
         refreshView();
     }
 
+    /**
+     * Ellenőrzi, hogy a játékos ütközött-e forgalmi autóval busz módban.
+     */
     private void checkPlayerTrafficCollision() {
         if (!busMode || playerLane == null) return;
 
@@ -840,6 +1046,11 @@ public class GameController {
         }
     }
 
+    /**
+     * Levonja a megadott összeget az aktuális szerep pénzéből.
+     *
+     * @param amount a levonandó összeg
+     */
     private void chargeCurrentRole(int amount) {
         Role role = getRole();
 
@@ -852,6 +1063,14 @@ public class GameController {
         }
     }
 
+    /**
+     * Megkeresi a megadott irányban szomszédos sávot.
+     *
+     * @param from a kiindulási sáv
+     * @param dr a sor irány (-1, 0, 1)
+     * @param dc az oszlop irány (-1, 0, 1)
+     * @return a szomszédos sáv, vagy {@code null} ha nem létezik
+     */
     private Lane findNeighbourLaneByDirection(Lane from, int dr, int dc) {
         if (from == null) return null;
 
@@ -861,6 +1080,13 @@ public class GameController {
         return getLaneAt(p.y + dr, p.x + dc);
     }
 
+    /**
+     * Visszaadja a sor irány értékét két sáv között.
+     *
+     * @param from a kiindulási sáv
+     * @param to a célsáv
+     * @return a sor irány (-1, 0 vagy 1)
+     */
     private int getDirectionRow(Lane from, Lane to) {
         Point a = lanePositions.get(from);
         Point b = lanePositions.get(to);
@@ -869,6 +1095,13 @@ public class GameController {
         return Integer.compare(b.y, a.y);
     }
 
+    /**
+     * Visszaadja az oszlop irány értékét két sáv között.
+     *
+     * @param from a kiindulási sáv
+     * @param to a célsáv
+     * @return az oszlop irány (-1, 0 vagy 1)
+     */
     private int getDirectionCol(Lane from, Lane to) {
         Point a = lanePositions.get(from);
         Point b = lanePositions.get(to);
@@ -877,10 +1110,17 @@ public class GameController {
         return Integer.compare(b.x, a.x);
     }
 
+    /**
+     * Takarítja az aktuális csempét a játékos pozíciójánál.
+     */
     public void cleanCurrentTile() {
         cleanAroundPlayer();
     }
 
+    /**
+     * Takarítást végez a játékos aktuális iránya szerinti szomszédos sávon.
+     * Az eredmény alapján jutalmazza a takarítót.
+     */
     public void cleanAroundPlayer() {
         if (!running) {
             message = "Takarításhoz előbb indítsd el a játékot.";
@@ -903,6 +1143,12 @@ public class GameController {
         refreshView();
     }
 
+    /**
+     * Takarítja a megadott sávot a hókotró aktuális fejének megfelelő logikával.
+     *
+     * @param lane a takarítandó sáv
+     * @return a sikeresen megtisztított sávok száma (0 vagy 1)
+     */
     private int cleanLane(Lane lane) {
         if (lane == null) return 0;
 
@@ -997,6 +1243,13 @@ public class GameController {
         return 0;
     }
 
+    /**
+     * Elmozdítja a sáv anyagát a játékos irányába a megadott távolságra.
+     *
+     * @param lane a forrássáv
+     * @param distance a távolság csempékben
+     * @return 1, ha sikerült az anyagot elmozdítani, egyébként 0
+     */
     private int moveMaterialInArrowDirection(Lane lane, int distance) {
         LaneState material = lane.removeMovableMaterial();
 
@@ -1021,6 +1274,9 @@ public class GameController {
         return 1;
     }
 
+    /**
+     * Kezeli a játékos ütközését: büntetést von le, és visszahelyezi a játékost egy depóba.
+     */
     private void handleCollision() {
         collisions++;
 
@@ -1038,10 +1294,19 @@ public class GameController {
         refreshView();
     }
 
+    /**
+     * Visszaadja a játékos aktuális szerepét.
+     *
+     * @return az aktuális {@link Role}, vagy {@code null} ha nincs játékos
+     */
     public Role getRole() {
         return game.getPlayer() != null ? game.getPlayer().getCurrentRole() : null;
     }
 
+    /**
+     * Ellenőrzi, hogy teljesült-e a küldetés. Busz módban a célállomás elérését,
+     * takarító módban a 70%-os tisztaság elérését vizsgálja.
+     */
     private void checkMissionEnd() {
         if (busMode) {
             if (playerLane == targetLane) {
@@ -1051,7 +1316,7 @@ public class GameController {
 
                 if (role instanceof BusdriverRole) {
                     ((BusdriverRole) role).changeMoney(100);
-                    
+
                 }
 
                 Lane oldTarget = targetLane;
@@ -1085,6 +1350,9 @@ public class GameController {
         }
     }
 
+    /**
+     * Szinkronizálja a hókotró pozícióját a játékos aktuális sávjával.
+     */
     private void syncSnowplowToPlayerLane() {
         Role role = getRole();
 
@@ -1098,6 +1366,11 @@ public class GameController {
         }
     }
 
+    /**
+     * Jutalmazza a takarítót a megadott összeggel.
+     *
+     * @param amount a jutalom összege
+     */
     private void rewardCleaner(int amount) {
         Role role = getRole();
 
@@ -1107,6 +1380,11 @@ public class GameController {
         }
     }
 
+    /**
+     * Levonja a megadott összeget a takarító pénzéből.
+     *
+     * @param amount a levonandó összeg
+     */
     private void chargeCleaner(int amount) {
         Role role = getRole();
 
@@ -1116,6 +1394,9 @@ public class GameController {
         }
     }
 
+    /**
+     * Fejleszti a hókotrót a következő szintre, ha van elég pénz és még nem maximális szintű.
+     */
     public void upgradePlow() {
         int price = getUpgradePrice();
 
@@ -1145,10 +1426,18 @@ public class GameController {
         refreshView();
     }
 
+    /**
+     * Visszaadja a hókotró fejlesztésének aktuális árát.
+     *
+     * @return a fejlesztés ára
+     */
     public int getUpgradePrice() {
         return 150 * plowLevel;
     }
 
+    /**
+     * Megnyitja a bolt képernyőt és szünetelteti a játékot.
+     */
     public void openStore() {
         pauseGame();
 
@@ -1157,6 +1446,9 @@ public class GameController {
         }
     }
 
+    /**
+     * Megnyitja a beállítások képernyőt és szünetelteti a játékot.
+     */
     public void openSettings() {
         pauseGame();
 
@@ -1165,6 +1457,9 @@ public class GameController {
         }
     }
 
+    /**
+     * Megnyitja a menü képernyőt és szünetelteti a játékot.
+     */
     public void openMenu() {
         pauseGame();
 
@@ -1173,14 +1468,23 @@ public class GameController {
         }
     }
 
+    /**
+     * Megerősítő művelet: visszaadja a fókuszt a játék képernyőnek.
+     */
     public void confirm() {
         gameScreen.requestFocusInWindow();
     }
 
+    /**
+     * Fejcserét hajt végre, amely a takarítás műveletet hívja meg.
+     */
     public void changeHead() {
         cleanAroundPlayer();
     }
 
+    /**
+     * Frissíti a nézetet: az idő, pénz, szerep, fej, HUD és készlet kijelzőket.
+     */
     private void refreshView() {
         gameScreen.timeChanged(remainingSeconds);
         gameScreen.moneyChanged();
@@ -1195,37 +1499,75 @@ public class GameController {
         gameScreen.repaint();
     }
 
+    /**
+     * Visszaadja a jármű-vezérlőt.
+     *
+     * @return a {@link VehicleController} példány
+     */
     public VehicleController getVehicleController() {
         return vehicleController;
     }
 
+    /**
+     * Visszaadja a billentyűzet-vezérlőt.
+     *
+     * @return a {@link KeyboardController} példány
+     */
     public KeyboardController getKeyboardController() {
         return keyboardController;
     }
 
+    /**
+     * Visszaadja, hogy a játék jelenleg fut-e.
+     *
+     * @return {@code true}, ha a játék fut
+     */
     public boolean isRunning() {
         return running;
     }
 
+    /**
+     * Visszaadja a játszható sávok listáját.
+     *
+     * @return a játszható sávok listája
+     */
     public List<Lane> getPlayableLanes() {
         return playableLanes;
     }
 
+    /**
+     * Visszaadja a megadott sáv pozícióját a pályán.
+     *
+     * @param lane a keresett sáv
+     * @return a sáv pozíciója, vagy {@code null} ha nem található
+     */
     public Point getLanePosition(Lane lane) {
         return lanePositions.get(lane);
     }
 
+    /**
+     * Visszaadja a játékos aktuális sávját.
+     *
+     * @return a játékos sávja
+     */
     public Lane getPlayerLane() {
         return playerLane;
     }
 
+    /**
+     * Visszaadja a célsávot (busz módban a célállomás).
+     *
+     * @return a célsáv, vagy {@code null} ha nincs
+     */
     public Lane getTargetLane() {
         return targetLane;
     }
 
-    /*
-     * Csak a régi GameScreen kompatibilitása miatt marad.
-     * Nem tárolt játékállapot, hanem minden repaint előtt Lane objektumokból számolt kirajzolási másolat.
+    /**
+     * Visszaadja a pálya vizuális térképét 2D tömbként a kirajzoláshoz.
+     * Minden repaint előtt a Lane objektumokból számolt kirajzolási másolat.
+     *
+     * @return a pálya vizuális térképe
      */
     public int[][] getRoadMap() {
         int[][] viewMap = new int[ROWS][COLS];
@@ -1241,6 +1583,12 @@ public class GameController {
         return viewMap;
     }
 
+    /**
+     * Meghatározza egy sáv vizuális kódját az állapota alapján.
+     *
+     * @param lane a vizsgálandó sáv
+     * @return a vizuális típus kódja
+     */
     private int laneToVisualCode(Lane lane) {
         if (lane == null) return FIELD;
 
@@ -1263,75 +1611,155 @@ public class GameController {
         return laneVisualType.getOrDefault(lane, ROAD);
     }
 
+    /**
+     * Visszaadja a játékos sor pozícióját.
+     *
+     * @return a játékos sora, vagy -1 ha nincs pozíció
+     */
     public int getPlayerRow() {
         Point p = lanePositions.get(playerLane);
         return p == null ? -1 : p.y;
     }
 
+    /**
+     * Visszaadja a játékos oszlop pozícióját.
+     *
+     * @return a játékos oszlopa, vagy -1 ha nincs pozíció
+     */
     public int getPlayerCol() {
         Point p = lanePositions.get(playerLane);
         return p == null ? -1 : p.x;
     }
 
+    /**
+     * Visszaadja a célállomás sor pozícióját.
+     *
+     * @return a célállomás sora, vagy -1 ha nincs célállomás
+     */
     public int getTargetRow() {
         Point p = lanePositions.get(targetLane);
         return p == null ? -1 : p.y;
     }
 
+    /**
+     * Visszaadja a célállomás oszlop pozícióját.
+     *
+     * @return a célállomás oszlopa, vagy -1 ha nincs célállomás
+     */
     public int getTargetCol() {
         Point p = lanePositions.get(targetLane);
         return p == null ? -1 : p.x;
     }
 
+    /**
+     * Visszaadja az aktuális üzenetet.
+     *
+     * @return az üzenet szövege
+     */
     public String getMessage() {
         return message;
     }
 
+    /**
+     * Visszaadja a maximális körök számát.
+     *
+     * @return a maximális körszám
+     */
     public int getMaxRound() {
         return game.getMaxRound();
     }
 
+    /**
+     * Visszaadja a forgalmi autók listáját.
+     *
+     * @return a forgalmi autók listája
+     */
     public List<TrafficCar> getTrafficCars() {
         return trafficCars;
     }
 
+    /**
+     * Visszaadja a tisztított csempék százalékos arányát.
+     *
+     * @return a tisztítási százalék (0-100)
+     */
     public int getCleanPercent() {
         if (totalDirtyTiles == 0) return 100;
         return (int) Math.round((cleanedTiles * 100.0) / totalDirtyTiles);
     }
 
+    /**
+     * Visszaadja a hókotró aktuális szintjét.
+     *
+     * @return a hókotró szintje
+     */
     public int getPlowLevel() {
         return plowLevel;
     }
 
+    /**
+     * Visszaadja az ütközések számát.
+     *
+     * @return az ütközések száma
+     */
     public int getCollisions() {
         return collisions;
     }
 
+    /**
+     * Visszaadja a teljesített küldetések számát.
+     *
+     * @return a teljesített küldetések száma
+     */
     public int getCompletedJobs() {
         return completedJobs;
     }
 
+    /**
+     * Visszaadja az utolsó mozgási irány sor komponensét.
+     *
+     * @return az utolsó sor irány (-1, 0 vagy 1)
+     */
     public int getLastDirRow() {
         return lastDirRow;
     }
 
+    /**
+     * Visszaadja az utolsó mozgási irány oszlop komponensét.
+     *
+     * @return az utolsó oszlop irány (-1, 0 vagy 1)
+     */
     public int getLastDirCol() {
         return lastDirCol;
     }
 
+    /**
+     * Beállítja a játékosok számát.
+     *
+     * @param count a kívánt játékosszám (minimum 1)
+     */
     public void setPlayerCount(int count) {
         message = "Játékosszám beállítva: " + Math.max(1, count);
         game.setPlayerCount(Math.max(1, count));
         refreshView();
     }
 
+    /**
+     * Beállítja a maximális körök számát.
+     *
+     * @param maxRound a kívánt maximális körszám (minimum 1)
+     */
     public void setMaxRound(int maxRound) {
         game.setMaxRound(Math.max(1, maxRound));
         message = "Játék hossza beállítva: " + game.getMaxRound() + " kör.";
         refreshView();
     }
 
+    /**
+     * Beállítja a forgalmi autók számát és újra létrehozza őket.
+     *
+     * @param count a kívánt autószám (0-30 közötti érték)
+     */
     public void setCarCount(int count) {
         configuredCarCount = Math.max(0, Math.min(30, count));
         resetTrafficCars();
@@ -1339,6 +1767,10 @@ public class GameController {
         refreshView();
     }
 
+    /**
+     * Forgalmi autó belső osztály, amely egy a pályán közlekedő járművet reprezentál.
+     * Lehet normál autó vagy busz, amely két végállomás között közlekedik.
+     */
     public class TrafficCar {
         private int stuckTicks = 0;
         private final String label;
@@ -1352,6 +1784,13 @@ public class GameController {
         private Lane terminalB;
         private int busRounds;
 
+        /**
+         * Létrehozza a forgalmi autót a megadott kezdő sávval, címkével és színindexszel.
+         *
+         * @param startLane a kezdő sáv
+         * @param label az autó megjelenítési címkéje
+         * @param colorIndex az autó színének indexe
+         */
         TrafficCar(Lane startLane, String label, int colorIndex) {
             this.currentLane = startLane;
             this.label = label;
@@ -1359,6 +1798,12 @@ public class GameController {
             chooseNewTarget();
         }
 
+        /**
+         * Beállítja az autót buszként két végállomással.
+         *
+         * @param a az első végállomás
+         * @param b a második végállomás
+         */
         private void makeBus(Lane a, Lane b) {
             bus = true;
             terminalA = a;
@@ -1367,6 +1812,9 @@ public class GameController {
             targetLane = b;
         }
 
+        /**
+         * Véletlenszerű új célsávot választ az autónak.
+         */
         private void chooseNewTarget() {
             Lane target = getRandomLane();
 
@@ -1375,10 +1823,18 @@ public class GameController {
             }
         }
 
+        /**
+         * Áthelyezi az autót a megadott sávba.
+         *
+         * @param lane a célsáv
+         */
         public void moveTo(Lane lane) {
             this.currentLane = lane;
         }
 
+        /**
+         * Ellenőrzi, hogy a busz elérte-e a végállomását, és ha igen, megfordítja az irányt.
+         */
         private void checkBusTerminalReached() {
             if (!bus) return;
 
@@ -1393,16 +1849,31 @@ public class GameController {
             }
         }
 
+        /**
+         * Visszaadja az autó sor pozícióját.
+         *
+         * @return az autó sora, vagy -1 ha nincs pozíció
+         */
         public int getRow() {
             Point p = lanePositions.get(currentLane);
             return p == null ? -1 : p.y;
         }
 
+        /**
+         * Visszaadja az autó oszlop pozícióját.
+         *
+         * @return az autó oszlopa, vagy -1 ha nincs pozíció
+         */
         public int getCol() {
             Point p = lanePositions.get(currentLane);
             return p == null ? -1 : p.x;
         }
 
+        /**
+         * Visszaadja az autó megjelenítési címkéjét. Busz esetén tartalmazza a megtett körök számát.
+         *
+         * @return az autó címkéje
+         */
         public String getLabel() {
             if (bus) {
                 return "BUS" + busRounds;
@@ -1411,11 +1882,19 @@ public class GameController {
             return label;
         }
 
+        /**
+         * Visszaadja az autó színindexét.
+         *
+         * @return a színindex
+         */
         public int getColorIndex() {
             return colorIndex;
         }
     }
 
+    /**
+     * Megjeleníti a fejválasztó dialógust, ahol a játékos kiválaszthatja az aktív hókotró fejet.
+     */
     public void showHeadSelector() {
         Role role = gameScreen.getRole();
 
@@ -1460,14 +1939,27 @@ public class GameController {
         }
     }
 
+    /**
+     * Visszaadja a hátralévő másodperceket az aktuális körben.
+     *
+     * @return a hátralévő másodpercek száma
+     */
     public int getRemainingSeconds() {
         return remainingSeconds;
     }
 
+    /**
+     * Visszaadja, hogy busz módban van-e a játék.
+     *
+     * @return {@code true}, ha busz módban van
+     */
     public boolean isBusMode() {
         return busMode;
     }
 
+    /**
+     * Váltogat a busz és hókotró mód között. Új pozíciót és célállomást állít be.
+     */
     public void toggleGameMode() {
         busMode = !busMode;
 
@@ -1497,6 +1989,11 @@ public class GameController {
         refreshView();
     }
 
+    /**
+     * Beállítja a kör időtartamát másodpercben.
+     *
+     * @param seconds a kör időtartama (minimum 30 másodperc)
+     */
     public void setRoundDurationSeconds(int seconds) {
         roundDurationSeconds = Math.max(30, seconds);
         remainingSeconds = roundDurationSeconds;
@@ -1504,20 +2001,45 @@ public class GameController {
         refreshView();
     }
 
+    /**
+     * Visszaadja az aktuális kör számát megjelenítésre.
+     *
+     * @return az aktuális körszám
+     */
     public int getCurrentRoundForDisplay() {
         return game.getRound();
     }
 
+    /**
+     * Visszaadja a kirajzolható utak listáját.
+     *
+     * @return a kirajzolható utak listája
+     */
     public List<DrawableRoad> getDrawableRoads() {
         return drawableRoads;
     }
 
+    /**
+     * Kirajzolható út szegmens, amely két csomópont közötti szakaszt reprezentál.
+     */
     public static class DrawableRoad {
+        /** A kiindulási sor. */
         public final int fromRow;
+        /** A kiindulási oszlop. */
         public final int fromCol;
+        /** A célsor. */
         public final int toRow;
+        /** A céloszlop. */
         public final int toCol;
 
+        /**
+         * Létrehozza a kirajzolható út szegmenst a megadott koordinátákkal.
+         *
+         * @param fromRow a kiindulási sor
+         * @param fromCol a kiindulási oszlop
+         * @param toRow a célsor
+         * @param toCol a céloszlop
+         */
         public DrawableRoad(int fromRow, int fromCol, int toRow, int toCol) {
             this.fromRow = fromRow;
             this.fromCol = fromCol;

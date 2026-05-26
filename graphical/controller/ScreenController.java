@@ -5,6 +5,10 @@ import view.*;
 import src.CleanerRole;
 import src.BusdriverRole;
 
+/**
+ * Képernyővezérlő osztály, amely a különböző képernyők (menü, játék, beállítások, bolt)
+ * közötti navigációt kezeli.
+ */
 public class ScreenController {
     private final SnowplowMenu menuScreen;
     private final GameScreen gameScreen;
@@ -13,14 +17,14 @@ public class ScreenController {
     private final StoreScreen storeScreen;
     private JFrame currentScreen;
     private final GameController gameController;
-     
+
     /**
-     * ScreenController konstruktor a szükséges képernyőkkel.
-     * A GameController opcionális lehet, ha nem szükséges az alkalmazásban.
+     * Létrehozza a képernyővezérlőt a megadott képernyőkkel és játékvezérlővel.
+     * Automatikusan létrehozza a menü és beállítások képernyőket.
      *
-     * @param menuScreen a menü képernyő
      * @param gameScreen a játék képernyő
-     * @param gameController a játék kontroler (opcionális)
+     * @param gameController a játékvezérlő
+     * @param storeScreen a bolt képernyő
      */
     public ScreenController(GameScreen gameScreen, GameController gameController, StoreScreen storeScreen) {
         this.menuScreen = new SnowplowMenu(this);
@@ -31,16 +35,28 @@ public class ScreenController {
         this.currentScreen = menuScreen;
     }
 
+    /**
+     * Visszaadja a játékvezérlőt.
+     *
+     * @return a játékvezérlő példány
+     */
     public GameController getGameController(){
         return gameController;
     }
 
+    /**
+     * Megjeleníti a főmenü képernyőt, elrejtve az aktuális képernyőt.
+     */
     public void showMenu(){
         currentScreen.setVisible(false);
         menuScreen.setVisible(true);
         currentScreen=menuScreen;
     }
 
+    /**
+     * Megjeleníti a játék képernyőt, elrejtve az aktuális képernyőt.
+     * Ha a játék nem fut, automatikusan folytatja.
+     */
     public void showGame(){
         currentScreen.setVisible(false);
         gameScreen.setVisible(true);
@@ -51,12 +67,19 @@ public class ScreenController {
         }
     }
 
+    /**
+     * Megjeleníti a beállítások képernyőt, elrejtve az aktuális képernyőt.
+     */
     public void showSettings(){
         currentScreen.setVisible(false);
         settingsScreen.setVisible(true);
         currentScreen=settingsScreen;
     }
 
+    /**
+     * Megjeleníti a bolt képernyőt, elrejtve az aktuális képernyőt.
+     * Frissíti a bolt képernyőn megjelenített pénzösszeget a játékos aktuális szerepe alapján.
+     */
     public void showStore(){
         currentScreen.setVisible(false);
         storeScreen.setVisible(true);
@@ -71,6 +94,9 @@ public class ScreenController {
         currentScreen=storeScreen;
     }
 
+    /**
+     * Kilép az alkalmazásból.
+     */
     public void exitApplication(){
         System.exit(0);
     }

@@ -5,14 +5,28 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * Egy sor a listában: Rózsaszín címke + Léptető (Spinner)
+ * Egy sor a bolt vagy beállítások listájában, amely egy rózsaszín címkét
+ * és egy léptető (Spinner) vagy vásárlás gombot tartalmaz.
  */
 public class ItemRow extends JPanel {
+    /** Az elem neve. */
     private String name;
+    /** A mennyiség beállítására szolgáló léptető. */
     private JSpinner spinner;
+    /** Az ár címkéje. */
     private JLabel priceLabel;
+    /** Az egyedi vásárlás gomb. */
     private StyledButton buyButton;
 
+    /**
+     * Létrehoz egy új elemsort a megadott névvel, mérettel, árral és opcionális vásárlás gombbal.
+     *
+     * @param name            az elem neve
+     * @param preferredWidth  a névcímke kívánt szélessége
+     * @param preferredHeight a névcímke kívánt magassága
+     * @param price           az elem ára, negatív érték esetén nem jelenik meg
+     * @param ownBuyButton    ha igaz, vásárlás gombot jelenít meg a léptető helyett
+     */
     public ItemRow(String name, int preferredWidth, int preferredHeight, int price, boolean ownBuyButton) {
         this.name = name;
         setOpaque(false);
@@ -37,15 +51,19 @@ public class ItemRow extends JPanel {
             add(pricePanel);
         }
 
-        // Kis rózsaszín panel a névnek
         JPanel nameTag = new JPanel() {
+            /**
+             * Kirajzolja a rózsaszín, lekerekített sarkú névcímke hátteret.
+             *
+             * @param g a grafikus kontextus
+             */
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(Color.decode("#EE8695"));
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
-                g2.setColor(new Color(40, 40, 50, 100)); // Árnyék keret
+                g2.setColor(new Color(40, 40, 50, 100));
                 g2.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 15, 15);
                 g2.dispose();
             }
@@ -53,7 +71,7 @@ public class ItemRow extends JPanel {
         nameTag.setOpaque(false);
         nameTag.setPreferredSize(new Dimension(preferredWidth, preferredHeight));
         nameTag.setLayout(new GridBagLayout());
-        
+
         JLabel nameLabel = new JLabel(name);
         nameLabel.setFont(AssetManager.getInstance().getFont("silkscreenSmall"));
         nameLabel.setForeground(Color.decode("#EAE0D5"));
@@ -72,35 +90,74 @@ public class ItemRow extends JPanel {
         }
     }
 
+    /**
+     * Létrehoz egy új elemsort a megadott névvel és mérettel, ár és vásárlás gomb nélkül.
+     *
+     * @param name            az elem neve
+     * @param preferredWidth  a névcímke kívánt szélessége
+     * @param preferredHeight a névcímke kívánt magassága
+     */
     public ItemRow(String name, int preferredWidth, int preferredHeight) {
         this(name, preferredWidth, preferredHeight, -1, false);
     }
 
+    /**
+     * Létrehoz egy új elemsort a megadott névvel, alapértelmezett mérettel.
+     *
+     * @param name az elem neve
+     */
     public ItemRow(String name){
         this(name, 130, 35, -1, false);
     }
 
+    /**
+     * Visszaadja a léptetőben beállított mennyiséget.
+     *
+     * @return a kiválasztott mennyiség, vagy 0, ha nincs léptető
+     */
     public int getAmount() {
         if (spinner == null) return 0;
         return (int) spinner.getValue();
     }
 
+    /**
+     * Visszaadja az elem nevét.
+     *
+     * @return az elem neve
+     */
     public String getItemName() {
         return name;
     }
 
+    /**
+     * Visszaállítja a léptető értékét nullára.
+     */
     public void ClearSpinner(){
         spinner.setValue(0);
     }
 
+    /**
+     * Beállítja a léptető maximális értékét.
+     *
+     * @param max a maximális mennyiség
+     */
     public void setMaxAmount(int max) {
         spinner.setModel(new SpinnerNumberModel(0, 0, max, 1));
     }
 
+    /**
+     * Visszaadja a vásárlás gombot.
+     *
+     * @return a vásárlás gomb, vagy {@code null}, ha nincs
+     */
     public StyledButton getBuyButton() {
         return buyButton;
     }
 
+    /**
+     * Megjelöli az elemet megvásároltként: a gomb szövegét "BOUGHT"-ra állítja
+     * és letiltja a gombot.
+     */
     public void markBought() {
         if (buyButton != null) {
             buyButton.setText("BOUGHT");
@@ -108,6 +165,13 @@ public class ItemRow extends JPanel {
         }
     }
 
+    /**
+     * Létrehoz egy fej típusú elemsort egyedi vásárlás gombbal.
+     *
+     * @param name  a fej neve
+     * @param price a fej ára
+     * @return az elkészített elemsor
+     */
     public static ItemRow headRow(String name, int price) {
         return new ItemRow(name, 130, 35, price, true);
     }

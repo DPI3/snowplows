@@ -21,8 +21,18 @@ public class Bus extends Vehicle {
     /** A busz jelenlegi állapota. */
     private String location = "úton";
 
+    /** A busz letiltott tick-jeinek száma. */
     private int disabledTicks;
 
+    /**
+     * Új Bus objektum létrehozása a megadott paraméterekkel.
+     *
+     * @param id a busz egyedi azonosítója
+     * @param lane a busz induló sávja
+     * @param speed a busz sebessége
+     * @param a a busz első végállomása
+     * @param b a busz második végállomása
+     */
     public Bus(String id, Lane lane, double speed, Terminal a, Terminal b) {
         super(id, lane, speed);
         this.terminalA = a;
@@ -30,42 +40,43 @@ public class Bus extends Vehicle {
     }
 
     /**
-     * Visszaadja a busz első állomását.
-     * 
+     * Visszaadja a busz első végállomását.
+     *
      * @return a busz első végállomása
      */
     public Terminal getTerminal_A() { return terminalA; }
 
     /**
-     * Visszaadja a busz második állomását.
-     * 
+     * Visszaadja a busz második végállomását.
+     *
      * @return a busz második végállomása
      */
     public Terminal getTerminal_B() { return terminalB; }
 
     /**
-     * Visszaadja, hogy a busz mennyi ideig nem tud haladni
-     * 
-     * @return a busz mozgásképtelenségének ideje
+     * Visszaadja, hogy a busz mennyi ideig nem tud haladni.
+     *
+     * @return a busz mozgásképtelenségének ideje tick-ekben
      */
     public int getImmobileTime()    { return immobileTime; }
 
     /**
-     * A busz állapotával szöveges formában visszatérő metódus
-     * 
+     * Visszaadja a busz jelenlegi állapotát szöveges formában.
+     *
      * @return a busz állapota
      */
     public String getLocation()     { return location; }
 
     /**
-     * A busz állapotának beállítása
-     * 
+     * Beállítja a busz állapotát.
+     *
      * @param location a busz új állapota
      */
     public void setLocation(String location) { this.location = location; }
 
     /**
      * A szimuláció egy időlépését hajtja végre.
+     * Ha a busz le van tiltva, a letiltott tick-ek száma csökken és az immobileTime nő.
      * Ha a busz sávja járható, a busz továbbhalad és az immobileTime nullázódik.
      * Ha nem járható, az immobileTime növekszik.
      */
@@ -92,6 +103,12 @@ public class Bus extends Vehicle {
         }
     }
 
+    /**
+     * Letiltja a buszt a megadott számú tick-re.
+     * Ha a busz már le van tiltva, a nagyobb értéket tartja meg.
+     *
+     * @param ticks a letiltás időtartama tick-ekben
+     */
     public void disableForTicks(int ticks) {
         this.disabledTicks = Math.max(this.disabledTicks, ticks);
         this.location = "mozgásképtelen";

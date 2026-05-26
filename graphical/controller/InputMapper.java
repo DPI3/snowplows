@@ -4,25 +4,52 @@ import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Billentyűkódok és bemeneti műveletek közötti leképezést kezelő osztály.
+ * Alapértelmezett billentyűkiosztást tölt be a konstruktorban, amely később módosítható.
+ */
 public class InputMapper {
     private final Map<Integer, InputAction> keyBindings = new HashMap<>();
 
+    /**
+     * Létrehozza az InputMapper-t és betölti az alapértelmezett billentyűkiosztást.
+     */
     public InputMapper() {
         loadDefaultBindings();
     }
 
+    /**
+     * Visszaadja a megadott billentyűkódhoz tartozó műveletet.
+     *
+     * @param keyCode a billentyű kódja
+     * @return a hozzárendelt {@link InputAction}, vagy {@code null} ha nincs hozzárendelés
+     */
     public InputAction getAction(int keyCode) {
         return keyBindings.get(keyCode);
     }
 
+    /**
+     * Beállít egy billentyűkód-művelet hozzárendelést.
+     *
+     * @param keyCode a billentyű kódja
+     * @param action a hozzárendelni kívánt művelet
+     */
     public void setBinding(int keyCode, InputAction action) {
         keyBindings.put(keyCode, action);
     }
 
+    /**
+     * Eltávolít egy billentyűkód-hozzárendelést.
+     *
+     * @param keyCode az eltávolítandó billentyűkód
+     */
     public void removeBinding(int keyCode) {
         keyBindings.remove(keyCode);
     }
 
+    /**
+     * Betölti az alapértelmezett billentyűkiosztást (WASD, nyilak és egyéb gyorsbillentyűk).
+     */
     private void loadDefaultBindings() {
         keyBindings.put(KeyEvent.VK_W, InputAction.MOVE_UP);
         keyBindings.put(KeyEvent.VK_UP, InputAction.MOVE_UP);

@@ -1,13 +1,14 @@
 package src;
 
 /**
- * A ThrowerHead olyan mechanikus tisztítófej, amely a havat, zúzottkövet vagy a fellazított jeget oldalra dobja. 
+ * A ThrowerHead olyan mechanikus tisztítófej, amely a havat, zúzottkövet vagy a fellazított jeget oldalra dobja.
  */
 public class ThrowerHead extends Head {
 
     /**
-     * Az útszakasz tisztítása, oldalra söpri a hó-, feltört jég-, illetve a zúzottkő réteget.
-     * 
+     * Az útszakasz tisztítása: oldalra dobja a hó-, feltört jég-, illetve a zúzottkő réteget.
+     * Az eltávolított anyagot a távolabbi szomszédos sávra helyezi.
+     *
      * @param lane a tisztítandó szakasz
      * @param snowplow a tisztítást végző hókotró
      */
@@ -36,9 +37,9 @@ public class ThrowerHead extends Head {
         }
     }
 
-     /**
-     * Visszadja a ThrowerHead fej árát.
-     * 
+    /**
+     * Visszaadja a ThrowerHead fej árát.
+     *
      * @return az ára
      */
     @Override

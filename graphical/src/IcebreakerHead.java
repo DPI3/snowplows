@@ -1,16 +1,16 @@
 package src;
 
 /**
- * Az IcebreakerHead feladata a kemény, letapadt jégréteg mechanikus feltörése. 
+ * Az IcebreakerHead feladata a kemény, letapadt jégréteg mechanikus feltörése.
  * Ez a fej elsősorban nem a teljes tisztítást végzi el, hanem a jég állapotát alakítja át kezelhetőbbé, például
- * jégpáncélból feltört jéggé. Ezzel előkészíti a felületet más fejek, például a SweeperHead vagy ThrowerHead 
+ * jégpáncélból feltört jéggé. Ezzel előkészíti a felületet más fejek, például a SweeperHead vagy ThrowerHead
  * számára.
  */
 public class IcebreakerHead extends Head {
 
-     /**
+    /**
      * Az útszakasz tisztítása, feltöri a jégpáncélt, hogy az út később teljesen megtisztítható legyen.
-     * 
+     *
      * @param lane a tisztítandó szakasz
      * @param snowplow a tisztítást végző hókotró
      */
@@ -27,9 +27,9 @@ public class IcebreakerHead extends Head {
     }
 
     /**
-     * Visszadja a jégtörő fej árát.
-     * 
-     * @return az ára
+     * Visszaadja a jégtörő fej árát.
+     *
+     * @return az ár
      */
     @Override
     public int getPrice() {

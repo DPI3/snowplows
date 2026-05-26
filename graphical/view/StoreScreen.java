@@ -11,40 +11,51 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+/**
+ * A bolt képernyő, amely megjeleníti a vásárolható elemeket, a játékos pénzét
+ * és a hókotró készleteit.
+ */
 public class StoreScreen extends JFrame{
 
+    /** A bolt panel, amely az oszlopokat tartalmazza. */
     private StorePanel storePanel;
+    /** A képernyőváltásokat kezelő vezérlő. */
     private ScreenController screenController;
+    /** A játékos pénzét megjelenítő panel. */
     private JPanel playerMoneyLabel;
+    /** A pénzösszeget megjelenítő kapszula. */
     private TopPill moneyTopPill;
 
+    /** A só készletet megjelenítő kapszula. */
     private TopPill saltStockPill;
+    /** A biokerozin készletet megjelenítő kapszula. */
     private TopPill bioStockPill;
+    /** A kavics készletet megjelenítő kapszula. */
     private TopPill gravelStockPill;
 
+    /**
+     * Létrehozza a bolt képernyőt a fejléccel, bolt panellel és készlet kijelzőkkel.
+     *
+     * @param storeController a bolt vezérlő
+     * @param role            a játékos tisztító szerepe
+     */
     public StoreScreen(StoreController storeController, CleanerRole role) {
         setTitle("Snowplow - Store");
-        setSize(1300, 760); // Kicsit szélesebb ablak a három oszlop miatt
+        setSize(1300, 760);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Fő háttérpanel
-        //BackgroundPanel mainPanel =  new BackgroundPanel("graphical/factoryite.png"); 
-
-        BackgroundPanel mainPanel =  new BackgroundPanel("factoryite.png"); 
+        BackgroundPanel mainPanel =  new BackgroundPanel("factoryite.png");
         mainPanel.setLayout(new BorderLayout(10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Pénz ikon betöltése előre, hogy használhassuk a fejlécben
         Image moneyIcon = null;
         try {
-            //moneyIcon = ImageIO.read(new File("graphical/money.png")); 
-            moneyIcon = ImageIO.read(new File("money.png")); 
+            moneyIcon = ImageIO.read(new File("money.png"));
         } catch (Exception e) {
             System.err.println("Nem található a money.png!");
         }
 
-        // --- FELSŐ SÁV (HEADER) ---
         playerMoneyLabel = new JPanel(new FlowLayout(FlowLayout.CENTER, 18, 0));
         playerMoneyLabel.setOpaque(false);
 
@@ -81,14 +92,29 @@ public class StoreScreen extends JFrame{
         updateStock(role.getSnowplow());
     }
 
+    /**
+     * Beállítja a képernyőváltásokat kezelő vezérlőt.
+     *
+     * @param screenController a képernyővezérlő
+     */
     public void setScreenController(ScreenController screenController){
         this.screenController=screenController;
     }
 
+    /**
+     * Frissíti a pénz kijelzőt a megadott összeggel.
+     *
+     * @param amount a megjelenítendő pénzösszeg
+     */
     public void updateMoney(int amount){
         moneyTopPill.setText(Integer.toString(amount));
     }
 
+    /**
+     * Frissíti a készlet kapszulákat a hókotró aktuális készleteivel.
+     *
+     * @param snowplow a hókotró, amelyből a készletadatok származnak
+     */
     public void updateStock(src.Snowplow snowplow) {
         if (snowplow == null) return;
 
@@ -105,13 +131,23 @@ public class StoreScreen extends JFrame{
         }
     }
 
-     /**
-     * Felső lekerekített információs panelek (pl. STORE, Pénz)
+    /**
+     * Felső lekerekített információs kapszula panel, amely szöveget
+     * és opcionálisan ikont jelenít meg a bolt képernyőn.
      */
     static class TopPill extends JPanel {
+        /** A kapszulában megjelenített szöveg. */
         private String text;
+        /** A kapszulában megjelenített opcionális ikon. */
         private Image icon;
 
+        /**
+         * Létrehoz egy új kapszula panelt a megadott szöveggel, szélességgel és ikonnal.
+         *
+         * @param text           a megjelenítendő szöveg
+         * @param preferredWidth a kapszula kívánt szélessége
+         * @param icon           az opcionális ikon kép, lehet {@code null}
+         */
         public TopPill(String text, int preferredWidth, Image icon) {
             this.text = text;
             this.icon = icon;
@@ -119,18 +155,27 @@ public class StoreScreen extends JFrame{
             setPreferredSize(new Dimension(preferredWidth, 50));
         }
 
-         public void setText(String newText) {
+        /**
+         * Beállítja a kapszula szövegét és újrarajzolja a panelt.
+         *
+         * @param newText az új megjelenítendő szöveg
+         */
+        public void setText(String newText) {
             this.text = newText;
             repaint();
             revalidate();
         }
 
+        /**
+         * Kirajzolja a kapszula hátteret, a szöveget és az opcionális ikont.
+         *
+         * @param g a grafikus kontextus
+         */
         @Override
         protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            // Kapszula háttere (#748CAB)
             g2.setColor(new Color(116, 140, 171));
             g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
 
@@ -138,20 +183,17 @@ public class StoreScreen extends JFrame{
             g2.setColor(Color.decode("#EAE0D5"));
             FontMetrics fm = g2.getFontMetrics();
 
-            int gap = 10; // Távolság a szöveg és a kép között
+            int gap = 10;
             int textWidth = fm.stringWidth(text);
-            int iconWidth = (icon != null) ? 40 : 0; 
-            int iconHeight = (icon != null) ? 30 : 0; 
+            int iconWidth = (icon != null) ? 40 : 0;
+            int iconHeight = (icon != null) ? 30 : 0;
 
-            // Teljes szélesség kiszámítása a középre igazításhoz
             int totalContentWidth = textWidth + (icon != null ? gap + iconWidth : 0);
             int startX = (getWidth() - totalContentWidth) / 2;
             int centerY = (getHeight() / 2);
 
-            // Szöveg kirajzolása
             g2.drawString(text, startX, centerY + (fm.getAscent() / 2) - 2);
 
-            // Kép kirajzolása a szöveg után
             if (icon != null) {
                 int iconX = startX + textWidth + gap;
                 int iconY = centerY - (iconHeight / 2);
@@ -160,8 +202,14 @@ public class StoreScreen extends JFrame{
 
             g2.dispose();
         }
-        
-}
+
+    }
+
+    /**
+     * Az alkalmazás belépési pontja, amely beállítja a megjelenést.
+     *
+     * @param args a parancssori argumentumok
+     */
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -171,10 +219,6 @@ public class StoreScreen extends JFrame{
 
 
         SwingUtilities.invokeLater(() -> {
-            /*StoreController sc= new StoreController();
-            StoreScreen store = new StoreScreen(sc);
-            sc.setStoreScreen(store);
-            store.setVisible(true);*/
         });
     }
 }

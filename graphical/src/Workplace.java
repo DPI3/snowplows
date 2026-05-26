@@ -5,17 +5,16 @@ package src;
  */
 public class Workplace extends Node {
 
-    /** 
+    /**
      * Új Workplace objektum létrehozása alapértelmezett azonosítóval.
-     * 
      */
     public Workplace() {
         super("default_workplace");
     }
 
-    /** 
+    /**
      * Új Workplace objektum létrehozása egyedi azonosítóval.
-     * 
+     *
      * @param id az egyedi azonosító
      */
     public Workplace(String id) {
@@ -23,8 +22,9 @@ public class Workplace extends Node {
     }
 
     /**
-     * Kezeli azt az eseményt, amikor egy jármű belép.
-     * 
+     * Kezeli azt az eseményt, amikor egy jármű belép a munkahelyre.
+     * A jármű megérkezettnek lesz jelölve.
+     *
      * @param vehicle a belépő jármű
      */
     @Override

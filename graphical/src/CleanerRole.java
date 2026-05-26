@@ -14,17 +14,19 @@ public class CleanerRole extends Role {
     /** A takarítóhoz tartozó hókotró. */
     private Snowplow snowplow;
 
-    /** A takarító neve.  */
+    /** A takarító neve. */
     private String name;
 
+    /** A takarító által birtokolt kotrófejeinek listája. */
     private java.util.List<Head> ownedHeads = new java.util.ArrayList<>();
 
-     /** A  CleanerRole objektum konstruktora
-     * 
+    /**
+     * A CleanerRole objektum konstruktora.
+     *
      * @param name a takarító neve
      * @param money a takarító kezdeti pénze
-     * @param snowplow a buszvezető által mozgatandó hókotró
-    */
+     * @param snowplow a takarító által irányított hókotró
+     */
     public CleanerRole(String name, int money, Snowplow snowplow) {
         this.name=name;
         this.money = money;
@@ -35,6 +37,13 @@ public class CleanerRole extends Role {
         }
     }
 
+    /**
+     * Vásárlási művelet egy szerepkörrel. Jelenleg nem támogatott.
+     *
+     * @param role a szerepkör
+     * @param item a megvásárolni kívánt elem
+     * @return false, mivel ez a vásárlási mód nem támogatott
+     */
     public boolean buy(Role role, Buyable item) {
         return false;
     }
@@ -44,7 +53,7 @@ public class CleanerRole extends Role {
      *
      * @param store a bolt
      * @param item a megvásárolni kívánt elem
-     * @return true, ha a vásárlás sikeres
+     * @return true, ha a vásárlás sikeres; false egyébként
      */
     public boolean buy(Store store, Buyable item) {
         boolean result = store.buy(this, item);
@@ -52,7 +61,7 @@ public class CleanerRole extends Role {
     }
 
     /**
-     * A metódus megadja a takarító aktuális pénzét.
+     * Visszaadja a takarító aktuális pénzmennyiségét.
      *
      * @return a szerepkör pénze
      */
@@ -61,14 +70,16 @@ public class CleanerRole extends Role {
     }
 
     /**
-     * A takarító neve.
+     * Visszaadja a takarító nevét.
+     *
+     * @return a takarító neve
      */
     public String getName() {
         return name;
     }
 
     /**
-     * A metódus növeli a takarító pénzét.
+     * Növeli a takarító pénzmennyiségét a megadott összeggel.
      *
      * @param amount a növelés mennyisége
      */
@@ -77,16 +88,16 @@ public class CleanerRole extends Role {
     }
 
     /**
-     * A metódus csökkenti a takarító pénzét.
+     * Csökkenti a takarító pénzmennyiségét a megadott összeggel.
      *
-     * @param amount a csökkentés mennyisége
+     * @param price a csökkentés mennyisége
      */
     public void decreaseMoney(int price) {
         money -= price;
     }
 
     /**
-     * A metódus növeli a takarító által irányított hókotró só készletét.
+     * Növeli a takarító által irányított hókotró só készletét.
      *
      * @param amount a növelés mennyisége
      */
@@ -95,7 +106,7 @@ public class CleanerRole extends Role {
     }
 
     /**
-     * A metódus növeli a takarító által irányított hókotró zúzottkő készletét.
+     * Növeli a takarító által irányított hókotró zúzottkő készletét.
      *
      * @param amount a növelés mennyisége
      */
@@ -103,9 +114,8 @@ public class CleanerRole extends Role {
         snowplow.addGravel(amount);
     }
 
-    
     /**
-     * A metódus növeli a takarító által irányított hókotró biokerozin készletét.
+     * Növeli a takarító által irányított hókotró biokerozin készletét.
      *
      * @param amount a növelés mennyisége
      */
@@ -114,7 +124,7 @@ public class CleanerRole extends Role {
     }
 
     /**
-     * A metódus megadja a takarító által irányított hókotrót.
+     * Visszaadja a takarító által irányított hókotrót.
      *
      * @return a hókotró
      */
@@ -123,7 +133,7 @@ public class CleanerRole extends Role {
     }
 
     /**
-     * A metódus új fejet ad a takarító által irányított hókotrónak.
+     * Új fejet ad a takarító által irányított hókotrónak, és eltárolja a birtokolt fejek között.
      *
      * @param newHead a takarító által irányított hókotró új feje
      */
@@ -133,7 +143,7 @@ public class CleanerRole extends Role {
     }
 
     /**
-     * A takarító irányítja a megadott hókotró
+     * A takarító irányítja a megadott hókotrót a sávon, és a sikeres takarításért pénzt kap.
      *
      * @param sp a vezérelni kívánt hókotró
      */
@@ -166,7 +176,7 @@ public class CleanerRole extends Role {
     }
 
     /**
-     * A metódus megadja a takarító által szerzett pontszámot.
+     * Visszaadja a takarító által szerzett pontszámot, ami megegyezik a pénzmennyiséggel.
      *
      * @return a szerepkör pontszáma
      */
@@ -175,10 +185,20 @@ public class CleanerRole extends Role {
         return money;
     }
 
+    /**
+     * Visszaadja a takarító által birtokolt kotrófejek listáját.
+     *
+     * @return a birtokolt kotrófejek listája
+     */
     public java.util.List<Head> getOwnedHeads() {
         return ownedHeads;
     }
 
+    /**
+     * Hozzáad egy kotrófejet a birtokolt fejek listájához.
+     *
+     * @param head a hozzáadandó kotrófej
+     */
     public void addOwnedHead(Head head) {
         if (head != null) {
             ownedHeads.add(head);

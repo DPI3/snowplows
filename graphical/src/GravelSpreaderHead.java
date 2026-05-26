@@ -7,10 +7,10 @@ package src;
 public class GravelSpreaderHead extends Head {
 
     /**
-     * Az útszakasz tisztítása, ellenőrzi a hókotró zúzottkő-készletét, majd annak felhasználásával a sávot 
-     * kezeli. Ha van elegendő zúzalék, a sáv állapotát Gravel állapotba helyezi vagy növeli a zúzalék 
+     * Az útszakasz tisztítása, ellenőrzi a hókotró zúzottkő-készletét, majd annak felhasználásával a sávot
+     * kezeli. Ha van elegendő zúzalék, a sáv állapotát Gravel állapotba helyezi vagy növeli a zúzalék
      * borítottságát.
-     * 
+     *
      * @param lane a tisztítandó szakasz
      * @param snowplow a tisztítást végző hókotró
      */
@@ -30,7 +30,7 @@ public class GravelSpreaderHead extends Head {
 
     /**
      * Visszaadja a GravelSpreaderHead árát.
-     * 
+     *
      * @return az ár
      */
     @Override

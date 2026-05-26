@@ -6,10 +6,10 @@ package src;
  */
 public class Lane {
 
-    /** Az sáv neve. */
+    /** A sáv neve. */
     private String name;
 
-    /** Az sáv kiindulási pontja. */
+    /** A sáv kiindulási pontja. */
     private Node source;
 
     /** A sáv célja. */
@@ -39,16 +39,22 @@ public class Lane {
     /** A sáv aktuális állapotát reprezentáló objektum. */
     private LaneState currentState;
 
+    /** Jelzi, hogy a sáv sózva van-e. */
     private boolean salted;
+
+    /** A só hatásának hátralévő időtartama. */
     private int saltTimer;
 
+    /**
+     * Paraméter nélküli konstruktor, amely tiszta állapotú sávot hoz létre.
+     */
     public Lane() {
         this.currentState = new Clear();
     }
 
     /**
      * Sáv létrehozása a hozzá tartozó úthoz.
-     * 
+     *
      * @param road a sávhoz tartozó út
      */
     public Lane(Road road) {
@@ -56,8 +62,8 @@ public class Lane {
     }
 
     /**
-     * Sáv létrehozása csomópontokból.
-     * 
+     * Sáv létrehozása csomópontokból és névvel.
+     *
      * @param name a sáv neve
      * @param source a sáv kiinduló csomópontja
      * @param destination a sáv célállomása
@@ -70,8 +76,8 @@ public class Lane {
     }
 
     /**
-     * Visszadja a sáv nevét.
-     * 
+     * Visszaadja a sáv nevét.
+     *
      * @return a sáv neve
      */
     public String getName() {
@@ -80,7 +86,7 @@ public class Lane {
 
     /**
      * Beállítja a sáv nevét.
-     * 
+     *
      * @param name a sáv új neve
      */
     public void setName(String name) {
@@ -88,8 +94,8 @@ public class Lane {
     }
 
     /**
-     * Visszadja a sáv hórétegének vastagságát.
-     * 
+     * Visszaadja a sáv hórétegének vastagságát.
+     *
      * @return a sáv hóréteg vastagsága
      */
     public double getSnowThickness() {
@@ -98,16 +104,16 @@ public class Lane {
 
     /**
      * Beállítja a sáv hórétegének vastagságát.
-     * 
-     * @param name a sáv új hóréteg vastagsága
+     *
+     * @param snowThickness a sáv új hóréteg vastagsága
      */
     public void setSnowThickness(double snowThickness) {
         this.snowThickness = snowThickness;
     }
 
-     /**
-     * Visszadja a sáv jégrétegének vastagságát.
-     * 
+    /**
+     * Visszaadja a sáv jégrétegének vastagságát.
+     *
      * @return a sáv jégréteg vastagsága
      */
     public double getIceThickness() {
@@ -116,38 +122,43 @@ public class Lane {
 
     /**
      * Beállítja a sáv jégrétegének vastagságát.
-     * 
-     * @param name a sáv új jégréteg vastagsága
+     *
+     * @param iceThickness a sáv új jégréteg vastagsága
      */
     public void setIceThickness(double iceThickness) {
         this.iceThickness = iceThickness;
     }
 
     /**
-     * Visszaadja  az út objektumot, amelyhez ez a sáv tartozik.
-     * 
+     * Visszaadja az út objektumot, amelyhez ez a sáv tartozik.
+     *
      * @return az út objektum, amelyhez ez a sáv tartozik
      */
     public Road getParentRoad() {
         return parentRoad;
     }
 
+    /**
+     * Beállítja a sávhoz tartozó szülő utat.
+     *
+     * @param road az új szülő út objektum
+     */
     public void setParentRoad(Road road) {
         this.parentRoad = road;
     }
 
     /**
      * Beállítja a sáv zúzottkő rétegének vastagságát.
-     * 
-     * @param name a sáv új zúzottkő réteg vastagsága
+     *
+     * @param thickness a sáv új zúzottkő réteg vastagsága
      */
     public void setGravelThickness(double thickness) {
         this.gravelThickness = thickness;
     }
 
-     /**
-     * Visszadja a sáv zúzottkő rétegének vastagságát.
-     * 
+    /**
+     * Visszaadja a sáv zúzottkő rétegének vastagságát.
+     *
      * @return a sáv zúzottkő rétegének vastagsága
      */
     public double getGravelThickness() {
@@ -156,7 +167,7 @@ public class Lane {
 
     /**
      * Megváltoztatja a sáv jelenlegi állapotát a paraméterben kapott új állapotra.
-     * 
+     *
      * @param newState az új állapot
      */
     public void setState(LaneState newState) {
@@ -165,7 +176,7 @@ public class Lane {
 
     /**
      * Kiértékeli a sáv aktuális állapotát, és visszaadja, hogy járható-e.
-     * 
+     *
      * @return true, ha járható; false, ha járhatatlan
      */
     public boolean isPassable() {
@@ -179,7 +190,7 @@ public class Lane {
 
     /**
      * Kiszámítja a sáv súlyozását az útvonalkereséshez.
-     * 
+     *
      * @return a sáv súlya
      */
     public double getDynamicWeight() {
@@ -190,9 +201,9 @@ public class Lane {
     }
 
     /**
-     * Visszaadja a sáv leírására szolgáló állapot-objektumot.
-     * 
-     * @return a sáv leírására szolgáló állapot-objektum
+     * Visszaadja a sáv aktuális állapotát reprezentáló objektumot.
+     *
+     * @return a sáv állapot-objektum
      */
     public LaneState getLaneState() {
         return currentState;
@@ -200,7 +211,8 @@ public class Lane {
 
     /**
      * Módosítja a sáv állapotát az időjárási viszonyok hatásának megfelelően.
-     * 
+     * Ha a sáv sózva van, az időjárás nem hat rá.
+     *
      * @param snowamount a hó mennyisége
      */
     public void applyWeather(int snowamount) {
@@ -215,17 +227,17 @@ public class Lane {
 
     /**
      * Visszaadja, hogy a sávon van-e baleset.
-     * 
-     * @return true, ha van baleset; false, ha nincsen baleset
+     *
+     * @return true, ha van baleset; false, ha nincs
      */
     public boolean hasAccident() {
         return hasAccident;
     }
-    
+
     /**
-     * A balesetet vagy annak hiányát jelző érték beállítása.
-     * 
-     * @param hasAccident a baleset új értéke
+     * Beállítja a baleseti állapotot a sávon.
+     *
+     * @param hasAccident true, ha baleset történt; false, ha nincs baleset
      */
     public void setHasAccident(boolean hasAccident) {
         this.hasAccident = hasAccident;
@@ -233,7 +245,8 @@ public class Lane {
 
     /**
      * Módosítja a hó, jég vagy zúzalék mennyiségét a sávon havazás vagy hókotrás hatására.
-     * A PDF specifikációja alapján leprogramozva.
+     *
+     * @param amount a változás mértéke
      */
     public void change(int amount) {
         if (currentState instanceof DeepSnow || currentState instanceof ThinSnow) {
@@ -259,54 +272,58 @@ public class Lane {
             }
         }
     }
-    
-     /**
-     * Lekérdezi a sáv célját.
-     * 
-     * @return a cél
+
+    /**
+     * Visszaadja a sáv célcsomópontját.
+     *
+     * @return a cél csomópont
      */
     public Node getDestination() {
         return destination;
     }
-    
 
     /**
      * Visszaadja a sáv hosszát.
-     * 
-     * @return a hossz
+     *
+     * @return a sáv hossza
      */
     public double getLength() {
         return 100.0;
     }
 
-
     /**
-     * Lekérdezi a sáv kiindulási pontját.
-     * 
-     * @return a kiindulási pont
+     * Visszaadja a sáv kiindulási csomópontját.
+     *
+     * @return a kiindulási csomópont
      */
     public Node getSource() {
         return source;
     }
 
     /**
-     * Az indulási pont beállítása
-     * 
-     * @param source az új indulási pont
+     * Beállítja a sáv kiindulási csomópontját.
+     *
+     * @param source az új kiindulási csomópont
      */
     public void setSource(Node source) {
         this.source = source;
     }
 
     /**
-     * A cél beállítása
-     * 
-     * @param destination az új cél
+     * Beállítja a sáv célcsomópontját.
+     *
+     * @param destination az új célcsomópont
      */
     public void setDestination(Node destination) {
         this.destination = destination;
     }
 
+    /**
+     * Sót alkalmaz a sávra megadott időtartamra. A sáv tiszta állapotba kerül,
+     * és az időtartam lejártáig védett az időjárás hatásaival szemben.
+     *
+     * @param duration a só hatásának időtartama tickekben
+     */
     public void applySalt(int duration) {
         this.salted = true;
         this.saltTimer = duration;
@@ -315,10 +332,19 @@ public class Lane {
         this.iceThickness = 0;
     }
 
+    /**
+     * Visszaadja, hogy a sáv sózva van-e.
+     *
+     * @return true, ha a sáv sózva van; false egyébként
+     */
     public boolean isSalted() {
         return salted;
     }
 
+    /**
+     * Egy tick-kel csökkenti a só hatásának hátralévő időtartamát.
+     * Ha az időtartam lejárt, a sáv sózott állapota megszűnik.
+     */
     public void tickSalt() {
         if (!salted) return;
 
@@ -330,6 +356,12 @@ public class Lane {
         }
     }
 
+    /**
+     * Eltávolítja a sávról a mozgatható anyagot (vékony hó, mély hó, törött jég vagy zúzottkő),
+     * és a sávot tiszta állapotba állítja.
+     *
+     * @return az eltávolított anyag állapot-objektuma, vagy null, ha nem volt mozgatható anyag
+     */
     public LaneState removeMovableMaterial() {
         if (currentState instanceof ThinSnow ||
             currentState instanceof DeepSnow ||
@@ -347,6 +379,11 @@ public class Lane {
         return null;
     }
 
+    /**
+     * Anyagot helyez el a sávon, ha az jelenleg tiszta állapotban van.
+     *
+     * @param material az elhelyezendő anyag állapot-objektuma
+     */
     public void placeMaterial(LaneState material) {
         if (material == null) return;
 

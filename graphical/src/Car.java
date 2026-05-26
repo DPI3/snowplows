@@ -24,17 +24,20 @@ public class Car extends Vehicle {
     /** Az autó állapota. */
     private String location = "úton";
 
+    /** Az úthálózat referencia az útvonaltervezéshez. */
     private RoadNetwork roadNetwork;
+
+    /** Az aktuális célcsomópont. */
     private Node currentTarget;
 
     /**
      * Létrehozza a Car objektumot a megadott paraméterekkel.
      *
-     * @param id az autó azonosítója.
-     * @param lane az aktuális sáv, amelyen az autó halad.
-     * @param speed az autó sebessége.
-     * @param res az autóhoz tartozó lakóhely.
-     * @param work az autóhoz tartozó munkahely.
+     * @param id az autó azonosítója
+     * @param lane az aktuális sáv, amelyen az autó halad
+     * @param speed az autó sebessége
+     * @param res az autóhoz tartozó lakóhely
+     * @param work az autóhoz tartozó munkahely
      */
     public Car(String id, Lane lane, double speed, Residence res, Workplace work) {
         super(id, lane, speed);
@@ -43,9 +46,11 @@ public class Car extends Vehicle {
         this.defaultSpeed = speed;
     }
 
-  
     /**
      * Az autó sávváltása a feltételek ellenőrzésével.
+     *
+     * @param targetLane a cél sáv, amelyre az autó váltani kíván
+     * @return true, ha a sávváltás sikeres; false, ha nem
      */
     @Override
     public boolean changeLane(Lane targetLane) {
@@ -63,25 +68,25 @@ public class Car extends Vehicle {
     public void stopAndWait() { this.speed = 0.0; }
 
     /**
-     * Aktuális sebesség állítása alapértelmezettre.
+     * Aktuális sebesség visszaállítása az alapértelmezett értékre.
      */
     public void resume()      { this.speed = defaultSpeed; }
 
-     /**
+    /**
      * Visszaadja az autóhoz tartozó lakóhelyet.
      *
      * @return az autóhoz tartozó lakóhely
      */
     public Residence getResidence()  { return residence; }
 
-     /**
+    /**
      * Visszaadja az autóhoz tartozó munkahelyet.
      *
      * @return az autóhoz tartozó munkahely
      */
     public Workplace getWorkplace()  { return workplace; }
 
-     /**
+    /**
      * Visszaadja az autó alapértelmezett sebességét.
      *
      * @return az autó alapértelmezett sebessége
@@ -89,27 +94,42 @@ public class Car extends Vehicle {
     public double getDefaultSpeed()  { return defaultSpeed; }
 
     /**
-     * Az autó aktuális állapotának lekérdezése szöveges formában
-     * 
+     * Az autó aktuális állapotának lekérdezése szöveges formában.
+     *
      * @return az aktuális állapot
      */
     public String getLocation()      { return location; }
 
     /**
-     * Az autó állapotának beállítása
-     * 
+     * Az autó állapotának beállítása.
+     *
      * @param location az új állapot
      */
     public void setLocation(String location) { this.location = location; }
 
+    /**
+     * Beállítja az úthálózat referenciát az útvonaltervezéshez.
+     *
+     * @param roadNetwork az úthálózat objektum
+     */
     public void setRoadNetwork(RoadNetwork roadNetwork) {
         this.roadNetwork = roadNetwork;
     }
 
+    /**
+     * Beállítja az aktuális célcsomópontot.
+     *
+     * @param currentTarget az új célcsomópont
+     */
     public void setCurrentTarget(Node currentTarget) {
         this.currentTarget = currentTarget;
     }
 
+    /**
+     * Egy szimulációs lépés végrehajtása. Az autó ellenőrzi a sáv járhatóságát,
+     * szükség esetén sávot vált vagy megáll, majd halad előre és újratervezi az útvonalat,
+     * ha a következő sáv járhatatlanná vált.
+     */
     @Override
     public void tick() {
         if (currentLane == null) return;
@@ -135,6 +155,11 @@ public class Car extends Vehicle {
         }
     }
 
+    /**
+     * Megpróbál átváltani egy szomszédos járható sávra.
+     *
+     * @return true, ha sikerült szomszédos sávra váltani; false, ha nem
+     */
     private boolean tryAdjacentLane() {
         Road road = currentLane.getParentRoad();
         if (road == null) return false;
@@ -153,6 +178,10 @@ public class Car extends Vehicle {
         return false;
     }
 
+    /**
+     * Újratervezi az útvonalat az aktuális pozícióból a célcsomópontig.
+     * Csak akkor hajtja végre, ha az úthálózat, a célcsomópont és a sáv célállomása elérhető.
+     */
     private void replanRoute() {
         if (roadNetwork == null || currentTarget == null || currentLane.getDestination() == null) {
             return;

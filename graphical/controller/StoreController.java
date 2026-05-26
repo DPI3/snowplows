@@ -6,13 +6,22 @@ import javax.swing.JOptionPane;
 import src.*;
 import view.StoreScreen;
 
-
+/**
+ * A bolt vezérlője, amely a vásárlási logikát kezeli.
+ * Kezeli a különböző tárgyak (fejek, anyagok, hókotró) megvásárlását,
+ * és frissíti a bolt képernyőt a tranzakciók után.
+ */
 public class StoreController {
     private Store store;
     private StoreScreen storeScreen;
     private java.util.Set<String> boughtHeads = new java.util.HashSet<>();
     private GameController gameController;
 
+    /**
+     * Visszaadja a játékos aktuális pénzmennyiségét a szerepe alapján.
+     *
+     * @return a játékos pénze, vagy 0 ha nincs megfelelő szerep
+     */
     public int getMoney(){
         if(gameController.getRole() instanceof CleanerRole){
             return ((CleanerRole) gameController.getRole()).getMoney();
@@ -23,33 +32,57 @@ public class StoreController {
         return 0;
     }
 
+    /**
+     * Beállítja a bolt képernyő referenciáját.
+     *
+     * @param s a bolt képernyő
+     */
     public void setStoreScreen(StoreScreen s){
         storeScreen=s;
     }
 
+    /**
+     * Visszaadja a bolt modell objektumot.
+     *
+     * @return a bolt példány
+     */
     public Store getStore() {
         return store;
     }
 
-        /**
+    /**
      * Ellenőrzi, hogy a játékos meg tudja-e engedni az adott árat.
      *
      * @param price az ellenőrizendő ár
-     * @return igaz, ha a játékosnak van elég pénze
+     * @return {@code true}, ha a játékosnak van elég pénze
      */
     public boolean canAfford(int price) {
         return getMoney() >= price;
     }
 
+    /**
+     * Beállítja a játékvezérlő referenciáját.
+     *
+     * @param gameController a játékvezérlő
+     */
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
     }
 
+    /**
+     * Létrehozza a bolt vezérlőt egy új bolt példánnyal.
+     */
     public StoreController() {
         store= new Store(null);
     }
 
-
+    /**
+     * Megvásárolja a megadott tárgyat. Kezeli a biokerozin, só, kavics, hókotró és fejek vásárlását.
+     * Fejekből minden típusból csak egyet lehet vásárolni.
+     *
+     * @param item a megvásárolni kívánt tárgy azonosítója
+     * @return {@code true}, ha a vásárlás sikeres volt
+     */
     public boolean buyItem(String item){
         if(gameController.getRole() == null || !(gameController.getRole() instanceof CleanerRole)) return false;
         CleanerRole role = (CleanerRole) gameController.getRole();
@@ -107,6 +140,12 @@ public class StoreController {
         return false;
     }
 
+    /**
+     * A tárgy szöveges azonosítóját a megfelelő {@link Buyable} objektummá alakítja.
+     *
+     * @param itemId a tárgy szöveges azonosítója
+     * @return a megfelelő {@link Buyable} példány, vagy {@code null} ha ismeretlen azonosító
+     */
     private Buyable ConvertToBuyable(String itemId){
         if (itemId.equals("GRAVELSPREAD")) return new GravelSpreaderHead();
         if (itemId.equals("SALTSPREAD")) return new SaltSpreaderHead();
@@ -117,10 +156,21 @@ public class StoreController {
         return null;
     }
 
+    /**
+     * Visszaadja a játékos takarító szerepét.
+     *
+     * @return a {@link CleanerRole} példány
+     */
     public CleanerRole getCleanerRole() {
         return (CleanerRole) gameController.getRole();
     }
 
+    /**
+     * Visszaadja a megadott tárgy árát.
+     *
+     * @param item a tárgy szöveges azonosítója
+     * @return a tárgy ára, vagy 0 ha ismeretlen tárgy
+     */
     public int getItemPrice(String item) {
         if (item.equals("BIOKEROZIN")) return 10;
         if (item.equals("SALT")) return 10;

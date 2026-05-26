@@ -1,16 +1,17 @@
 package src;
 
 /**
- * A SweeperHead olyan mechanikus tisztítófej, amely a havat vagy a fellazított jeget eltakarítja. 
- * A zúzalékot ugyanúgy eltakarítja, mint a havat. Vastag, de még nem teljesen lefagyott hó eltávolítására 
- * alkalmas, valamint képes a korábban kiszórt zúzott kő eltávolítására is, ha arra  már nincs tovább szükség az 
+ * A SweeperHead olyan mechanikus tisztítófej, amely a havat vagy a fellazított jeget eltakarítja.
+ * A zúzalékot ugyanúgy eltakarítja, mint a havat. Vastag, de még nem teljesen lefagyott hó eltávolítására
+ * alkalmas, valamint képes a korábban kiszórt zúzott kő eltávolítására is, ha arra már nincs tovább szükség az
  * adott sávon.
  */
 public class SweeperHead extends Head {
 
     /**
-     * Az útszakasz tisztítása, eltakarítja a hó-, feltört jég-, illetve a zúzottkő réteget.
-     * 
+     * Az útszakasz tisztítása: eltakarítja a hó-, feltört jég-, illetve a zúzottkő réteget.
+     * Az eltávolított anyagot a szomszédos sávra helyezi.
+     *
      * @param lane a tisztítandó szakasz
      * @param snowplow a tisztítást végző hókotró
      */
@@ -40,8 +41,8 @@ public class SweeperHead extends Head {
     }
 
     /**
-     * Visszadja a SweeperHead árát.
-     * 
+     * Visszaadja a SweeperHead árát.
+     *
      * @return az ára
      */
     @Override
