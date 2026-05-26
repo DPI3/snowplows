@@ -141,6 +141,41 @@ public class GameController {
     public void tick() {
         if (!running) return;
 
+        if (game.isOver()) {
+            stopGame();
+            
+            List<Player> players = game.getPlayers();
+            Player first = null;
+            Player second = null;
+            Player third = null;
+            for (Player p : players) {
+                int s = p.getScore();
+
+                if (first == null || s > first.getScore()) {
+                    third = second;
+                    second = first;
+                    first = p;
+                }
+                else if (second == null || s > second.getScore()) {
+                    third = second;
+                    second = p;
+                }
+                else if (third == null || s > third.getScore()) {
+                    third = p;
+                }
+                
+            }
+            String str="A játék véget ért! Helyezettek: ";
+            if(first!=null)
+                str+="1. "+first.getName()+" ("+first.getScore()+" pont)";
+            if(second!=null)
+                str+=", 2. "+second.getName()+" ("+second.getScore()+" pont)";
+            if(third!=null)
+                str+=", 3. "+third.getName()+" ("+third.getScore()+" pont)";
+            message = str;
+            refreshView();
+            return;
+        }
         long now = System.currentTimeMillis();
 
         if (now - lastSecondUpdate >= 1000) {

@@ -99,7 +99,7 @@ public class Player {
      * @return a játékos összesített pontszáma
      */
     public int getSumPoints() {
-        return score;
+        return getMoney();
     }
 
     /**
@@ -126,7 +126,7 @@ public class Player {
      * @return a játékos pontszáma
      */
     public int getScore() {
-        return score;
+        return getMoney();
     }
 
     /**
