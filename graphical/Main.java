@@ -1,11 +1,13 @@
+import controller.AssetManager;
+import controller.GameController;
+import controller.ScreenController;
+import controller.SoundManager;
+import controller.StoreController;
 import java.util.ArrayList;
 import java.util.List;
-
-import controller.*;
+import src.*;
 import view.GameScreen;
 import view.StoreScreen;
-import src.*;
-import view.*;
 
 /**
  * A Main osztály az alkalmazás belépési pontja.
@@ -67,6 +69,8 @@ public class Main {
         
         // SoundManager inicializálása (háttérzene lejátszása, ha szükséges)
         soundManager.playMusic("background");
+
+        soundManager.playEffect("click");
     }
 
     /**
