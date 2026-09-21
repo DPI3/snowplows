@@ -2,6 +2,7 @@
 bin/
 .idea
 .vs
+.DS_Store
 out
 skeleton/bin
 *.class
