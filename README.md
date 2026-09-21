@@ -4,8 +4,8 @@ A 2D top-down snowplow/city-management simulation game written in **Java (Swing)
 
 ## Documentation
 
-- 📄 [Full weekly team documentation](https://github.com/czdotL/Snowplows/blob/main/o%CC%88sszesitett_merged.pdf) — detailed, week-by-week write-up of the team's design decisions, sprint progress, and iteration history across the skeleton → prototype → graphical stages.
-- 📄 [Project documentation (summary)](https://github.com/czdotL/Snowplows/blob/main/Snowplow_Documentation.pdf) — condensed overview of the architecture, design patterns, and features.
+- 📄 [Full weekly team documentation](https://github.com/DPI3/snowplows/blob/main/összesitett_merged.pdf) — detailed, week-by-week write-up of the team's design decisions, sprint progress, and iteration history across the skeleton → prototype → graphical stages.
+- 📄 [Project documentation (summary)](https://github.com/DPI3/snowplows/blob/main/Snowplow_Documentation.pdf) — condensed overview of the architecture, design patterns, and features.
 
 ## Gameplay
 
